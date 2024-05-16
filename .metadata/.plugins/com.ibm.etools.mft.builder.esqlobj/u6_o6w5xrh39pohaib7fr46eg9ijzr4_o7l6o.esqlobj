@@ -1,0 +1,80 @@
+CREATE FILTER MODULE InputLog_Hubo_error_EOF
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		IF FLAG_ERROR = FALSE THEN
+		--En caso de EOF exitoso guardo en el environment parametros para OutputLog
+		SET Environment.Variables.Service_Name 			= SERVICE;
+		SET Environment.Variables.Operation_Name 		= OPERATION;
+		SET Environment.Variables.fileDirectory 		= LocalEnvironment.File.Directory;
+		
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_DEF = '' THEN
+			SET	Environment.Variables.Bussiness_DEF					= COALESCE(Environment.Variables.Bussiness_DEF,'NULL');
+		ELSE
+			SET Environment.Variables.Bussiness_DEF					= BUSINESS_ENTITY_DEF;
+			BEGIN  
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_DEF					= EVAL (BUSINESS_ENTITY_DEF);
+					
+				END;
+		END IF;
+		
+		IF BUSINESS_ENTITY_ID = NULL OR BUSINESS_ENTITY_ID = '' THEN
+			SET	Environment.Variables.Bussiness_ID			= COALESCE(Environment.Variables.Bussiness_ID,'NULL');
+		ELSE 	
+			SET Environment.Variables.Bussiness_ID			= BUSINESS_ENTITY_ID;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_ID			= EVAL(BUSINESS_ENTITY_ID);
+			END;
+		END IF;
+		
+		IF PROCESS_DEF = NULL OR PROCESS_DEF = '' THEN
+			SET	Environment.Variables.PROCESS_DEF			= ' ';
+		ELSE 	
+			SET Environment.Variables.PROCESS_DEF			= PROCESS_DEF;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.PROCESS_DEF			= EVAL(PROCESS_DEF);
+			END;
+		END IF;
+		
+		IF PROCESS_INSTANCE_ID = NULL OR PROCESS_INSTANCE_ID = '' THEN
+			SET	Environment.Variables.PROCESS_INSTANCE_ID			= ' ';
+		ELSE 	
+			SET Environment.Variables.PROCESS_INSTANCE_ID			= PROCESS_INSTANCE_ID;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.PROCESS_INSTANCE_ID			= EVAL(PROCESS_INSTANCE_ID);
+			END;
+		END IF;
+	
+		IF ACTIVITY_DEF = NULL OR ACTIVITY_DEF = '' THEN
+			SET	Environment.Variables.ACTIVITY_DEF			= ' ';
+		ELSE 	
+			SET Environment.Variables.ACTIVITY_DEF			= ACTIVITY_DEF;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.ACTIVITY_DEF			= EVAL(ACTIVITY_DEF);
+			END;
+		END IF;
+		
+		IF ACTIVITY_STATUS = NULL OR ACTIVITY_STATUS = '' THEN
+			SET	Environment.Variables.ACTIVITY_STATUS				= ' ';
+		ELSE 	
+			SET Environment.Variables.ACTIVITY_STATUS				= ACTIVITY_STATUS;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.ACTIVITY_STATUS			= EVAL(ACTIVITY_STATUS);
+			END;
+		END IF;
+		
+
+		SET Environment.Variables.Orchestration_ID  	= COALESCE(Root.DFDL.*:*.OrchestrationId, ' ');
+			
+						
+			RETURN FALSE;
+		END IF;
+	END;
+
+END MODULE;

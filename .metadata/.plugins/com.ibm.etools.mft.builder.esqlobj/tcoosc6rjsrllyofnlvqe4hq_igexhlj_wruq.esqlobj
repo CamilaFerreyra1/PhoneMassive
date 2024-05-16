@@ -1,0 +1,11 @@
+CREATE COMPUTE MODULE Set_MsgID_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+
+		SET Environment.MsgID = InputLocalEnvironment.WrittenDestination.MQ.DestinationData.msgId;
+
+		RETURN TRUE;
+	END;
+
+
+END MODULE;

@@ -1,0 +1,15 @@
+CREATE COMPUTE MODULE Get_MsgID_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+		
+
+			SET OutputRoot.MQMD.MsgId = CAST(InputLocalEnvironment.SOAP.Input.Message.Header.nsc:HeaderInfo.nsc:MsgID AS BLOB);	
+			RETURN TRUE;
+
+		
+	END;
+
+
+END MODULE;

@@ -1,0 +1,14 @@
+CREATE FUNCTION  ValidateHeaderWhitErrorCodes(IN Header REFERENCE, IN refError REFERENCE ) RETURNS BOOLEAN
+ BEGIN
+ 	 DECLARE castValue CHARACTER;
+ 	
+ 	 IF (Header.Applicationid = '' OR UPPER(Header.Applicationid) ='NULL' OR Header.Applicationid <> '4'  OR Header.Applicationid IS NULL OR 
+ 	 	  Header.Companycode = '' OR UPPER(Header.Companycode)= 'NULL' OR Header.Companycode <> '5' OR  Header.Companycode IS NULL OR
+ 	 	  Header.Clienttypeid ='' OR UPPER(Header.Clienttypeid ) ='NULL' OR Header.Clienttypeid <> '3' OR Header.Clienttypeid IS NULL )THEN 
+ 	 	  CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+		  RETURN TRUE;
+ 	 ELSE 
+ 	 	RETURN FALSE;
+ 	 END IF; 	
+ 	
+ END;

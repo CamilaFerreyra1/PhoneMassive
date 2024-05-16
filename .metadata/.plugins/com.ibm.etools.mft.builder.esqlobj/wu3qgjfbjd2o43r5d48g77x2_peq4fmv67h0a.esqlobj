@@ -1,0 +1,15 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		SET OutputRoot.HTTPRequestHeader.Authorization = Token;
+
+		CREATE FIELD OutputRoot.JSON.Data;
+		DECLARE refOutJson	REFERENCE TO OutputRoot.JSON.Data;
+		DECLARE refEnv		REFERENCE TO Environment.Variables.XMLNSC.Msg.MessageHeader;
+		
+		SET refOutJson.phone.personID		= refEnv.bupId;
+		SET refOutJson.phone.phoneNumber	= refEnv.Phone;
+		SET refOutJson.phone.areaCode		= refEnv.AreaCode;
+		SET refOutJson.phone.phoneType		= NULLIF(CAST(refEnv.PhoneTypeId AS CHARACTER DEFAULT ''), '');
+			
+        RETURN TRUE;
+	END;

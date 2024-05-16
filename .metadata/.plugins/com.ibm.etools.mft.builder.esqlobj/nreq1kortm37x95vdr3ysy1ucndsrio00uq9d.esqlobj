@@ -1,0 +1,10 @@
+CREATE PROCEDURE ConvertCDATA (IN REFCDATA REFERENCE,IN REFOUPUT REFERENCE,IN REFINPUT REFERENCE)
+	BEGIN
+		CREATE LASTCHILD OF REFOUPUT DOMAIN('XMLNSC') PARSE
+		(
+			REFCDATA
+			--Estos 2 datos estaban Hardcodeados anteriormente, se lo toma diractamente desde el INPUTROOT por si llegan a cambiar 
+			ENCODING   REFINPUT.Properties.Encoding
+		    CCSID      REFINPUT.Properties.CodedCharSetId
+		);
+END;

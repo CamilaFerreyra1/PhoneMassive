@@ -1,0 +1,22 @@
+CREATE FUNCTION NotIntObl(IN ref REFERENCE, IN refError REFERENCE) RETURNS BOOLEAN
+BEGIN
+	DECLARE err REFERENCE TO refError.Code;
+	IF (ref IS NOT NULL) AND (ref <> '') THEN
+		DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+		DECLARE aux INTEGER;
+		DECLARE auxRow ROW;
+		SET auxRow.reference = ref;
+		SET aux = CAST(ref AS INTEGER);
+		SET auxRow.reference = ref - 1;
+		IF (aux <> CAST(auxRow.reference AS INTEGER)) THEN
+			RETURN FALSE;
+		ELSE
+			CREATE LASTCHILD OF refError AS err NAME 'Code';
+			SET err = 'GSS-422-002';
+		END IF;
+	ELSE
+		CREATE LASTCHILD OF refError AS err NAME 'Code';
+		SET err = 'GSS-415-001';
+	END IF;
+	RETURN TRUE;
+END;

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ComIbmCompute.msgnode="ComIbmCompute.msgnode" xmlns:ComIbmMQInput.msgnode="ComIbmMQInput.msgnode" xmlns:ComIbmMQOutput.msgnode="ComIbmMQOutput.msgnode" xmlns:ComIbmTrace.msgnode="ComIbmTrace.msgnode" xmlns:ComIbmWSInput.msgnode="ComIbmWSInput.msgnode" xmlns:ComIbmWSReply.msgnode="ComIbmWSReply.msgnode" xmlns:ComIbmWSRequest.msgnode="ComIbmWSRequest.msgnode" xmlns:common_BackendInput_Log.subflow="common/BackendInput_Log.subflow"
+    xmlns:common_Backend_Output_Log.subflow="common/Backend_Output_Log.subflow" xmlns:common_InputMQ_Log.subflow="common/InputMQ_Log.subflow" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:eflow="http://www.ibm.com/wbi/2005/eflow" xmlns:utility="http://www.ibm.com/wbi/2005/eflow_utility" nsURI="PhoneProcessing/com/gruposancorseguros/flow/PhoneProcessing.msgflow" nsPrefix="PhoneProcessing_com_gruposancorseguros_flow_PhoneProcessing.msgflow">
+  <eClassifiers xmi:type="eflow:FCMComposite" name="FCMComposite_1">
+    <eSuperTypes href="http://www.ibm.com/wbi/2005/eflow#//FCMBlock"/>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.Token" name="Token" defaultValueLiteral="eyAndXNlcmNvZGUnOiAnY2FmZXJyZXlyYScsICd1c2VybmFtZSc6ICdCVVAnLCAncGFzc3dvcmQnOiAnMEQ5NEM4NjEtREZENy00MUMwLTk1NjItQUVEQjlGQzJFOTlBJyB9">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="Property.TopMsgError" name="TopMsgError" lowerBound="1" defaultValueLiteral="400">
+      <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <translation xmi:type="utility:TranslatableString" key="PhoneProcessing" bundleName="PhoneProcessing/com/gruposancorseguros/flow/PhoneProcessing" pluginId="PhoneProcessing"/>
+    <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/PhoneProcessing/icons/full/obj16/PhoneProcessing.gif"/>
+    <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/PhoneProcessing/icons/full/obj30/PhoneProcessing.gif"/>
+    <composition>
+      <nodes xmi:type="ComIbmMQInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_2" location="23,84" queueName="BUP_PhoneMassive" destinationQueueManagerName="GSS_PERSON_AND_ORGANIZATION_QMGR" messageDomainProperty="XMLNSC">
+        <translation xmi:type="utility:ConstantString" string="MQ Input"/>
+      </nodes>
+      <nodes xmi:type="common_InputMQ_Log.subflow:FCMComposite_1" xmi:id="FCMComposite_1_3" location="98,84">
+        <translation xmi:type="utility:ConstantString" string="InputMQ_Log"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_4" location="182,80" dataSource="BUP_DS" computeExpression="esql://routine/PhoneProcessing.com.gruposancorseguros.flow#PhoneProcessing_ReqGetPerson.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="ReqGetPerson"/>
+      </nodes>
+      <nodes xmi:type="common_BackendInput_Log.subflow:FCMComposite_1" xmi:id="FCMComposite_1_5" location="281,81" BACKEND_PROVIDER="PeopleAPI" OPERATION_NAME="SearchPersonData" ENDPOINT_NAME="https://internal-pro-rest.gruposancorseguros.com/apigss/pro-lan/people/data">
+        <translation xmi:type="utility:ConstantString" string="PersonApi"/>
+      </nodes>
+      <nodes xmi:type="ComIbmWSRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_6" location="360,81" URLSpecifier="https://internal-pro-rest.gruposancorseguros.com/apigss/pro-lan/people/data" httpMethod="GET" httpVersion="1.1" protocol="TLSv1.2" messageDomainProperty="JSON">
+        <translation xmi:type="utility:ConstantString" string="PersonAPI"/>
+      </nodes>
+      <nodes xmi:type="common_Backend_Output_Log.subflow:FCMComposite_1" xmi:id="FCMComposite_1_8" location="446,82">
+        <translation xmi:type="utility:ConstantString" string="Backend_Output_Log"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_9" location="591,74" dataSource="BUP_DS" computeExpression="esql://routine/PhoneProcessing.com.gruposancorseguros.flow#PhoneProcessing_SavePerson.Main" computeMode="destinationAndMessage">
+        <translation xmi:type="utility:ConstantString" string="SavePerson"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_10" location="710,188" dataSource="BUP_DS" computeExpression="esql://routine/PhoneProcessing.com.gruposancorseguros.flow#PhoneProcessing_FailPerson.Main" computeMode="destinationAndMessage">
+        <translation xmi:type="utility:ConstantString" string="FailPerson"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_11" location="39,194" dataSource="BUP_DS" computeExpression="esql://routine/PhoneProcessing.com.gruposancorseguros.flow#PhoneProcessing_CreatePhone.Main" computeMode="destinationAndMessage">
+        <translation xmi:type="utility:ConstantString" string="CreatePhone"/>
+      </nodes>
+      <nodes xmi:type="common_BackendInput_Log.subflow:FCMComposite_1" xmi:id="FCMComposite_1_12" location="125,196" BACKEND_PROVIDER="PhonesAPI" OPERATION_NAME="CreatePhone" ENDPOINT_NAME="https://internal-pro-rest.gruposancorseguros.com/apigss/pro-lan/phones/datas">
+        <translation xmi:type="utility:ConstantString" string="PhoneApi"/>
+      </nodes>
+      <nodes xmi:type="ComIbmWSRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_13" location="227,197" URLSpecifier="https://internal-pro-rest.gruposancorseguros.com/apigss/pro-lan/phones/datas" httpVersion="1.1" protocol="TLSv1.2" messageDomainProperty="JSON">
+        <translation xmi:type="utility:ConstantString" string="PhoneAPI"/>
+      </nodes>
+      <nodes xmi:type="common_Backend_Output_Log.subflow:FCMComposite_1" xmi:id="FCMComposite_1_14" location="310,197">
+        <translation xmi:type="utility:ConstantString" string="Backend_Output_Log1"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_15" location="436,189" dataSource="BUP_DS" computeExpression="esql://routine/PhoneProcessing.com.gruposancorseguros.flow#PhoneProcessing_Final.Main" computeMode="destinationAndMessage">
+        <translation xmi:type="utility:ConstantString" string="Final"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_16" location="453,263" dataSource="BUP_DS" computeExpression="esql://routine/PhoneProcessing.com.gruposancorseguros.flow#PhoneProcessing_FailurePhoneApi.Main" computeMode="destinationAndMessage">
+        <translation xmi:type="utility:ConstantString" string="FailurePhoneApi"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_1" location="261,26" dataSource="BUP_DS" computeExpression="esql://routine/PhoneProcessing.com.gruposancorseguros.flow#PhoneProcessing_Compute.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="Final_Archivo"/>
+      </nodes>
+      <nodes xmi:type="ComIbmTrace.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_17" location="176,149" pattern="${Root}&#xD;&#xA;${LocalEnvironment}">
+        <translation xmi:type="utility:ConstantString" string="Trace"/>
+      </nodes>
+      <nodes xmi:type="ComIbmWSInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_18" location="22,273" URLSpecifier="/gss/people/cache">
+        <translation xmi:type="utility:ConstantString" string="HTTP Input"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_19" location="114,269" computeExpression="esql://routine/PhoneProcessing.com.gruposancorseguros.flow#PhoneProcessing_Compute1.Main">
+        <translation xmi:type="utility:ConstantString" string="Compute"/>
+      </nodes>
+      <nodes xmi:type="ComIbmWSReply.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_20" location="201,270">
+        <translation xmi:type="utility:ConstantString" string="HTTP Reply"/>
+      </nodes>
+      <nodes xmi:type="ComIbmTrace.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_22" location="597,188" pattern="${Root}">
+        <translation xmi:type="utility:ConstantString" string="PP01"/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_7" location="347,26" dataSource="BUP_DS" computeExpression="esql://routine/PhoneProcessing.com.gruposancorseguros.flow#PhoneProcessing_SendQueueMail.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="SendQueueMail"/>
+      </nodes>
+      <nodes xmi:type="ComIbmMQOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_21" location="452,27" queueName="BUP_PhoneMassive_SendMail_IN" destinationQueueManagerName="GSS_PERSON_AND_ORGANIZATION_QMGR">
+        <translation xmi:type="utility:ConstantString" string="MQ Output"/>
+      </nodes>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_1" targetNode="FCMComposite_1_3" sourceNode="FCMComposite_1_2" sourceTerminalName="OutTerminal.failure" targetTerminalName="InTerminal.Input"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_4" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_3" sourceTerminalName="OutTerminal.Output1" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_5" targetNode="FCMComposite_1_5" sourceNode="FCMComposite_1_4" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.Input"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_6" targetNode="FCMComposite_1_8" sourceNode="FCMComposite_1_6" sourceTerminalName="OutTerminal.failure" targetTerminalName="InTerminal.Input"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_7" targetNode="FCMComposite_1_8" sourceNode="FCMComposite_1_6" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.Input1"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_8" targetNode="FCMComposite_1_8" sourceNode="FCMComposite_1_6" sourceTerminalName="OutTerminal.error" targetTerminalName="InTerminal.Input2"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_9" targetNode="FCMComposite_1_9" sourceNode="FCMComposite_1_8" sourceTerminalName="OutTerminal.Output" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_12" targetNode="FCMComposite_1_11" sourceNode="FCMComposite_1_9" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in">
+        <bendPoints>26,34,576,-81</bendPoints>
+        <bendPoints>-572,34,-27,-82</bendPoints>
+      </connections>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_13" targetNode="FCMComposite_1_12" sourceNode="FCMComposite_1_11" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.Input"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_14" targetNode="FCMComposite_1_14" sourceNode="FCMComposite_1_13" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.Input1"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_15" targetNode="FCMComposite_1_14" sourceNode="FCMComposite_1_13" sourceTerminalName="OutTerminal.failure" targetTerminalName="InTerminal.Input"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_16" targetNode="FCMComposite_1_14" sourceNode="FCMComposite_1_13" sourceTerminalName="OutTerminal.error" targetTerminalName="InTerminal.Input2"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_17" targetNode="FCMComposite_1_15" sourceNode="FCMComposite_1_14" sourceTerminalName="OutTerminal.Output" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_18" targetNode="FCMComposite_1_16" sourceNode="FCMComposite_1_14" sourceTerminalName="OutTerminal.Output1" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_19" targetNode="FCMComposite_1_16" sourceNode="FCMComposite_1_14" sourceTerminalName="OutTerminal.Output2" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_23" targetNode="FCMComposite_1_6" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.Output" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_24" targetNode="FCMComposite_1_17" sourceNode="FCMComposite_1_12" sourceTerminalName="OutTerminal.Output" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_25" targetNode="FCMComposite_1_13" sourceNode="FCMComposite_1_17" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_26" targetNode="FCMComposite_1_19" sourceNode="FCMComposite_1_18" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_27" targetNode="FCMComposite_1_20" sourceNode="FCMComposite_1_19" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_30" targetNode="FCMComposite_1_1" sourceNode="FCMComposite_1_4" sourceTerminalName="OutTerminal.out1" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_31" targetNode="FCMComposite_1_22" sourceNode="FCMComposite_1_8" sourceTerminalName="OutTerminal.Output1" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_32" targetNode="FCMComposite_1_10" sourceNode="FCMComposite_1_22" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_33" targetNode="FCMComposite_1_22" sourceNode="FCMComposite_1_8" sourceTerminalName="OutTerminal.Output2" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_10" targetNode="FCMComposite_1_7" sourceNode="FCMComposite_1_1" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_21" targetNode="FCMComposite_1_21" sourceNode="FCMComposite_1_7" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_2" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_2" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+    </composition>
+    <propertyOrganizer>
+      <propertyDescriptor groupName="Group.Basic" configurable="true" userDefined="true" describedAttribute="Property.Token">
+        <propertyName xmi:type="utility:TranslatableString" key="Property.Token" bundleName="PhoneProcessing/com/gruposancorseguros/flow/PhoneProcessing" pluginId="PhoneProcessing"/>
+        <propertyDescriptor groupName="Group.Basic" configurable="true" userDefined="true" describedAttribute="Property.TopMsgError">
+          <propertyName xmi:type="utility:TranslatableString" key="Property.TopMsgError" bundleName="PhoneProcessing/com/gruposancorseguros/flow/PhoneProcessing" pluginId="PhoneProcessing"/>
+        </propertyDescriptor>
+      </propertyDescriptor>
+    </propertyOrganizer>
+    <stickyBoard/>
+  </eClassifiers>
+</ecore:EPackage>

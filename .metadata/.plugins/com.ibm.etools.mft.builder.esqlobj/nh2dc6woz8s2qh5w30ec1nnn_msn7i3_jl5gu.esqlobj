@@ -1,0 +1,18 @@
+CREATE FUNCTION Canonical_BUP (IN table CHARACTER, IN CanonicalCode INT) RETURNS CHARACTER
+BEGIN
+    DECLARE query CHARACTER 
+        'SELECT Name FROM BUP.Bup.' || table || ' WITH (NOLOCK)'
+        || ' WHERE CanonicalCode = ' || CAST(CanonicalCode AS CHARACTER);
+
+    DECLARE result Character;
+
+    SET result.Data[] = PASSTHRU(query);
+
+    IF result IS NULL THEN
+        THROW USER EXCEPTION MESSAGE 502 
+        VALUES('No se pudo homologar el valor canónico ' || CAST(CanonicalCode AS CHARACTER) || ' en la tabla ' || table || '.');
+    END IF;
+
+    RETURN result;
+
+END;

@@ -1,0 +1,13 @@
+CREATE COMPUTE MODULE DataQueuePhone_MapServ
+
+    CREATE FUNCTION Main() RETURNS BOOLEAN
+    BEGIN
+ -- 	IF CONTAINS(InputRoot.HTTPInputHeader."X-Original-HTTP-Command", 'POST')
+--			AND InputLocalEnvironment.HTTP.Input.Path.Segment[3] = 'phone' THEN
+			SET OutputRoot.JSON.Data.success = TRUE;
+---		END IF;
+        
+        RETURN TRUE;
+    END;
+
+END MODULE;

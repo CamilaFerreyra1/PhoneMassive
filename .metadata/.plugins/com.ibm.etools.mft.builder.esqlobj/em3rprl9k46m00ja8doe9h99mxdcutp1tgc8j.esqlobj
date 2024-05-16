@@ -1,0 +1,74 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		CREATE FIELD Environment.Variables;
+		SET Environment.TransactionId	    				= UUIDASCHAR;
+		SET Environment.Variables.Orchestration_ID			= COALESCE(InputRoot.HTTPInputHeader.Transactionid, Environment.TransactionId);
+		SET TransactionID									= Environment.TransactionId;  --??
+		
+		--Se agrega para mapeo header salida
+		SET Environment.Variables.InputHeader = InputRoot.HTTPInputHeader;
+		
+		SET Environment.Variables.REST 		= TRUE;
+		SET Environment.Variables.RESTAPI 	= TRUE;
+		
+		SET Environment.Variables.MandatoryCoreId = mandatoryCoreId; --ver si no es necesario.
+		--Se agrega validación de Authorization obligatorio.
+		--Se agrega validación de RoleId opcional y int positivo.
+		--Se agrega validación de ExternalApplicationId opcional y int positivo.
+		CALL ValidateHeaderV2(InputRoot, Environment.Variables);
+		
+		SET Environment.Variables.Authorization = InputRoot.HTTPInputHeader.Authorization;
+		
+		IF EXISTS(Environment.Variables.ErrorHeader.Code[]) THEN
+			THROW USER EXCEPTION;
+		ELSE
+			IF EXISTS(InputLocalEnvironment.HTTP.Input.QueryString[]) THEN
+				CALL CheckFieldRepetitionsQueryString(InputLocalEnvironment.HTTP.Input.QueryString, Environment.Variables);
+			ELSE
+				CALL CheckFieldRepetitionsJSON(InputRoot.JSON.Data, Environment.Variables);
+			END IF;
+			IF EXISTS(Environment.Variables.ErrorCodes.Code[]) THEN
+				THROW USER EXCEPTION;
+			END IF;
+			SET OutputRoot = InputRoot;
+			
+-------------MessageContext-------------------------------------------------------------------------------------------------------------
+			
+			SET Environment.Variables[1] ='BUSINESSENTITYDEF';
+			SET Environment.Variables[2] ='BUSINESSENTITYID';
+			SET Environment.Variables[3] ='PROCESSDEF';
+			SET Environment.Variables[4] ='PROCESSINSTANCEID';
+			SET Environment.Variables[5] ='ACTIVITYDEF';
+			SET Environment.Variables[6] ='ACTIVITYSTATUS'; 
+			
+			SET Environment.Variables[7] ='PROCESSDEFINITIONID';
+			SET Environment.Variables[8] ='PROCESSINSTANCEID';
+			SET Environment.Variables[9] ='ACTIVITYDEFINITIONID';
+			SET Environment.Variables[10] ='ACTIVITYSTATUSID';
+		
+			--Environment vacio hasta el momento
+--			FOR P AS Environment.Properties[] DO
+--				DECLARE A ROW;
+--			
+--				SET A.key = P;
+--				SET A.value = InputRoot.HTTPInputHeader.{P};
+--				
+--				CREATE LASTCHILD OF refHeader.messageContext NAME 'property' VALUE A;
+--			END FOR;
+			
+----------------------------------------------------------------------------------------------------------------------------------------
+			
+			SET OutputLocalEnvironment = InputLocalEnvironment;
+		END IF;
+		
+		SET Environment.Variables.Service_Name 	= InputRoot.HTTPInputHeader."X-Original-HTTP-Command";
+		SET Environment.Variables.UserName		= COALESCE(InputRoot.HTTPInputHeader.Username, 'NULL');
+		SET Environment.Variables.IP 			= InputRoot.HTTPInputHeader."X-Remote-Addr";
+		DECLARE operationString CHARACTER '/';
+		FOR path AS InputLocalEnvironment.HTTP.Input.Path.Segment[] DO
+			SET operationString = operationString || path || '/';
+		END FOR;
+		SET Environment.Variables.Operation_Name = operationString;
+		
+		RETURN TRUE;
+	END;

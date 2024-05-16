@@ -1,0 +1,7 @@
+CREATE PROCEDURE MapeoCabeceraExitoREST(IN refOutputHeader REFERENCE, IN refInHeader REFERENCE)
+BEGIN
+	SET refOutputHeader.systemId		=	refInHeader.systemId;
+	SET refOutputHeader.messageId		=	refInHeader.messageId;
+	SET refOutputHeader.timestamp		=	CURRENT_TIMESTAMP;
+	SET refOutputHeader.statusCode		=	'Success';
+END;

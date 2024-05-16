@@ -1,0 +1,21 @@
+CREATE PROCEDURE InsertIntoProcessResults(IN refParams REFERENCE)
+BEGIN
+	DECLARE insertProcessResult ROW;
+	SET insertProcessResult.result[] = PASSTHRU('INSERT INTO BUP.PhoneMassiveProcessResult 
+            (ProcessId, ID, PersonId, PhoneId, TributaryCodeTypeId, TributaryCodeNumber,
+            DocumentTypeId, DocumentNumber, FullName, AreaCode, PhoneNumber, PhoneTypeId,
+            PersonSpreadable, Orden, Error, PhoneIdBUP, ProcessDate)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+			VALUES (refParams.ProcessId, refParams.messageId, refParams.PersonId,
+					refParams.PhoneId, refParams.TributaryCodeType, refParams.TributaryCode,
+          	 	 	refParams.documentType, refParams.documentNum, refParams.registeredName,
+          	 	 	refParams.AreaCode, refParams.Phone, refParams.PhoneCodeType,
+          	 	 	refParams.PersonSpreadable, refParams.Orden, refParams.Error,
+          	 	 	refParams.PhoneId, refParams.Timestamp));
+			
+			/*
+VALUES (RefEnv.ProcessId, Environment.Variables.messageId,'0','0',RefEnv.TributaryCodeType,RefEnv.TributaryCode,
+ 	 	RefEnv.documentType,RefEnv.documentNum,RefEnv.registeredName,Environment.Variables.AreaCode,Environment.Variables.Phone,
+	  	Environment.Variables.PhoneCodeType,Null,Null,RefEnv.Error,Null,Current_timeStamp));
+          	*/
+END;

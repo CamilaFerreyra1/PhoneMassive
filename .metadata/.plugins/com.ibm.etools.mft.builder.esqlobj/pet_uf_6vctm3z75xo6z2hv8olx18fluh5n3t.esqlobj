@@ -1,0 +1,37 @@
+CREATE FUNCTION NotIntQueryString(IN ref REFERENCE, IN option BOOLEAN, IN refError REFERENCE) RETURNS BOOLEAN 
+BEGIN
+    DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+    DECLARE err REFERENCE TO refError.Code;
+
+    IF (UPPER(ref) = 'NULL' OR TRIM(ref) = '') AND option = TRUE THEN
+    	CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-415-001';
+    	RETURN TRUE;
+    ELSEIF (UPPER(ref) = 'NULL' OR TRIM(ref) = '') AND option = FALSE THEN
+    	CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+    	RETURN TRUE;
+    END IF;
+    ------
+    IF ref IS NULL THEN
+        IF option = FALSE THEN
+        	CREATE LASTCHILD OF refError AS err NAME 'Code' VALUE 'GSS-422-002';
+        ELSE
+            CREATE LASTCHILD OF refError AS err NAME 'Code' VALUE 'GSS-415-001';
+        END IF;
+        RETURN TRUE;
+    ELSE
+        IF LENGTH(TRANSLATE(ref, '0123456789-', '')) = 0 THEN
+            IF ref = '-' THEN
+                CREATE LASTCHILD OF refError AS err NAME 'Code' VALUE 'GSS-422-002';
+            ELSEIF CONTAINS(SUBSTRING(ref FROM 2), '-') THEN
+                CREATE LASTCHILD OF refError AS err NAME 'Code' VALUE 'GSS-422-002';
+            ELSEIF ref <> CAST(CAST(ref AS INTEGER) AS CHARACTER) THEN 
+            	CREATE LASTCHILD OF refError AS err NAME 'Code' VALUE 'GSS-422-002';
+            ELSE
+                RETURN FALSE;
+            END IF;
+        ELSE
+            CREATE LASTCHILD OF refError AS err NAME 'Code' VALUE 'GSS-422-002';
+        END IF;
+    END IF;
+    RETURN TRUE;
+END;

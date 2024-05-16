@@ -1,0 +1,17 @@
+CREATE COMPUTE MODULE ErrorTranslate_ErrorResponse
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsGenErrorTranslateRes NAMESPACE 'http://gruposancorseguros.com/ents/SOI/MessageSvc/GenericErrorTranslate/response';
+		DECLARE nsMessageTranslateRes NAMESPACE 'http://gruposancorseguros.com/ents/SOI/MessageSvc/MessageTranslate/response';
+		DECLARE errors REFERENCE TO Environment.Variables.ErrorCodeRes.Code[1];
+		IF EXISTS(InputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsGenErrorTranslateRes:GenericErrorTranslateResponse[]) THEN
+			CREATE LASTCHILD OF Environment.Variables.ErrorCodeRes AS errors NAME 'Code';
+			SET errors = InputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsGenErrorTranslateRes:GenericErrorTranslateResponse;
+		ELSEIF EXISTS(InputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsMessageTranslateRes:MessageTranslateResponse[]) THEN
+			CREATE LASTCHILD OF Environment.Variables.ErrorCodeRes AS errors NAME 'Code';
+			SET errors = InputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsMessageTranslateRes:MessageTranslateResponse;
+		END IF;
+		RETURN FALSE;
+	END;
+END MODULE;

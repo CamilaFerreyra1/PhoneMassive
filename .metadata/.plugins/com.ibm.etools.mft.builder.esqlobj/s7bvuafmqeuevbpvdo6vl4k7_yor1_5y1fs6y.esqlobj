@@ -1,0 +1,83 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		SET OutputRoot.XMLNSC = InputRoot.DataObject[1];
+		SET Environment.TransactionId 	= UUIDASCHAR;
+							
+		SET Environment.Variables.Properties 		= InputRoot.Properties;
+		SET Environment.Variables.MQMD 				= InputRoot.MQMD;
+		SET Environment.Variables.MQRFH2 			= InputRoot.MQRFH2;
+		SET Environment.Variables.XMLNSC 			= InputRoot.XMLNSC;	
+		SET Environment.Variables.Operation_Name 	= ApplicationLabel;
+		SET Environment.Variables.Service_Name		= CAST (BrokerName AS CHARACTER) || '/' || CAST( ExecutionGroupLabel AS CHARACTER) || '/' || CAST (ApplicationLabel AS CHARACTER);
+		SET Environment.Variables.UserName		 	= BrokerUserId;
+		SET	Environment.TransactionId 	= UUIDASCHAR;
+		
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_DEF = '' THEN
+			SET	Environment.Variables.Bussiness_DEF					= ' ';
+		ELSE
+			SET Environment.Variables.Bussiness_DEF					= BUSINESS_ENTITY_DEF;
+			BEGIN  
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_DEF					= EVAL (BUSINESS_ENTITY_DEF);
+			END;
+		END IF;
+		
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_ID = '' THEN
+			SET	Environment.Variables.Bussiness_ID			= ' ';
+		ELSE 	
+			SET Environment.Variables.Bussiness_ID			= BUSINESS_ENTITY_ID;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_ID			= EVAL(BUSINESS_ENTITY_ID);
+			END;
+		END IF;
+		
+		SET Environment.Variables.Orchestration_ID  	= Environment.TransactionId ;
+----------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------		
+		IF PROCESS_DEF = NULL OR PROCESS_DEF = '' THEN
+			SET	Environment.Variables.PROCESS_DEF			= ' ';
+		ELSE 	
+			SET Environment.Variables.PROCESS_DEF			= PROCESS_DEF;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.PROCESS_DEF			= EVAL(PROCESS_DEF);
+			END;
+		END IF;
+		
+		IF PROCESS_INSTANCE_ID = NULL OR PROCESS_INSTANCE_ID = '' THEN
+			SET	Environment.Variables.PROCESS_INSTANCE_ID			= ' ';
+		ELSE 	
+			SET Environment.Variables.PROCESS_INSTANCE_ID			= PROCESS_INSTANCE_ID;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.PROCESS_INSTANCE_ID			= EVAL(PROCESS_INSTANCE_ID);
+			END;
+		END IF;
+	
+		IF ACTIVITY_DEF = NULL OR ACTIVITY_DEF = '' THEN
+			SET	Environment.Variables.ACTIVITY_DEF			= ' ';
+		ELSE 	
+			SET Environment.Variables.ACTIVITY_DEF			= ACTIVITY_DEF;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.ACTIVITY_DEF			= EVAL(ACTIVITY_DEF);
+			END;
+		END IF;
+		
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;

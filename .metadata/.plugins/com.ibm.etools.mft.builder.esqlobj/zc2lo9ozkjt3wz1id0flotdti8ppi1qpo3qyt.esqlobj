@@ -1,0 +1,30 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		
+		SET Environment.TransactionId	    				= COALESCE(InputRoot.SOAP.*:Header.*:requestHeader.messageId,UUIDASCHAR);
+		SET Environment.Variables.Orchestration_ID			= Environment.TransactionId;
+		SET TransactionID									= Environment.TransactionId;
+		SET Environment.Variables.Service_Name 				= SUBSTRING(SUBSTRING(InputRoot.HTTPInputHeader."X-Original-HTTP-Command" AFTER ' ') BEFORE ' ');
+		SET Environment.Variables.Operation_Name			= InputRoot.SOAP.*:Context.*:operation;
+		SET Environment.Variables.ClientIP					= InputRoot.HTTPInputHeader."X-Remote-Addr";
+		SET Environment.Variables.UserName 					= COALESCE(InputRoot.SOAP.*:Header.*:requestHeader.userName,'NULL');
+		SET Environment.Variables.systemId 					= InputRoot.SOAP.*:Header.*:requestHeader.systemId;
+		
+		FOR M as InputRoot.XMLNSC.*:*.*:Header.*:requestHeader.messageContext.*[] do
+			DECLARE Key CHARACTER UPPER (M.key);
+			DECLARE Value CHARACTER M.value;
+			
+			IF Key IS NOT NULL AND NOT TRIM(Key) = '' THEN
+                SET Environment.Variables.{Key} = Value;
+			END IF;
+
+		END FOR;
+		
+		CALL validateHeader(InputRoot, Environment.Variables);
+		IF EXISTS(Environment.Variables.ErrorHeader.GenericError[]) THEN
+			THROW USER EXCEPTION;
+		END IF;
+		SET OutputRoot = InputRoot;
+		SET OutputLocalEnvironment = InputLocalEnvironment;	
+		RETURN TRUE;
+	END;

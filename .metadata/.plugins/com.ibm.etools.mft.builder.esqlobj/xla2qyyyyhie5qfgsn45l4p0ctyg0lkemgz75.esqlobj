@@ -1,0 +1,11 @@
+CREATE PROCEDURE ResponseRest(IN outputRestRef REFERENCE, IN refResponseCode REFERENCE)
+BEGIN
+	SET outputRestRef.paging.offset = 1;
+	SET outputRestRef.paging.limit = 1;
+	SET outputRestRef.paging.total 	= 1;
+	SET outputRestRef.messages.message.status 	= COALESCE(refResponseCode.Status, '');
+	SET outputRestRef.messages.message.code 	= refResponseCode.Code;
+	SET outputRestRef.messages.message.text 	= refResponseCode.Message;
+	SET outputRestRef.messages.message.help 	= COALESCE(refResponseCode.Detail, '');
+	SET outputRestRef.messages TYPE = JSON.Array;
+END;

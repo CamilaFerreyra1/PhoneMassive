@@ -1,0 +1,28 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		
+		
+		SET OutputRoot.HTTPInputHeader.Authorization = 'Bearer '|| InputRoot.JSON.Data."access_token";----Token generado en la api anterior
+		SET OutputLocalEnvironment.Destination.HTTP.RequestURL = UpdateURL || CAST(Environment.Variables.Metadata.Auth0 AS CHARACTER);----Se concatena Auth0 a modificar a la url
+		SET OutputLocalEnvironment.Destination.HTTP.RequestLine.Method = 'PATCH';
+		
+		SET OutputRoot.JSON.Data."app_metadata"."PersonBupId"  = CAST(Environment.Variables.Metadata.PersonBupId AS CHARACTER);
+		SET OutputRoot.JSON.Data."app_metadata"."TimeClientId" = CAST(Environment.Variables.Metadata.TimeClientId AS CHARACTER);
+		
+		RETURN TRUE;
+		
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;

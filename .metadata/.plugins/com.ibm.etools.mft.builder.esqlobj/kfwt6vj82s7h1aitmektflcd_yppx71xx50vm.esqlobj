@@ -1,0 +1,55 @@
+CREATE COMPUTE MODULE Backend_Input_BD_Log_LogHandler_Backend
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+					
+					
+					
+					
+		IF EXISTS (InputRoot.XMLNSC.LogMsg[]) THEN
+			SET OutputRoot.XMLNSC = InputRoot.XMLNSC;
+			RETURN TRUE;
+		END IF;
+		
+		
+		
+					
+		DECLARE nss NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/SecurityTypes';
+		DECLARE nssm NAMESPACE 'http://GrupoSancorSeguros/xsd/service/SecuritySvcMsg';
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+		SET Environment.Variables.Backend_Provider 	= 	BACKEND_PROVIDER;
+        SET Environment.Variables.Endpoint_Name 	= 	ENDPOINT_NAME;
+        SET Environment.Variables.Backend_Operation	= 	OPERATION_NAME;
+        SET Environment.Variables.Bussiness_DEF		=	COALESCE(Environment.Variables.Bussiness_DEF,BUSINESS_ENTITY_DEF);
+        SET Environment.Variables.Bussiness_ID		=	COALESCE(Environment.Variables.Bussiness_ID,BUSINESS_ENTITY_ID);
+		
+		CREATE LASTCHILD OF OutputRoot.XMLNSC.LogMsg DOMAIN 'XMLNSC' NAME 'MESSAGE';
+			
+		SET OutputRoot.XMLNSC.LogMsg.MESSAGE	= InputRoot.XMLNSC;
+			
+		SET OutputRoot.XMLNSC.LogMsg.FILTRO_BROKER					= TRIM(BrokerName);
+		SET OutputRoot.XMLNSC.LogMsg.TRANSACTION_ID 				= Environment.TransactionId;
+		SET OutputRoot.XMLNSC.LogMsg.SERVICE_NAME 					= Environment.Variables.Service_Name;
+		SET OutputRoot.XMLNSC.LogMsg.USER_NAME 						= Environment.Variables.UserName;
+		SET OutputRoot.XMLNSC.LogMsg.TIMESTAMP 						= CURRENT_TIMESTAMP;
+		SET OutputRoot.XMLNSC.LogMsg.DIRECTION 						= 'BACKEND_REQUEST_BD';
+		SET OutputRoot.XMLNSC.LogMsg.BACKENDPROVIDER 				= Environment.Variables.BD;
+		SET OutputRoot.XMLNSC.LogMsg.ENDPOINT_NAME 					= Environment.Variables.DATA_SOURCE;
+		SET OutputRoot.XMLNSC.LogMsg.OPERATION_NAME 				= Environment.Variables.SP_NAME;
+
+		SET OutputRoot.XMLNSC.LogMsg.APPOWNER 						= BrokerName;
+		SET OutputRoot.XMLNSC.LogMsg.IP 							= Environment.Variables.ClientIP;
+		SET OutputRoot.XMLNSC.LogMsg.SERVICE_OPERATION_NAME 		= Environment.Variables.Operation_Name;
+		SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_DEF			= Environment.Variables.Bussiness_DEF;
+		SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_ID	 			= Environment.Variables.Bussiness_ID;
+		SET OutputRoot.XMLNSC.LogMsg.ORCHESTRATION_ID	 			= Environment.Variables.Orchestration_ID;
+		
+		SET OutputRoot.XMLNSC.LogMsg.PROCESS_DEF 					= COALESCE(Environment.Variables.PROCESS_DEF,Environment.Variables.PROCESSDEFINITIONID);
+		SET OutputRoot.XMLNSC.LogMsg.PROCESS_INSTANCE_ID	 		= COALESCE(Environment.Variables.PROCESS_INSTANCE_ID,Environment.Variables.PROCESSINSTANCEID);
+		SET OutputRoot.XMLNSC.LogMsg.ACTIVITY_DEF	 				= COALESCE(Environment.Variables.ACTIVITY_DEF,Environment.Variables.ACTIVITYDEFINITIONID);
+		SET OutputRoot.XMLNSC.LogMsg.ACTIVITY_STATUS	 			= '0';
+
+		RETURN TRUE;
+
+	END;
+
+END MODULE;

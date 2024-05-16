@@ -1,0 +1,34 @@
+CREATE PROCEDURE NotBooleanJSONv2(IN ref REFERENCE, IN option BOOLEAN, IN refError REFERENCE) RETURNS BOOLEAN
+BEGIN
+    DECLARE empty CHAR '';
+    IF ref IS NULL THEN
+        IF option THEN
+            CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-415-001';
+            RETURN TRUE;
+        ELSE
+            CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+            RETURN TRUE;
+        END IF;
+    ELSE
+        IF TRIM(CAST(ref AS CHAR)) = empty THEN
+            CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+            RETURN TRUE;
+        ELSE
+	        DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+	        DECLARE auxRow ROW;
+            IF (ref = 0 OR ref = 1) AND NotIntJSON(ref, TRUE, auxRow) IS NOT TRUE THEN
+                IF ref = 1 THEN
+                    SET ref = TRUE;
+                ELSE
+                    SET ref = FALSE;
+                END IF;
+                RETURN FALSE;
+            END IF;
+            IF IsBool(ref)THEN
+                RETURN FALSE;
+            END IF;
+            CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+            RETURN TRUE;
+        END IF;
+    END IF;
+END;

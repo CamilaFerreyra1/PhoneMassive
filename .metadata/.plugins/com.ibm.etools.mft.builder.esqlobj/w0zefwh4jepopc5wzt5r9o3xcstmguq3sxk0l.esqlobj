@@ -1,0 +1,26 @@
+CREATE PROCEDURE MapeaBodyError(IN pfaultCode CHARACTER, IN pfaultActor CHARACTER, IN pfaulString CHARACTER, IN prefOutBody REFERENCE)
+    BEGIN
+    /****************************************************************************
+     * Procedimiento que completa los campos del body con los valores
+     *      correspondientes a una excepcion de negocio.
+     * IN pfaultCode: faultcode del backend
+     * IN pfaultActor: faultactor del backend
+     * IN pfaultString: faultstring del backend
+     * IN prefOutHeader:    Referencia al SOAP Body de salida
+     *****************************************************************************/
+        DECLARE nsSoap                              NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+        DECLARE nsError                             NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Err/v1.0';
+        
+        SET prefOutBody.nsSoap:Fault.faultcode = 'SOA-GSS-9999';
+        SET prefOutBody.nsSoap:Fault.faultstring = 'System General Error';
+        
+        --Mapeo body
+        CREATE FIELD prefOutBody.nsSoap:Fault.detail.nsError:businessFault.nsError:errorDetail;
+        DECLARE refOutBodyError REFERENCE TO prefOutBody.nsSoap:Fault.detail.nsError:businessFault.nsError:errorDetail;
+         
+        SET refOutBodyError.nsError:errorCode = pfaultCode;
+        SET refOutBodyError.nsError:errorType = pfaultActor;
+        SET refOutBodyError.nsError:errorDesc = pfaulString;
+        SET refOutBodyError.nsError:rootCause = 'Error Response from Backend';
+    
+    END;

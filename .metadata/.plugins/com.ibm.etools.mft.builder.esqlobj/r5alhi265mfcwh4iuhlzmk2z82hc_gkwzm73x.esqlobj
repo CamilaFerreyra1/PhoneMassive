@@ -1,0 +1,18 @@
+CREATE COMPUTE MODULE LogHandler_Backend_Input_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+				
+		SET Environment.LogMsg.TRANSACTION_ID = Environment.TransactionId;
+		SET Environment.LogMsg.SERVICE_NAME = '';
+		SET Environment.LogMsg.OPERATION_NAME = '';
+		
+		SET Environment.LogMsg.TRANSACTION_STATE = 'Backend_Request';
+		SET Environment.LogMsg.TIMESTAMP = CURRENT_TIMESTAMP;
+		SET Environment.LogMsg.MSG = InputRoot.XMLNSC;	
+		
+		SET OutputRoot.XMLNSC.LogMsg = Environment.LogMsg;
+			
+		RETURN TRUE;
+	END;
+
+END MODULE;

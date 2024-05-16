@@ -1,0 +1,21 @@
+CREATE PROCEDURE GetLastExceptionDetailDBInput(IN InputTree reference,OUT messageNumber CHARACTER,OUT messageText CHARACTER)   
+    /****************************************************************************
+     * A procedure that will get the details of the last exception from a message
+     * IN InputTree:  The incoming exception list
+     * OUT messageNumber:  The last message number.
+     * OUT messageText: The last message text.
+     *****************************************************************************/
+   BEGIN
+    -- Create a reference to the first child of the exception list
+    declare ptrException reference to InputTree.*[1];
+    -- keep looping while the moves to the child of exception list work 
+    WHILE lastmove(ptrException) DO
+        -- store the current values for the error number and text
+        IF ptrException.Number is not null THEN
+            SET messageNumber = ptrException.Number;
+            SET messageText = ptrException.Text;
+        END IF;
+        -- now move to the last child which should be the next exceptionlist
+        move ptrException lastchild;
+    END WHILE; 
+   END;

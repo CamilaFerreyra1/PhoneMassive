@@ -1,0 +1,22 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		--Decode Authorization y parseo a JSON
+		DECLARE decoded BLOB BASE64DECODE(Environment.Variables.Authorization);	
+		CREATE LASTCHILD OF Environment.Variables.AuthorizationDecode DOMAIN('JSON') PARSE(decoded);
+		
+		SET Environment.Variables.UserData.UserName = Environment.Variables.AuthorizationDecode.JSON.Data.userName;
+		SET Environment.Variables.UserData.BupId	= Environment.Variables.AuthorizationDecode.JSON.Data.bupId;
+		
+		--Obtengo el token que le corresponde a ese usuario
+		DECLARE rowToken ROW;
+		SET rowToken.info[] = PASSTHRU('SELECT EdgeToken FROM ArgChannelsInt.EdgeToken WHERE ApplicationId = ? AND PortalUser = ?' VALUES(Environment.Variables.ApplicationId, Environment.Variables.UserData.UserName));
+		
+		SET OutputRoot.HTTPRequestHeader = InputRoot.HTTPRequestHeader;
+		--Mapeo token directamente al root
+		SET OutputRoot.HTTPRequestHeader.Authorization = 'Bearer ' || rowToken.info.EdgeToken;
+
+		SET OutputRoot.JSON = InputRoot.JSON;
+		SET OutputLocalEnvironment = InputLocalEnvironment;
+
+		RETURN TRUE;
+	END;

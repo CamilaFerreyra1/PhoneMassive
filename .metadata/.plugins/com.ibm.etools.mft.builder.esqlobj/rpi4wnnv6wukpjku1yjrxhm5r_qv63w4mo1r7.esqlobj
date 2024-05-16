@@ -1,0 +1,38 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		IF EXISTS (InputRoot.BLOB.BLOB[]) THEN
+			CREATE LASTCHILD OF OutputRoot DOMAIN('JSON') PARSE(InputRoot.BLOB.BLOB);
+		ELSE
+			SET OutputRoot.JSON.Data = InputRoot.JSON.Data;
+		END IF;
+
+		DECLARE RefEnv REFERENCE TO Environment.Variables.XMLNSC.Msg.MessageHeader;
+		DECLARE refError REFERENCE TO OutputRoot.JSON.Data;
+		
+		DECLARE errorMessage CHARACTER concatedErrors(refError.messages.Item[1], 400);
+		
+		CALL SumValueItem(RefEnv.messageId, 'numPhoneNOTForged',cacheCount.Data[1]);
+
+        DECLARE insertValuesProcessResult ROW;
+		CREATE FIELD insertValuesProcessResult.values;
+		
+		SET insertValuesProcessResult.values.ProcessId		= RefEnv.ProcessId;
+		SET insertValuesProcessResult.values.messageId		= RefEnv.batchId;
+		SET insertValuesProcessResult.values.PersonId		= RefEnv.bupId;
+		SET insertValuesProcessResult.values.TributaryCodeType	= RefEnv.TributaryCodeType;
+		SET insertValuesProcessResult.values.TributaryCode	= RefEnv.TributaryCodeNumber;
+		SET insertValuesProcessResult.values.DocumentType	= RefEnv.documentType;
+		SET insertValuesProcessResult.values.DocumentNum	= RefEnv.DocumentNumber;
+		SET insertValuesProcessResult.values.FullName	= RefEnv.FullName;
+		SET insertValuesProcessResult.values.AreaCode		= RefEnv.AreaCode;
+		SET insertValuesProcessResult.values.Phone			= RefEnv.Phone;
+		SET insertValuesProcessResult.values.PhoneCodeType	= NULLIF(CAST(RefEnv.PhoneTypeId AS CHARACTER DEFAULT ''), '');
+		SET insertValuesProcessResult.values.Error			= errorMessage;
+		SET insertValuesProcessResult.values.Timestamp		= TimestampToString(CAST(CURRENT_TIMESTAMP AS CHARACTER));
+		
+		CALL InsertIntoProcessResults(insertValuesProcessResult.values);
+		COMMIT;
+		
+		RETURN FALSE;
+	END;
+

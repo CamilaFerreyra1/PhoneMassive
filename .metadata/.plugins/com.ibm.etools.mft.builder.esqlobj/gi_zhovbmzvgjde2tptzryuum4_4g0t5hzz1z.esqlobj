@@ -1,0 +1,67 @@
+CREATE COMPUTE MODULE SuccessTranslate_BuildReq
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		IF EXISTS(Environment.Variables.AlreadySucces[]) THEN
+			SET Environment.Variables.SuccessCodeRes = Environment.Variables.AlreadySucces;
+			RETURN FALSE;
+		END IF;
+		
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsCommon NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Commons/v1.0';
+		DECLARE nsMsgTrasReq NAMESPACE 'http://gruposancorseguros.com/ents/SOI/MessageSvc/MessageTranslate/request';
+		CREATE FIELD OutputRoot.SOAP.Header.nsCommon:requestHeader;
+		CREATE FIELD OutputRoot.SOAP.Body.nsMsgTrasReq:MessageTranslateRequest.IIBMessageCode;
+		
+		/*
+		IF      CONTAINS(Environment.Variables.Service_Name, 'ss10674')
+			OR 	CONTAINS(Environment.Variables.Service_Name, 'iib-dev')	THEN
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10674.sancorseguros.net:7817/Gss/Person/Process/MessageSvc';
+        ELSEIF  CONTAINS(Environment.Variables.Service_Name, 'ss10675')
+        	OR 	CONTAINS(Environment.Variables.Service_Name, 'iib-tst') THEN
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10675.sancorseguros.net:7801/Gss/Person/Process/MessageSvc';
+        ELSEIF  CONTAINS(Environment.Variables.Service_Name, 'ss10746')
+        	OR 	CONTAINS(Environment.Variables.Service_Name, 'ss10985')
+        	OR	CONTAINS(Environment.Variables.Service_Name, 'iib-pre') THEN
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10746.sancorseguros.net:7086/Gss/Person/Process/MessageSvc';
+        ELSE 
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10766.sancorseguros.net:7086/Gss/Person/Process/MessageSvc';
+        END IF;
+        */
+        
+		IF NOT EXISTS(InputRoot.JSON.Data.*[1].*[]) THEN
+		
+		SET Environment.Variables.NotEmptyResponse = FALSE;
+		----Para backends que responden vacío
+			--Si StatusCode204 viene true, posteriormente se va a setear al HTTPStatusCode el 204, lo que genera un response vacío
+			SET Environment.Variables.StatusCode204 = COALESCE(Environment.Variables.StatusCode204, FALSE);
+			IF Environment.Variables.StatusCode204 IS TRUE THEN
+				SET Environment.Variables.GenericEmptyResponse = FALSE;
+			ELSE 
+				SET Environment.Variables.GenericEmptyResponse = TRUE;
+			END IF;
+			SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[1].key	= 'ApplicationId'; 
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[1].value 	= Environment.Variables.ApplicationId;
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[2].key 	= 'CompanyCode';
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[2].value 	= Environment.Variables.CompanyCode;
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[3].key 	= 'ClientTypeId';
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[3].value 	= Environment.Variables.ClientTypeId;
+	        IF EXISTS(Environment.Variables.RoleId[]) THEN
+		        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[4].key 	= 'RoleId';
+		        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[4].value = Environment.Variables.RoleId;
+        	END IF;
+			SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsMsgTrasReq:MessageTranslateRequest.IIBMessageCode = COALESCE(Environment.Variables.DifferentSuccessCode,'GSS-204-002');
+		ELSE
+			SET Environment.Variables.NotEmptyResponse = TRUE;
+			SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[1].key	= 'ApplicationId'; 
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[1].value 	= Environment.Variables.ApplicationId;
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[2].key 	= 'CompanyCode';
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[2].value 	= Environment.Variables.CompanyCode;
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[3].key 	= 'ClientTypeId';
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[3].value 	= Environment.Variables.ClientTypeId;
+		----Environment reservado por si necesito en alguna operación en particular mapear un código success diferente al genérico. Caso null mapeo el 200-002
+			SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsMsgTrasReq:MessageTranslateRequest.IIBMessageCode = COALESCE(Environment.Variables.DifferentSuccessCode, 'GSS-200-002');
+		END IF;
+		RETURN TRUE;
+	END;
+END MODULE;

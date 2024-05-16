@@ -1,0 +1,35 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN 
+		--Genero JSON con scopes
+		CREATE FIELD OutputRoot.JSON.Data.scopes;
+		CASE GWModule
+		WHEN 'pc' THEN
+			SET OutputRoot.JSON.Data.scopes."pc.service.edge.user.behalf" = Environment.Variables.GetGWCredentials.Result.UserName;
+			SET OutputRoot.JSON.Data.scopes."pc.service.edge.user.authorities" = Environment.Variables.GetGWCredentials.Result.Scopes;
+		WHEN 'bc' THEN
+			SET OutputRoot.JSON.Data.scopes."bc.service.edge.user.behalf" = Environment.Variables.GetGWCredentials.Result.UserName;
+			SET OutputRoot.JSON.Data.scopes."bc.service.edge.user.authorities" = Environment.Variables.GetGWCredentials.Result.Scopes;
+		WHEN 'cc' THEN
+			SET OutputRoot.JSON.Data.scopes."cc.service.edge.user.behalf" = Environment.Variables.GetGWCredentials.Result.UserName;
+			SET OutputRoot.JSON.Data.scopes."cc.service.edge.user.authorities" = Environment.Variables.GetGWCredentials.Result.Scopes;
+		WHEN 'ab' THEN
+			SET OutputRoot.JSON.Data.scopes."ab.service.edge.user.behalf" = Environment.Variables.GetGWCredentials.Result.UserName;
+			SET OutputRoot.JSON.Data.scopes."ab.service.edge.user.authorities" = Environment.Variables.GetGWCredentials.Result.Scopes;
+		ELSE
+			CREATE LASTCHILD OF Environment.Variables.ErrorCodes NAME 'Code' VALUE 'GSS-500-003';
+			THROW USER EXCEPTION;
+		END CASE;
+		
+		DECLARE jsonToChar CHAR CAST(ASBITSTREAM(OutputRoot.JSON.Data.scopes) AS CHAR CCSID 1208); 	
+		
+		DELETE FIELD OutputRoot.JSON.Data;
+		
+		--Mapeo token directamente al root backupeado.
+		SET OutputRoot.HTTPRequestHeader = Environment.Variables.GwRequest.Header;
+		SET OutputRoot.HTTPRequestHeader.Authorization = 'Bearer ' || InputRoot.JSON.Data.id_token;			--Token de Edge generado por auth0. Se agrega GSS_Ditigal a pedido de Dami Longoni.
+		SET OutputRoot.HTTPRequestHeader.GWUserContext = BASE64ENCODE(jsonToChar);									--JSON con datos de los scopes encodeados.
+		SET OutputRoot.JSON.Data = Environment.Variables.GwRequest.Body;
+		--Libero el environment de backup
+		DELETE FIELD Environment.Variables.GwRequest;
+		RETURN TRUE;
+	END;

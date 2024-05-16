@@ -1,0 +1,52 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		SET OutputRoot = InputRoot;
+		SET OutputExceptionList = InputExceptionList;
+		
+		CREATE LASTCHILD OF OutputRoot.XMLNSC.LogMsg DOMAIN 'XMLNSC' NAME 'MESSAGE';
+        SET OutputRoot.XMLNSC.LogMsg.MESSAGE.ns85:Envelope.ns85:Header    	= InputRoot.SOAP.Header;
+        SET OutputRoot.XMLNSC.LogMsg.MESSAGE.ns85:Envelope.ns85:Body    	= InputRoot.SOAP.Body;
+        SET Environment.Variables.InputFallido                  			= CAST(ASBITSTREAM(OutputRoot.XMLNSC.LogMsg.MESSAGE [<])   AS CHARACTER CCSID 819);
+--   	SET Environment.Variables.InputFallido 			= CAST(ASBITSTREAM(InputRoot.XMLNSC)   AS CHARACTER CCSID 819);
+
+		SET Environment.TransactionId 					= COALESCE(Environment.TransactionId, InputRoot.SOAP.Header.*:requestHeader.messageId, UUIDASCHAR); 
+		SET Environment.Variables.Operation_Name		= InputRoot.SOAP.Context.operation;
+		SET Environment.Variables.UserName 				= COALESCE(InputRoot.SOAP.Header.*:requestHeader.userName, 'NULL');
+		SET Environment.Variables.systemId 				= InputRoot.SOAP.Header.*:requestHeader.systemId;
+		SET Environment.Service.Operation.NameFallido 	= FIELDVALUE (InputLocalEnvironment.Destination.RouterList.DestinationData.labelName);
+		SET Environment.Variables.Orchestration_ID		= COALESCE(Environment.Variables.Orchestration_ID, UUIDASCHAR);
+		SET Environment.Variables.Service_Name			= COALESCE(Environment.Variables.Service_Name,SUBSTRING(SUBSTRING(InputRoot.HTTPInputHeader."X-Original-HTTP-Command" AFTER ' ') BEFORE ' '));
+		SET Environment.Variables.IP 					= COALESCE(InputRoot.HTTPInputHeader."X-Remote-Addr", Environment.Variables.IP);
+		
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_DEF = '' THEN
+			SET	Environment.Variables.Bussiness_DEF					= COALESCE(InputRoot.SOAP.Header.*:requestHeader.Bussiness_DEF, 'NULL');
+		ELSE
+			SET Environment.Variables.Bussiness_DEF					= BUSINESS_ENTITY_DEF;
+			BEGIN  
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_DEF				= EVAL (BUSINESS_ENTITY_DEF);
+					
+				END;
+		END IF;
+		
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_ID = '' THEN
+			SET	Environment.Variables.Bussiness_ID			= COALESCE(InputRoot.SOAP.Header.*:requestHeader.Bussiness_ID, 'NULL');
+		ELSE 	
+			SET Environment.Variables.Bussiness_ID			= BUSINESS_ENTITY_ID;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_ID		= EVAL(BUSINESS_ENTITY_ID);
+			END;
+		END IF;
+		
+		FOR M as InputRoot.XMLNSC.*:*.*:Header.*:requestHeader.messageContext.*[] do
+			DECLARE Key CHARACTER UPPER (M.key);
+			DECLARE Value CHARACTER M.value;
+			
+			IF Key IS NOT NULL AND NOT TRIM(Key) = '' THEN
+                SET Environment.Variables.{Key} = Value;
+			END IF;
+		END FOR;
+
+		RETURN TRUE;
+	END;

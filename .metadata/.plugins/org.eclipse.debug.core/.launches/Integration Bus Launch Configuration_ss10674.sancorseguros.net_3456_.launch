@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="com.ibm.etools.mft.debug.internal.mbLaunchConfigurationDelegate">
+<stringAttribute key="BRName" value="GSS_PERSON_AND_ORGANIZATION"/>
+<stringAttribute key="ConnectionInfo" value="ss10674.sancorseguros.net:4415"/>
+<stringAttribute key="EGName" value="OPERATIONS_BUP_ONLINE"/>
+<stringAttribute key="com.ibm.etools.mft.debug.attr_hostname" value="ss10674.sancorseguros.net"/>
+<stringAttribute key="com.ibm.etools.mft.debug.attr_javaportname" value="3456"/>
+</launchConfiguration>

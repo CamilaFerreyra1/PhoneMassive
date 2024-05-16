@@ -1,0 +1,12 @@
+CREATE PROCEDURE CheckFieldRepetitionsJSON(IN refRoot REFERENCE, IN refEnv REFERENCE)
+BEGIN
+	FOR field AS refRoot.*[] DO
+		IF FIELDTYPE(field) <> 50331648 THEN
+			CALL CheckFieldRepetitionsJSON(field, refEnv);
+		END IF;
+		SET refEnv.Repeated.Fields[] = SELECT ITEM P FROM refRoot.*[] AS P WHERE FIELDNAME(P) = FIELDNAME(field);
+		IF FIELDTYPE(refRoot) <> 16781312 AND CARDINALITY(refEnv.Repeated.Fields[]) > 1 THEN
+			CREATE LASTCHILD OF refEnv.ErrorCodes NAME 'Code' VALUE 'GSS-400-003';
+		END IF;
+	END FOR;
+END;

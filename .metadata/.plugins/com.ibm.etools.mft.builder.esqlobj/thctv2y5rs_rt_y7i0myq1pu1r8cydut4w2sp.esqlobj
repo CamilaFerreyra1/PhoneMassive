@@ -1,0 +1,67 @@
+CREATE PROCEDURE ValidateHeaderV2(IN refRoot REFERENCE, IN refEnv REFERENCE)
+BEGIN
+	----Validación de header REST (pensado también para SOAP) -> A implementar en el proximo release de los componentes comunes.
+	SET refEnv.ApplicationId = CAST(				
+                                              COALESCE (THE (select ITEM P.value from refRoot.SOAP.Header.*:requestHeader.messageContext.property[]
+                                                        as P where P.key = 'ApplicationId'),refRoot.HTTPInputHeader.Applicationid)
+                                              AS CHARACTER);
+    SET refEnv.CompanyCode   = CAST(
+                                              COALESCE (THE (select ITEM P.value from refRoot.SOAP.Header.*:requestHeader.messageContext.property[]
+                                                        as P where P.key = 'CompanyCode') ,refRoot.HTTPInputHeader.Companycode) 
+                                              AS CHARACTER);
+    SET refEnv.ClientTypeId  = CAST(
+                                              COALESCE (THE (select ITEM P.value from refRoot.SOAP.Header.*:requestHeader.messageContext.property[]
+                                                        as P where P.key = 'ClientTypeId') , refRoot.HTTPInputHeader.Clienttypeid )
+                                              AS CHARACTER);
+    SET refEnv.RoleId  = CAST(
+                                              COALESCE (THE (select ITEM P.value from refRoot.SOAP.Header.*:requestHeader.messageContext.property[]
+                                                        as P where P.key = 'RoleId') , refRoot.HTTPInputHeader.Roleid )
+                                              AS CHARACTER);    
+	SET refEnv.Authorization = refRoot.HTTPInputHeader.Authorization;
+    
+    SET refEnv.ExternalApplicationId  = CAST(
+                                              COALESCE (THE (select ITEM P.value from refRoot.SOAP.Header.*:requestHeader.messageContext.property[]
+                                                        as P where P.key = 'ExternalApplicationId') , refRoot.HTTPInputHeader.Externalapplicationid )
+                                              AS CHARACTER);
+                                              
+	SET refEnv.CoreId  = CAST(
+                                              COALESCE (THE (select ITEM P.value from refRoot.SOAP.Header.*:requestHeader.messageContext.property[]
+                                                        as P where P.key = 'CoreId') , refRoot.HTTPInputHeader.Coreid )
+                                              AS CHARACTER); 
+                                              
+	DECLARE applicationId 			INTEGER CAST(refEnv.ApplicationId AS INTEGER DEFAULT NULL);
+	DECLARE companyCode				INTEGER CAST(refEnv.CompanyCode AS INTEGER DEFAULT NULL); 
+	DECLARE roleId					INTEGER CAST(refEnv.RoleId AS INTEGER DEFAULT NULL); 
+	DECLARE externalApplicationId	INTEGER CAST(refEnv.ExternalApplicationId AS INTEGER DEFAULT NULL); 
+	DECLARE coreId					INTEGER CAST(refEnv.CoreId AS INTEGER DEFAULT NULL); 
+	
+--    DECLARE clientTypeId	INTEGER CAST(refEnv.ClientTypeId AS INTEGER DEFAULT NULL);
+   
+    DECLARE errors REFERENCE TO refEnv.ErrorHeader.Code;
+        
+    IF 	LENGTH(refEnv.ApplicationId) = 0 OR refEnv.ApplicationId IS NULL OR UPPER(refEnv.ApplicationId) = 'NULL' OR
+    	LENGTH(refEnv.CompanyCode) = 0 OR refEnv.CompanyCode IS NULL OR UPPER(refEnv.CompanyCode) = 'NULL' OR
+    	LENGTH(refEnv.ClientTypeId) = 0 OR refEnv.ClientTypeId IS NULL  OR UPPER(refEnv.ClientTypeId) = 'NULL' OR
+    	LENGTH(refEnv.Authorization) = 0 OR refEnv.Authorization IS NULL OR UPPER(refEnv.Authorization) = 'NULL' OR
+    	(refEnv.MandatoryCoreId IS TRUE AND (LENGTH(refEnv.CoreId) = 0 OR refEnv.CoreId IS NULL OR UPPER(refEnv.CoreId) = 'NULL')) THEN
+    	
+    	CREATE LASTCHILD OF refEnv.ErrorHeader AS errors NAME 'Code';
+    	SET errors.ErrorCode = 'GSS-415-001';
+    	SET errors.ErrorHelp = 'Faltan parámetros de entrada obligatorios.';
+    	SET errors.ErrorText = 'Error de esquema.';
+    END IF;
+    
+    IF 	(applicationId IS NULL OR CAST(applicationId AS CHARACTER) <> refEnv.ApplicationId) AND refEnv.ApplicationId IS NOT NULL AND refEnv.ApplicationId <> '' AND UPPER(refEnv.ApplicationId) <> 'NULL' OR applicationId < 0 OR
+    	(companyCode IS NULL OR CAST(companyCode AS CHARACTER) <> refEnv.CompanyCode) AND refEnv.CompanyCode IS NOT NULL AND refEnv.CompanyCode <> '' AND UPPER(refEnv.CompanyCode) <> 'NULL' OR companyCode < 0  OR
+    	refEnv.ClientTypeId NOT IN('1', '2', '3') AND refEnv.ClientTypeId IS NOT NULL AND refEnv.ClientTypeId <> '' AND UPPER(refEnv.ClientTypeId) <> 'NULL' OR
+    	(roleId IS NULL OR CAST(roleId AS CHARACTER) <> refEnv.RoleId) AND refEnv.RoleId IS NOT NULL AND refEnv.RoleId <> '' OR roleId < 0 OR refEnv.RoleId = '' OR 
+    	(externalApplicationId IS NULL OR CAST(externalApplicationId AS CHARACTER) <> refEnv.ExternalApplicationId) AND refEnv.ExternalApplicationId IS NOT NULL AND refEnv.ExternalApplicationId <> '' OR externalApplicationId < 0 OR refEnv.ExternalApplicationId = '' OR 
+    	(refEnv.MandatoryCoreId IS FALSE AND ((coreId IS NULL OR CAST(coreId AS CHARACTER) <> refEnv.CoreId) AND refEnv.CoreId IS NOT NULL AND refEnv.CoreId <> '' OR coreId < 0 OR refEnv.CoreId = '')) OR refEnv.MandatoryCoreId IS TRUE AND((coreId IS NULL OR CAST(coreId AS CHARACTER) <> refEnv.CoreId) AND refEnv.CoreId IS NOT NULL AND refEnv.CoreId <> '' AND UPPER(refEnv.CoreId) <> 'NULL' OR coreId < 0)
+    	THEN
+    	
+    	CREATE LASTCHILD OF refEnv.ErrorHeader AS errors NAME 'Code';
+    	SET errors.ErrorCode = 'GSS-422-002';
+    	SET errors.ErrorHelp = 'Parámetros de entrada con valores incorrectos.';
+    	SET errors.ErrorText = 'Error de esquema.';
+    END IF;
+END;

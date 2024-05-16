@@ -1,0 +1,21 @@
+CREATE PROCEDURE NotStringJSON(IN ref REFERENCE, IN option BOOLEAN, IN refError REFERENCE) RETURNS BOOLEAN
+BEGIN 
+	DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+    IF ref IS NULL OR TRIM(ref) = '' OR UPPER(ref) = 'NULL' THEN
+    	IF option THEN
+        	CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-415-001';
+    	ELSE
+    		CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+    	END IF;
+        RETURN TRUE;
+    END IF;
+    
+    IF ref IS NOT NULL THEN
+        IF(IsString(ref)) THEN
+            RETURN FALSE;
+        END IF; 
+    END IF;
+    
+    CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+    RETURN TRUE;
+END;

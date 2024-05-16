@@ -1,0 +1,123 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_DEF = ''  THEN
+			SET	Environment.Variables.Bussiness_DEF					= COALESCE(Environment.Variables.Bussiness_DEF,InputRoot.XMLNSC.*[>].MessageHeader.Bussiness_DEF,'NULL');
+		ELSE
+			SET Environment.Variables.Bussiness_DEF					= BUSINESS_ENTITY_DEF;
+			BEGIN  
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_DEF				= EVAL (BUSINESS_ENTITY_DEF);
+					
+				END;
+		END IF;
+		
+		IF BUSINESS_ENTITY_ID = NULL OR BUSINESS_ENTITY_ID = ''  THEN
+			SET	Environment.Variables.Bussiness_ID			= COALESCE(Environment.Variables.Bussiness_ID,InputRoot.XMLNSC.*[>].MessageHeader.Bussiness_ID,'NULL');
+		ELSE 	
+			SET Environment.Variables.Bussiness_ID			= BUSINESS_ENTITY_ID;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_ID		= EVAL(BUSINESS_ENTITY_ID);
+			END;
+		END IF;
+		
+		IF PROCESS_DEF = NULL OR PROCESS_DEF = '' THEN
+			SET	Environment.Variables.PROCESS_DEF			= ' ';
+		ELSE 	
+			SET Environment.Variables.PROCESS_DEF			= PROCESS_DEF;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.PROCESS_DEF			= EVAL(PROCESS_DEF);
+			END;
+		END IF;
+		
+		IF PROCESS_INSTANCE_ID = NULL OR PROCESS_INSTANCE_ID = '' THEN
+			SET	Environment.Variables.PROCESS_INSTANCE_ID			= ' ';
+		ELSE 	
+			SET Environment.Variables.PROCESS_INSTANCE_ID			= PROCESS_INSTANCE_ID;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.PROCESS_INSTANCE_ID			= EVAL(PROCESS_INSTANCE_ID);
+			END;
+		END IF;
+	
+		IF ACTIVITY_DEF = NULL OR ACTIVITY_DEF = '' THEN
+			SET	Environment.Variables.ACTIVITY_DEF			= ' ';
+		ELSE 	
+			SET Environment.Variables.ACTIVITY_DEF			= ACTIVITY_DEF;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.ACTIVITY_DEF			= EVAL(ACTIVITY_DEF);
+			END;
+		END IF;
+		
+		
+		SET Environment.Variables.Orchestration_ID  	= COALESCE(InputRoot.XMLNSC.*[>].MessageHeader.messageId,InputRoot.XMLNSC.*[>].MessageHeader.UUID,InputRoot.XMLNSC.*:*.OrchestrationId, ' ');
+			
+		
+		DECLARE strErrNumber CHARACTER;
+		DECLARE strErrText CHARACTER;
+		CALL GetLastExceptionDetailDBInput(InputExceptionList,strErrNumber,strErrText);
+	
+		--Guardo datos de la excepcion en el Environment para uso posterior
+		SET Environment.Variables.ExceptionNumber 				= strErrNumber;
+		SET Environment.Variables.ExceptionText 				= strErrText;
+		SET Environment.Variables.ExceptionList 				= InputExceptionList; 
+		
+		SET Environment.Variables.Properties 					= InputRoot.Properties;
+		SET Environment.Variables.MQMD 							= InputRoot.MQMD;
+		SET Environment.Variables.MQRFH2 						= InputRoot.MQRFH2;
+		
+		SET Environment.Variables.XMLNSC 						= '<MESSAGE>INVALID MESSAGE</MESSAGE>';	
+		BEGIN  
+			DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+			SET Environment.Variables.XMLNSC 		= InputRoot.XMLNSC;	
+		END;
+			
+			
+		SET Environment.Variables.Operation_Name 				= InputRoot.MQMD.SourceQueue;
+		SET Environment.Variables.Name			    			= TRIM(InputRoot.MQMD.ReplyToQMgr) || '/' || CAST( ExecutionGroupLabel AS CHARACTER) || '/' || CAST (ApplicationLabel AS CHARACTER);
+	 	SET	Environment.TransactionId 							= COALESCE(InputRoot.XMLNSC.*[>].MessageHeader.UUID,Environment.TransactionId,UUIDASCHAR);
+		 	
+	 	SET OutputRoot.XMLNSC.ErrorMsg.FILTRO_BROKER 			= TRIM(BrokerName);
+		SET OutputRoot.XMLNSC.ErrorMsg.TRANSACTION_ID 			= Environment.TransactionId;
+		SET OutputRoot.XMLNSC.ErrorMsg.SERVICE_NAME 			= TRIM(InputRoot.MQMD.ReplyToQMgr) || '/' || CAST( ExecutionGroupLabel AS CHARACTER) || '/' || CAST (ApplicationLabel AS CHARACTER);
+		SET OutputRoot.XMLNSC.ErrorMsg.OPERATION_NAME 			= InputRoot.MQMD.SourceQueue;
+		SET OutputRoot.XMLNSC.ErrorMsg.USER_NAME 		    	= InputRoot.MQMD.UserIdentifier;
+			
+		IF (CONTAINS(Environment.Service.Name,'InAppSvc')		= TRUE) THEN	
+			SET OutputRoot.XMLNSC.ErrorMsg.SECURITY_GROUP 		= Environment.BackupHeader.*:HeaderInfo_Internal.*:SecurityGroup;
+		ELSEIF (EXISTS (Environment.SecurityGroup[])) THEN
+			SET OutputRoot.XMLNSC.ErrorMsg.SECURITY_GROUP 		= Environment.SecurityGroup;
+		ELSE
+			SET OutputRoot.XMLNSC.ErrorMsg.SECURITY_GROUP 		= NULL;
+		END IF;
+		SET OutputRoot.XMLNSC.ErrorMsg.ERROR_NUMBER 			= 'ERROR_NUMBER=' || CAST(strErrNumber AS CHARACTER);
+		SET OutputRoot.XMLNSC.ErrorMsg.ERROR_TEXT 				= strErrText;
+		SET OutputRoot.XMLNSC.ErrorMsg.ERROR_LABEL 				= SUBSTRING(InputExceptionList.RecoverableException.Label FROM 1 FOR 300);
+		SET OutputRoot.XMLNSC.ErrorMsg.ERROR_TIMESTAMP 			= CURRENT_TIMESTAMP;
+		SET OutputRoot.XMLNSC.ErrorMsg.EXCEPTION_LIST 			= InputExceptionList;
+		SET OutputRoot.XMLNSC.ErrorMsg.DATETIME		 			= CURRENT_TIMESTAMP;
+		SET OutputRoot.XMLNSC.ErrorMsg.DIRECTION 				= 'ERROR';
+		SET OutputRoot.XMLNSC.ErrorMsg.APPOWNER 				= BrokerName;
+		SET OutputRoot.XMLNSC.ErrorMsg.BACKENDPROVIDER 			= InputRoot.MQMD.SourceQueue;
+		SET OutputRoot.XMLNSC.ErrorMsg.IP 						= NULL;
+		SET OutputRoot.XMLNSC.ErrorMsg.ENDPOINT_NAME 			= NULL;
+		SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_INPUT 		= Environment.Variables.XMLNSC;
+		SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT 		= NULL;		
+		SET OutputRoot.XMLNSC.ErrorMsg.BACKEND_OPERATION_NAME 	= ' ';
+		SET OutputRoot.XMLNSC.ErrorMsg.BUSINESS_ENTITY_DEF	 	= Environment.Variables.Bussiness_DEF;
+		SET OutputRoot.XMLNSC.ErrorMsg.BUSINESS_ENTITY_ID	 	= Environment.Variables.Bussiness_ID;
+		SET OutputRoot.XMLNSC.ErrorMsg.ORCHESTRATION_ID	 		= Environment.Variables.Orchestration_ID;
+		
+		SET OutputRoot.XMLNSC.ErrorMsg.PROCESS_DEF 				= COALESCE(Environment.Variables.PROCESS_DEF,Environment.Variables.PROCESSDEFINITIONID);
+		SET OutputRoot.XMLNSC.ErrorMsg.PROCESS_INSTANCE_ID	 	= COALESCE(Environment.Variables.PROCESS_INSTANCE_ID,Environment.Variables.PROCESSINSTANCEID);
+		SET OutputRoot.XMLNSC.ErrorMsg.ACTIVITY_DEF	 			= COALESCE(Environment.Variables.ACTIVITY_DEF,Environment.Variables.ACTIVITYDEFINITIONID);
+		SET OutputRoot.XMLNSC.ErrorMsg.ACTIVITY_STATUS	 		= '1';
+		
+		
+		
+		RETURN TRUE;
+	 	
+	END;

@@ -1,0 +1,186 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		
+		DECLARE refIn REFERENCE TO InputRoot.XMLNSC.Msg;
+		DECLARE refEnv REFERENCE TO Environment.Variables;
+		
+		DECLARE crlf CHAR CAST(X'0D0A' AS CHAR CCSID 1208);
+		DECLARE utf8BOM CHAR CAST(X'EFBBBF' AS CHAR CCSID 1208);
+		DECLARE fileName CHARACTER TimestampToString(CAST(CURRENT_TIMESTAMP AS CHARACTER)) || '_' ||
+																	 refIn.MessageHeader.batchId || '.txt';
+		
+		DECLARE queryResultFound ROW;
+		DECLARE countItems INTEGER 0;
+		DECLARE top INTEGER 100;
+		DECLARE toFileSystem BOOLEAN FALSE;
+		
+
+
+		SET Environment.Variables.SendEmail[] = PASSTHRU('SELECT ProcessId, TributaryCodeNumber, DocumentNumber, FullName,
+											    		PhoneNumber, PhoneTypeId, AreaCode, Error
+											    FROM BUP.PhoneMassiveProcessResult (NOLOCK)
+											    WHERE ID = ?' VALUES (refIn.MessageHeader.batchId));
+											    
+		SET toFileSystem = CARDINALITY(Environment.Variables.SendEmail[]) > 20000;
+		
+		DECLARE foundResults REFERENCE TO  Environment.Variables.SendEmail[1];
+
+		--Encabezado del mail 
+		DECLARE attachmentMessage CHARACTER utf8BOM || 'NOMBRE;TIPO DOCUMENTO;NRO DOCUMENTO;TIPO COD. TRIBUTARIO; COD. TRIBUTARIO;' ||
+													'NUM. TELEFONO;PERSONID;PHONEID; ERROR' || crlf;
+		
+		MOVE foundResults TO Environment.Variables.SendEmail.*[1];
+		
+		WHILE LASTMOVE(foundResults) DO
+				SET attachmentMessage = attachmentMessage || ConcatStringFound (	COALESCE(CAST(foundResults.FullName AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.DocumentTypeId AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.DocumentNumber AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.TributaryCodeTypeId AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.TributaryCodeNumber AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.PhoneNumber AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.PersonId AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.PhoneId AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.Error AS CHARACTER), ''));
+																					
+																				
+																		--			COALESCE(NULLIF(CAST(foundResults.OriginID AS CHARACTER), 'NULL'), ''));
+				SET countItems = countItems + 1;
+			
+			MOVE foundResults NEXTSIBLING;
+			DELETE PREVIOUSSIBLING OF foundResults;
+			
+			IF toFileSystem AND countItems = top THEN
+				SET OutputLocalEnvironment.Destination.File.Directory	= FileDirectory;
+				SET OutputLocalEnvironment.Destination.File.Name		= fileName;
+				SET OutputRoot.BLOB.BLOB = CAST(attachmentMessage AS BLOB CCSID 1208 ENCODING 546);
+				PROPAGATE TO TERMINAL 1;
+				
+				SET attachmentMessage = '';
+				SET countItems = 0;				
+			END IF;
+		END WHILE;
+		
+		IF toFileSystem AND countItems > 0 THEN
+			SET OutputLocalEnvironment.Destination.File.Directory	= FileDirectory;
+			SET OutputLocalEnvironment.Destination.File.Name		= fileName;
+			SET OutputRoot.BLOB.BLOB = CAST(attachmentMessage AS BLOB CCSID 1208  ENCODING 546);
+			PROPAGATE TO TERMINAL 1;
+			
+			SET attachmentMessage = '';
+			SET countItems = 0;
+		END IF;
+		
+
+		
+		IF toFileSystem THEN
+			SET OutputLocalEnvironment.Destination.File.Directory	= FileDirectory;
+			SET OutputLocalEnvironment.Destination.File.Name		= fileName;
+			SET OutputRoot.BLOB.BLOB = CAST(attachmentMessage AS BLOB CCSID 1208  ENCODING 546);
+			PROPAGATE TO TERMINAL 2;
+			
+			SET attachmentMessage = '';
+			SET countItems = 0;
+		END IF;
+		
+		
+		DECLARE DurationSeconds CHARACTER CAST(CAST(CAST(CAST(refIn.MessageHeader.Duration AS INTERVAL HOUR TO SECOND) AS INTERVAL SECOND) AS DECIMAL) AS CHARACTER) || ' segundos';
+		DECLARE EndTimeString CHARACTER CAST(CAST(REPLACE(refIn.MessageHeader.EndTime, 'T', ' ') AS TIMESTAMP) AS CHARACTER FORMAT 'yyyy-MM-dd HH:mm:ss');
+		DECLARE StartTimeString CHARACTER CAST(CAST(REPLACE(refIn.MessageHeader.StartTime, 'T', ' ') AS TIMESTAMP) AS CHARACTER FORMAT 'yyyy-MM-dd HH:mm:ss');
+		DECLARE msgBody CHARACTER ConcatMsgBody(StartTimeString, EndTimeString, DurationSeconds,
+			CAST(refIn.MessageHeader.TotalPerson AS CHARACTER),
+			CAST(refIn.MessageHeader.numPeopleFound AS CHARACTER),CAST(refIn.MessageHeader.numPeopleNOTFound AS CHARACTER),
+			CAST(refIn.MessageHeader.numPhoneForged AS CHARACTER),CAST(refIn.MessageHeader.numPhoneNOTForged AS CHARACTER));
+		
+		IF toFileSystem THEN
+			SET OutputLocalEnvironment.Destination.File.Directory	= FileDirectory;
+			SET OutputLocalEnvironment.Destination.File.Name		= fileName;
+			SET OutputRoot.BLOB.BLOB = CAST(attachmentMessage AS BLOB CCSID 1208  ENCODING 546);
+			PROPAGATE TO TERMINAL 1;
+			
+			SET attachmentMessage = '';
+			SET msgBody = msgBody || crlf || 'El archivo ' || fileName || ' está alojado en \\ss1039\Apps\BUP\PhoneProcessing\' || Environments;
+		END IF;
+
+		CREATE FIELD OutputRoot.EmailOutputHeader;
+		DECLARE refOutEmail REFERENCE TO OutputRoot.EmailOutputHeader;
+
+		SET refOutEmail.To = refIn.MessageHeader.EmailEntered;
+		SET refOutEmail.From = 'Comunicaciones@gruposancorseguros.com' ;
+		SET refOutEmail.Subject = 'Enriqucimiento de Telefonos - ' || refIn.MessageHeader.batchId;
+		
+		CREATE FIELD OutputRoot.MIME;
+		DECLARE mimeContent REFERENCE TO OutputRoot.MIME;
+		
+		CREATE FIELD mimeContent."Content-Type" VALUE 'multipart/related; boundary=myBoundary';
+		CREATE FIELD mimeContent."Content-ID" VALUE 'new MIME document';
+		
+		CREATE LASTCHILD OF mimeContent NAME 'Parts';
+		CREATE LASTCHILD OF mimeContent.Parts NAME 'Part';
+		DECLARE bodyContent REFERENCE TO mimeContent.Parts.Part;
+		
+		CREATE FIELD bodyContent."Content-Type" VALUE 'text/plain; charset=utf-8';
+		CREATE FIELD bodyContent."Content-Transfer-Encoding" VALUE 'base64';
+		
+		CREATE LASTCHILD OF bodyContent NAME 'Data';
+		CREATE LASTCHILD OF bodyContent.Data DOMAIN('BLOB') PARSE(CAST(BASE64ENCODE(msgBody) AS BLOB CCSID 1208));
+		
+		IF NOT toFileSystem THEN
+			CREATE LASTCHILD OF mimeContent.Parts NAME 'Part';
+			DECLARE attachmentContent REFERENCE TO mimeContent.Parts.Part[2];
+			
+			
+			CREATE FIELD attachmentContent."Content-Type" VALUE 'text/plain; charset=utf-8; name=' 
+																|| fileName;
+			CREATE FIELD attachmentContent."Content-Dispostion" VALUE 'attachment; filename="attachment.txt"';
+			CREATE FIELD attachmentContent."Content-Transfer-Encoding" VALUE '8bit';
+			CREATE LASTCHILD OF attachmentContent NAME 'Data';
+			CREATE LASTCHILD OF attachmentContent.Data DOMAIN('BLOB') PARSE(CAST(attachmentMessage AS BLOB CCSID 1208));
+		END IF;
+		
+		
+		PROPAGATE TO TERMINAL 0;
+		RETURN FALSE;
+	END;
+	
+	CREATE PROCEDURE ConcatMsgBody(IN StartTimeString CHARACTER, IN EndTimeString CHARACTER, 
+									IN DurationSeconds CHARACTER, IN TotalPerson CHARACTER, IN numPeopleFound CHARACTER,
+									IN numPeopleNOTFound CHARACTER, IN numPhoneForged CHARACTER, IN numPhoneNOTForged CHARACTER)
+	RETURNS CHARACTER
+	LANGUAGE JAVA
+	EXTERNAL NAME "com.gruposancorseguros.java.BupPhoneMassive.ConcatString.concatMsgBody";
+	
+	CREATE PROCEDURE ConcatStringFound(IN FullName CHARACTER, IN DocumentTypeId CHARACTER, IN DocumentNumber CHARACTER, 
+												IN TributaryCodeTypeId CHARACTER, IN tributaryCodeNumber CHARACTER, 
+												IN PhoneNumber CHARACTER, IN PersonId CHARACTER,
+												IN PhoneId CHARACTER, IN Error CHARACTER)
+	RETURNS CHARACTER
+	LANGUAGE JAVA
+	EXTERNAL NAME "com.gruposancorseguros.java.BupPhoneMassive.ConcatString.concatStringFound";
+	
+	
+--	CREATE FUNCTION TimestampToString (IN dateTime CHARACTER) RETURNS CHARACTER
+--	BEGIN
+--		DECLARE newDateTime CHARACTER dateTime;
+--		
+--		IF CONTAINS(newDateTime, 'TIMESTAMP') THEN
+--			SET newDateTime = SUBSTRING(newDateTime AFTER 'TIMESTAMP ');
+--		END IF;
+--		SET newDateTime	= SUBSTRING(newDateTime FROM 1 FOR 24);
+--		SET newDateTime	= REPLACE(newDateTime, '''', '');
+--		SET newDateTime	= REPLACE(newDateTime, ' ', 'T');
+--				RETURN newDateTime;
+--	END;
+--CREATE PROCEDURE UpdateCCMTables
+--(
+--IN StatusID CHAR,
+--IN LastModifiedDate TIMESTAMP,
+--IN EventIDCCMEvent CHAR,
+--IN Table CHAR
+--)
+--LANGUAGE DATABASE
+--EXTERNAL NAME "dbo.CCMUpdate";
+
+	CREATE PROCEDURE CountPerson_Phone 
+	(IN ID CHARACTER) RETURNS CHARACTER
+	LANGUAGE DATABASE
+	EXTERNAL NAME "dbo.ContabilizarTelefonos";

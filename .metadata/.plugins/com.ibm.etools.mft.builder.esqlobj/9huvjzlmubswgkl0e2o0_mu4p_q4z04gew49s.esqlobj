@@ -1,0 +1,65 @@
+CREATE COMPUTE MODULE InitialSubflow_PreparaSubflow
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+								
+		SET OutputRoot = InputRoot;
+		--Guardar Propiedades y el Mensaje Completo
+		CREATE FIELD Environment.Variables.MensajeCompleto;
+		CREATE FIELD Environment.Variables.Properties;
+		
+		IF EXISTS(Environment.Variables.JSON[]) THEN
+            SET OutputRoot.XMLNSC.LogMsg.MESSAGE    				= Environment.Variables.JSON;
+            SET Environment.Variables.LastInputBeforeError          = Environment.Variables.JSON;
+        ELSE
+            CREATE LASTCHILD OF Environment.Variables DOMAIN 'XMLNSC' NAME 'MensajeCompleto';
+			SET Environment.Variables.MensajeCompleto = InputRoot.XMLNSC;
+        END IF;
+
+		SET Environment.Variables.Properties = InputRoot.Properties;
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+						
+		SET Environment.TransactionId						= COALESCE(Environment.TransactionId,UUIDASCHAR); 
+		SET Environment.Variables.Service_Name 				= COALESCE(Environment.Variables.Service_Name,SUBSTRING(SUBSTRING(InputRoot.HTTPInputHeader."X-Original-HTTP-Command" AFTER ' ') BEFORE ' ')) ;
+		SET Service_Name									= Environment.Variables.Service_Name;	
+		SET Environment.Variables.Operation_Name			= COALESCE(Environment.Variables.Operation_Name,InputRoot.XMLNSC.*.Context.operation);
+		SET Operation_Name									= Environment.Variables.Operation_Name;
+		SET Environment.Variables.ClientIP					= COALESCE(Environment.Variables.ClientIP,InputRoot.HTTPInputHeader."X-Remote-Addr");
+		SET ClientIP										= Environment.Variables.ClientIP;
+		SET Environment.Variables.UserName 					= COALESCE(Environment.Variables.UserName,InputRoot.XMLNSC.*.Header.*:requestHeader.userName,'NULL');
+		SET Environment.Variables.systemId 					= COALESCE(Environment.Variables.systemId,InputRoot.XMLNSC.*.Header.*:requestHeader.systemId);
+		
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_DEF = '' THEN
+			SET	Environment.Variables.Bussiness_DEF					= COALESCE(Environment.Variables.Bussiness_DEF,InputRoot.XMLNSC.*:Envelope.*:Header.*:requestHeader.Bussiness_DEF,'NULL');
+		ELSE
+			SET Environment.Variables.Bussiness_DEF					= BUSINESS_ENTITY_DEF;
+			BEGIN  
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_DEF					= EVAL (BUSINESS_ENTITY_DEF);
+					
+				END;
+		END IF;
+		
+		IF BUSINESS_ENTITY_ID = NULL OR BUSINESS_ENTITY_ID = '' THEN
+			SET	Environment.Variables.Bussiness_ID			= COALESCE(Environment.Variables.Bussiness_ID,InputRoot.XMLNSC.*[>].MessageHeader.Bussiness_ID,'NULL');
+		ELSE 	
+			SET Environment.Variables.Bussiness_ID			= BUSINESS_ENTITY_ID;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_ID			= EVAL(BUSINESS_ENTITY_ID);
+			END;
+		END IF;
+		SET Environment.Variables.Orchestration_ID			= COALESCE(Environment.Variables.Orchestration_ID,InputRoot.XMLNSC.*:Envelope.*:Header.*:requestHeader.messageId,Environment.TransactionId);
+		
+		FOR M as InputRoot.XMLNSC.*:*.*:Header.*:requestHeader.messageContext.*[] do
+			DECLARE Key CHARACTER UPPER (M.key);
+			DECLARE Value CHARACTER M.value;
+			IF Value IS NOT NULL THEN
+				SET Environment.Variables.{Key}	= Value;
+			END IF;
+		END FOR;
+		
+		SET Environment.Variables.JSON = NULL;
+		
+		RETURN TRUE;
+	END;
+END MODULE;

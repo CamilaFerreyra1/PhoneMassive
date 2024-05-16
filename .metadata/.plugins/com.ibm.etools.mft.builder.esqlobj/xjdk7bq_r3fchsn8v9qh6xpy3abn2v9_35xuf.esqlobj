@@ -1,0 +1,8 @@
+CREATE FUNCTION InvalidMaxLength(IN field CHARACTER, IN maxLength INTEGER, IN refEnv REFERENCE) RETURNS BOOLEAN
+    BEGIN
+        IF LENGTH(field) > maxLength THEN
+            CREATE LASTCHILD OF refEnv NAME 'Code' VALUE 'GSS-422-002';
+            RETURN TRUE;
+        END IF;
+        RETURN FALSE;
+    END;

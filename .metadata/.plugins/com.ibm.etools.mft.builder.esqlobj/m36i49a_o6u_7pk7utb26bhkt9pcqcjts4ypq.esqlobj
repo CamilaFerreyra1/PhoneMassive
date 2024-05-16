@@ -1,0 +1,16 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+
+		SET Environment.LogMsg.TRANSACTION_ID = Environment.TransactionId;
+		SET Environment.LogMsg.SERVICE_NAME = Environment.Service.Name;
+		SET Environment.LogMsg.OPERATION_NAME = Environment.Service.Operation.Name;
+		
+		SET Environment.LogMsg.TRANSACTION_STATE = 'Request_OK';
+		SET Environment.LogMsg.TIMESTAMP = CURRENT_TIMESTAMP;
+		SET Environment.LogMsg.MSG = InputRoot.XMLNSC;	
+		
+		SET OutputRoot.XMLNSC.LogMsg = Environment.LogMsg;
+			
+		RETURN TRUE;
+	END;
+

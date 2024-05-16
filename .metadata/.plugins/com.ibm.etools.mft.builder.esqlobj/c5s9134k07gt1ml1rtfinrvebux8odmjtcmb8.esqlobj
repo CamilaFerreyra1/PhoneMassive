@@ -1,0 +1,7 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+--		DECLARE nsCommon NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Commons/v1.0';
+--		SET Environment.Variables.requestHeader = InputRoot.SOAP.Header.nsCommon:responseHeader;
+		--PREPARO MENSAJE A LOGUEAR.
+		RETURN FALSE;
+	END;

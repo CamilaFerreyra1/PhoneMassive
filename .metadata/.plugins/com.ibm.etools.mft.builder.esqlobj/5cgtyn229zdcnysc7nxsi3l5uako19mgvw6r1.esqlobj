@@ -1,0 +1,55 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+	        
+	        DECLARE ResultSpCount ROW; 
+			DECLARE PersonaEncontradaEnBup INTEGER;
+			DECLARE PersonaNoEncontradaEnBup INTEGER;
+			DECLARE TelefonosCreados INTEGER;
+			DECLARE TelefonosNoCreados INTEGER;
+			
+			CALL CountPerson_Phone(Environment.Variables.batchId, PersonasEncontradasEnBup, PersonasNoEncontradasEnBup,
+			TelefonosCreados, TelefonosNOCreados);
+
+--			CALL CountPerson_Phone(Environment.Variables.batchId, ResultSpCount.Result[]);
+			
+			SET PersonaEncontradaEnBup = CAST(SUBSTRING(ResultSpCount.Result BEFORE ',') AS INTEGER);
+			SET ResultSpCount.Result = SUBSTRING(ResultSpCount.Result AFTER ',' BEFORE LENGTH(Result));
+			SET PersonaNoEncontradaEnBup = CAST(SUBSTRING(ResultSpCount.Result BEFORE ',') AS INTEGER);
+			SET ResultSpCount.Result = SUBSTRING(ResultSpCount.Result AFTER ',' BEFORE LENGTH(Result));
+			SET TelefonosCreados = CAST(SUBSTRING(ResultSpCount.Result BEFORE ',') AS INTEGER);
+			SET ResultSpCount.Result = SUBSTRING(ResultSpCount.Result AFTER ',' BEFORE LENGTH(Result));
+			SET TelefonosNoCreados = CAST(ResultSpCount.Result AS INTEGER);
+
+--			SET PersonaEncontradaEnBup = CAST(SUBSTRING(Result AFTER 'Personas encontradas en BUP: ' BEFORE 'Personas no encontradas en BUP:') AS INTEGER);
+--SET Result = SUBSTRING(Result AFTER 'Personas no encontradas en BUP:' BEFORE 'Telefonos creados:');
+--SET PersonaNoEncontradaEnBup = CAST(SUBSTRING(Result AFTER 'Personas no encontradas en BUP:' BEFORE 'Telefonos creados:') AS INTEGER);
+--SET Result = SUBSTRING(Result AFTER 'Telefonos creados:' BEFORE 'Telefonos no creados:');
+--SET TelefonosCreados = CAST(SUBSTRING(Result AFTER 'Telefonos creados:' BEFORE 'Telefonos no creados:') AS INTEGER);
+--SET TelefonosNoCreados = CAST(SUBSTRING(Result AFTER 'Telefonos no creados:' BEFORE LENGTH(Result)) AS INTEGER);
+
+
+			CREATE FIELD OutputRoot.XMLNSC.Msg.MessageHeader;
+	        DECLARE refHead REFERENCE TO OutputRoot.XMLNSC.Msg.MessageHeader;
+	
+	 		SET refHead.batchId 					= Environment.Variables.batchId;
+			SET refHead.EmailEntered 				= Environment.Variables.EmailEntered;			
+			SET refHead.TotalPerson 				= Environment.Variables.TotalPerson;	  		
+			SET refHead.StartTime 					= Environment.Variables.StartTime; 				
+			SET refHead.EndTime 					= Environment.Variables.EndTime; 	
+			SET refHead.Duration 					= Environment.Variables.Duration; 			
+			SET refHead.numPeopleFound				= Environment.Variables.numPeopleFound;	  		
+			SET refHead.numPeopleNOTFound			= Environment.Variables.numPeopleNOTFound;				
+			SET refHead.numPhoneForged 				= Environment.Variables.numPhoneForged; 			
+			SET refHead.numPhoneNOTForged 			= Environment.Variables.numPhoneNOTForged;	  
+			
+			PROPAGATE TO TERMINAL 0;
+		RETURN FALSE;		
+	END;
+--END MODULE;
+
+
+	CREATE PROCEDURE CountPerson_Phone (IN Id CHARACTER)
+	LANGUAGE DATABASE
+	DYNAMIC RESULT SETS 4
+	EXTERNAL NAME "dbo.ContabilizarTelefonos";
+	

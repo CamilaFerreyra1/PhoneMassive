@@ -1,0 +1,12 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		--Validacion para evitar que se generen muchos errores por un solo archivo
+		IF (LocalEnvironment.File.Record <=1) THEN
+			SET FLAG_ERROR = FALSE;
+		END IF;
+	
+		IF FLAG_ERROR = FALSE THEN
+			RETURN FALSE;
+		END IF;
+	END;
+

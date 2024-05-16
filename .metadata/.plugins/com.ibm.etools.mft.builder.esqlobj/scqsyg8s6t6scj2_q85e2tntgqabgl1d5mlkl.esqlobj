@@ -1,0 +1,20 @@
+CREATE PROCEDURE ValidationStringBody(IN ref REFERENCE, IN option BOOLEAN, IN refError REFERENCE) RETURNS BOOLEAN
+BEGIN 
+    DECLARE err REFERENCE TO refError.Code;
+    IF  ((ref IS NULL) OR (ref = '')) AND (option) THEN
+        CREATE LASTCHILD OF refError AS err NAME 'Code';
+        SET err = 'GSS-415-001';
+        RETURN TRUE;
+    END IF;
+    
+    IF (ref IS  NOT NULL) THEN
+        DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+        IF(IsString(ref)) THEN
+            RETURN FALSE;
+        END IF; 
+    END IF;
+    
+    CREATE LASTCHILD OF refError AS err NAME 'Code';
+    SET err = 'GSS-422-002';
+    RETURN TRUE;
+END;

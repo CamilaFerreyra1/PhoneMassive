@@ -1,0 +1,11 @@
+CREATE PROCEDURE SumValueItem (IN messageId CHAR, IN FileName CHAR, IN RefShared REFERENCE)
+BEGIN
+	DECLARE FoundItem BOOLEAN FALSE;
+	WHILE LASTMOVE (RefShared)and NOT FoundItem DO
+		IF RefShared.ID = messageId THEN
+			SET FoundItem = TRUE;
+			SET RefShared.{FileName} = RefShared.{FileName} + 1;
+		END IF;		
+			MOVE RefShared NEXTSIBLING;
+	END WHILE;
+END;

@@ -1,0 +1,30 @@
+CREATE FUNCTION ValidationIntGet(IN ref REFERENCE, IN option BOOLEAN, IN refError REFERENCE) RETURNS BOOLEAN 
+BEGIN
+	DECLARE err REFERENCE TO refError.Code;
+	IF (UPPER(ref) = 'NULL') THEN
+        IF(option) THEN
+            CREATE LASTCHILD OF refError AS err NAME 'Code';
+            SET err = 'GSS-415-001';    
+        ELSE
+            CREATE LASTCHILD OF refError AS err NAME 'Code';
+            SET err = 'GSS-422-002';
+        END IF;
+        RETURN TRUE;
+    END IF;
+    
+    
+	IF(ref IS NULL) OR (ref = '') THEN
+		IF (option = FALSE) THEN
+			RETURN FALSE; -- DEVUELVE FALSE SI ES NULO Y ES OPCIONAL
+		ELSE
+			CREATE LASTCHILD OF refError AS err NAME 'Code';
+			SET err = 'GSS-415-001';
+		END IF;
+	ELSEIF ((LENGTH(TRANSLATE(ref,'0123456789', '')) = 0)) THEN
+		RETURN FALSE;
+	ELSE
+		CREATE LASTCHILD OF refError AS err NAME 'Code';
+		SET err = 'GSS-422-002';
+	END IF;
+	RETURN TRUE;
+END;

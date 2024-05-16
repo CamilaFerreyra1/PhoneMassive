@@ -1,0 +1,76 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		DECLARE nsMsgTrasRes NAMESPACE 'http://gruposancorseguros.com/ents/SOI/MessageSvc/MessageTranslate/response';
+		IF Environment.Variables.StatusCode204 IS TRUE AND Environment.Variables.NotEmptyResponse IS FALSE THEN
+			SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = '204';
+		ELSEIF Environment.Variables.GenericEmptyResponse IS TRUE THEN
+			SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = '200';
+		ELSEIF EXISTS(Environment.Variables.AlreadySucces[])THEN
+			SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = COALESCE(SUBSTRING(SUBSTRING(SUBSTRING(Environment.Variables.AlreadySucces.Code AFTER '-') AFTER '-')BEFORE '-'), '200');
+			IF OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = '204' THEN
+				SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = 200;
+			END IF;
+		ELSE
+			SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = COALESCE(SUBSTRING(Environment.Variables.SuccessCodeRes.Code FROM 5 FOR 3), '200');
+		END IF;
+		CREATE FIELD OutputRoot.HTTPReplyHeader;
+		IF Environment.Variables.RESTAPI THEN
+			SET OutputRoot.HTTPReplyHeader.systemId		=	Environment.Variables.InputHeader.Systemid;
+			SET OutputRoot.HTTPReplyHeader.messageId	=	Environment.TransactionId;
+			SET OutputRoot.HTTPReplyHeader.timestamp	=	CURRENT_TIMESTAMP;
+			SET OutputRoot.HTTPReplyHeader.statusCode	=	'Success';
+		ELSE
+			DECLARE nsCommons NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Commons/v1.0';
+			CALL MapeoCabeceraExitoREST(OutputRoot.HTTPReplyHeader, InputRoot.SOAP.Header.nsCommons:responseHeader);
+		END IF;
+		CREATE FIELD OutputRoot.JSON.Data;
+		SET OutputRoot.JSON.Data = InputRoot.JSON.Data;
+		CALL ResponseRest(OutputRoot.JSON.Data, Environment.Variables.SuccessCodeRes);
+	----Primero respondo, luego logueo.
+		PROPAGATE TO TERMINAL 'out1' DELETE NONE;
+	----LOGS
+		DECLARE nss NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/SecurityTypes';
+		DECLARE nssm NAMESPACE 'http://GrupoSancorSeguros/xsd/service/SecuritySvcMsg';
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+	
+		SET Environment.LogMsg.FILTRO_BROKER 						= TRIM(BrokerName);
+		SET Environment.LogMsg.TRANSACTION_ID 						= COALESCE(Environment.TransactionId, TransactionID);
+		SET Environment.LogMsg.SERVICE_NAME 						= COALESCE(Environment.Variables.Service_Name,Service_Name);
+		SET Environment.LogMsg.USER_NAME 							= Environment.Variables.UserName;
+		SET Environment.LogMsg.TIMESTAMP 							= CURRENT_TIMESTAMP;
+		SET Environment.LogMsg.DIRECTION 							= 'RESPONSE';
+		SET Environment.LogMsg.BACKENDPROVIDER 						= 'NULL';
+		SET Environment.LogMsg.ENDPOINT_NAME 						= 'NULL';
+		SET Environment.LogMsg.OPERATION_NAME 						= 'NULL';
+		DECLARE l_originalRecord ROW;
+	    CREATE FIRSTCHILD OF l_originalRecord DOMAIN 'XMLNSC' NAME 'XMLNSC';
+	    SET l_originalRecord.XMLNSC.JSON = OutputRoot.JSON;
+		SET Environment.Variables.JsonSuccess = CAST(ASBITSTREAM (l_originalRecord.XMLNSC) as CHAR CCSID 1208);
+		DECLARE l_originalRecord2 ROW;
+	    CREATE FIRSTCHILD OF l_originalRecord2 DOMAIN 'XMLNSC' NAME 'XMLNSC';
+	    SET l_originalRecord2.XMLNSC.Header = OutputRoot.HTTPReplyHeader;
+		SET Environment.Variables.HeaderSuccess = CAST(ASBITSTREAM (l_originalRecord2.XMLNSC) as CHAR CCSID 1208);
+		
+		 SET Environment.LogMsg.MESSAGE = TRANSLATE(Environment.Variables.HeaderSuccess,'@.!¡','')||TRANSLATE(Environment.Variables.JsonSuccess,'@.!¡','');
+		
+		--SET Environment.LogMsg.MESSAGE = Environment.Variables.HeaderSuccess || Environment.Variables.JsonSuccess;
+		DELETE FIELD Environment.Variables.HeaderSuccess;
+		DELETE FIELD Environment.Variables.JsonSuccess;	
+		SET Environment.LogMsg.APPOWNER 							= BrokerName;
+		SET Environment.LogMsg.IP 									= Environment.Variables.IP;
+		SET Environment.LogMsg.SERVICE_OPERATION_NAME 				= Environment.Variables.Operation_Name;
+		SET Environment.LogMsg.BUSINESS_ENTITY_DEF					= Environment.Variables.Bussiness_DEF;
+		SET Environment.LogMsg.BUSINESS_ENTITY_ID	 				= Environment.Variables.Bussiness_ID;
+		SET Environment.LogMsg.ORCHESTRATION_ID	 					= Environment.Variables.Orchestration_ID;
+		
+		SET Environment.LogMsg.PROCESS_DEF 							= COALESCE(Environment.Variables.PROCESS_DEF,Environment.Variables.PROCESSDEFINITIONID);
+		SET Environment.LogMsg.PROCESS_INSTANCE_ID	 				= COALESCE(Environment.Variables.PROCESS_INSTANCE_ID,Environment.Variables.PROCESSINSTANCEID);
+		SET Environment.LogMsg.ACTIVITY_DEF	 						= COALESCE(Environment.Variables.ACTIVITY_DEF,Environment.Variables.ACTIVITYDEFINITIONID);
+		SET Environment.LogMsg.ACTIVITY_STATUS	 					= '0';
+		
+		
+		SET OutputRoot.XMLNSC.LogMsg 								= Environment.LogMsg;
+		DELETE FIELD OutputRoot.JSON;
+		DELETE FIELD OutputRoot.HTTPReplyHeader;
+		RETURN TRUE;
+	END;

@@ -1,0 +1,41 @@
+CREATE PROCEDURE StringToList(
+		IN cStringToParse 	CHARACTER, 
+		IN strSeparador 	CHARACTER, 
+		IN refEnv 			REFERENCE )
+	BEGIN
+   /****************************************************************************
+	 * Procedimiento que se encarga de generar una estructura XML en base a una entrada 
+	 * String con un separador.
+	 * Ejemplo Campo = Valor; donde (=) es el asignador y (;) es el separador. El procedimiento se encarga de generar una estructura manejable por IIB
+	 * IN cStringToParse 	= Contiene el string URI que sera parseado de string a XML
+	 * IN strSeparador 		= Contentra el separador que separa cada uno de los campos=valor
+	 * IN refEnv 			= Es la referencia donde se guardara la estructura XML
+	 * Si los parametros son UriGlobalCache('Valor:Valor2:Valor3',';','=',Environment); Generara la siguiente estructura	
+	 
+	 Para el caso de los errores de sistema seria asi 
+	 Environtment.XMLNSC.xmlParser.Item[1]=Valor	-- Faultcode
+	 Environtment.XMLNSC.xmlParser.Item[2]=Valor2	-- Tipo Error 
+	 Environtment.XMLNSC.xmlParser.Item[3]=Valor3	-- Faultactor
+	 Environtment.XMLNSC.xmlParser.Item[4]=Valor4	-- Detalles
+	 
+	 *****************************************************************************/
+
+		DECLARE strPrueba CHARACTER '';
+		WHILE LENGTH(cStringToParse) > 0 DO
+			-- Valido si existe algun separador adicional en el string
+             IF CONTAINS(cStringToParse, strSeparador) THEN
+             	-- Si existe el separador tomo la pareja Campo=valor que se encuentra antes del separador
+                DECLARE strValor CHARACTER SUBSTRING (cStringToParse  BEFORE strSeparador);
+            	--CREATE FIELD refEnv.XMLNSC.xmlParser.Item[i];
+            	--SET refEnv.XMLNSC.xmlParser.Item[i] = strValor;  
+            	CREATE LASTCHILD OF refEnv.XMLNSC.xmlParser NAME 'Item' VALUE strValor;
+            	-- Tomo el resto del string que esta despues del separador, eliminando asi el campo parseado
+            	SET cStringToParse = SUBSTRING (cStringToParse AFTER strSeparador);
+             ELSE
+             	 -- Tomo el contenido que esta despues del asignador el cual define el nombre del campo
+				CREATE LASTCHILD OF refEnv.XMLNSC.xmlParser NAME 'Item' VALUE cStringToParse;
+            	-- Elimino el contenido string para culminar el ciclo
+                 SET cStringToParse = '';
+             END IF;
+         END WHILE;
+	END;

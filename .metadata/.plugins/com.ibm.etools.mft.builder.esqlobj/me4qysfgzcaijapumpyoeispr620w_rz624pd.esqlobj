@@ -1,0 +1,17 @@
+CREATE FILTER MODULE InputLog_Hubo_error_
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		--Reinicio en FALSE la bandera de error en el primer registro del archivo
+		IF (LocalEnvironment.File.Record =1) THEN
+			SET FLAG_ERROR = FALSE;
+		END IF;
+		
+		
+		--Valido si no hay error y no viene vacio
+		IF FLAG_ERROR = FALSE AND EXISTS(Root.DFDL.*.*[]) THEN
+			RETURN FALSE;
+		END IF;
+	END;
+
+END MODULE;

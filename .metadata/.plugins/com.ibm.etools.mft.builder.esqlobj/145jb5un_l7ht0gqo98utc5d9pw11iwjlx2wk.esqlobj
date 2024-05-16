@@ -1,0 +1,50 @@
+CREATE COMPUTE MODULE PhoneProcessing_SendQueueMail
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+	        
+	        DECLARE ResultSpCount ROW; 
+			DECLARE PersonasEncontradasEnBup INTEGER;
+			DECLARE PersonasNoEncontradasEnBup INTEGER;
+			DECLARE TelefonosCreados INTEGER;
+			DECLARE TelefonosNoCreados INTEGER;
+		
+
+			CALL ContabilizarTelefonos(Environment.Variables.batchId, ResultSpCount);
+			
+--			SET PersonasEncontradasEnBup = CAST(ResultSpCount.PersonasEncontradasEnBup AS INTEGER);
+--			SET PersonasNoEncontradasEnBup = CAST(ResultSpCount.PersonasNoEncontradasEnBup AS INTEGER);
+--			SET TelefonosCreados = CAST(ResultSpCount.TelefonosCreados AS INTEGER);
+--			SET TelefonosNoCreados = CAST(ResultSpCount.TelefonosNOCreados AS INTEGER);
+
+			MOVE PersonasEncontradasEnBup TO ResultSpCount.*[1];
+			MOVE PersonasNoEncontradasEnBup TO CAST(ResultSpCount.*[2] AS INTEGER);
+			MOVE TelefonosCreados TO CAST(ResultSpCount.*[3] AS INTEGER);
+			MOVE TelefonosNoCreados TO CAST(ResultSpCount.*[4] AS INTEGER);
+					
+
+			CREATE FIELD OutputRoot.XMLNSC.Msg.MessageHeader;
+	        DECLARE refHead REFERENCE TO OutputRoot.XMLNSC.Msg.MessageHeader;
+	
+	 		SET refHead.batchId 					= Environment.Variables.batchId;
+			SET refHead.EmailEntered 				= Environment.Variables.EmailEntered;			
+			SET refHead.TotalPerson 				= Environment.Variables.TotalPerson;	  		
+			SET refHead.StartTime 					= Environment.Variables.StartTime; 				
+			SET refHead.EndTime 					= Environment.Variables.EndTime; 	
+			SET refHead.Duration 					= Environment.Variables.Duration; 			
+			SET refHead.numPeopleFound				= PersonasEncontradasEnBup;	  		
+			SET refHead.numPeopleNOTFound			= PersonasNoEncontradasEnBup;				
+			SET refHead.numPhoneForged 				= TelefonosCreados; 			
+			SET refHead.numPhoneNOTForged 			= TelefonosNoCreados;	    
+			
+			PROPAGATE TO TERMINAL 0;
+		RETURN FALSE;		
+	END;
+--END MODULE;
+
+
+	CREATE PROCEDURE ContabilizarTelefonos (IN Id CHARACTER)
+	LANGUAGE DATABASE
+	DYNAMIC RESULT SETS 1 
+	EXTERNAL NAME "Bup.ContabilizarTelefonosNew";
+	
+END MODULE;

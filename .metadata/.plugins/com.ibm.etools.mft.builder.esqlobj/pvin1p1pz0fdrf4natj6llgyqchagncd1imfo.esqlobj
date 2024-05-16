@@ -1,0 +1,12 @@
+CREATE PROCEDURE FillValuesForLogs (INOUT refOut REFERENCE, IN refInVars REFERENCE)
+BEGIN
+	SET refOut.ProcessId		= refInVars.ProcessId;
+	SET refOut.messageId		= refInVars.batchId;
+	SET refOut.TributaryCode	= refInVars.TributaryCodeNumber;
+	SET refOut.documentNum		= refInVars.DocumentNumber;
+	SET refOut.registeredName	= refInVars.FullName;
+	SET refOut.AreaCode			= refInVars.AreaCode;
+	SET refOut.Phone			= refInVars.Phone;
+	SET refOut.Error			= refInVars.Item.observations;
+	SET refOut.Timestamp		= TimestampToString(CAST(CURRENT_TIMESTAMP AS CHARACTER));
+END;

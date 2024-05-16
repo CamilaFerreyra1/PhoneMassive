@@ -1,0 +1,15 @@
+CREATE COMPUTE MODULE IntegrationErrorTranslate_ErrorResponse
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsIntErrorTranslateRes NAMESPACE 'http://gruposancorseguros.com/ents/SOI/MessageSvc/IntegrationErrorTranslate/response';
+		
+		IF EXISTS(InputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsIntErrorTranslateRes:IntegrationErrorTranslateResponse[]) THEN	
+			DECLARE genErr REFERENCE TO Environment.Variables.IntegrationError.GenericError[1];
+			CREATE LASTCHILD OF Environment.Variables.IntegrationError AS genErr NAME 'GenericError';		
+			SET genErr = InputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsIntErrorTranslateRes:IntegrationErrorTranslateResponse;
+		END IF;   
+		RETURN FALSE;
+	END;
+
+END MODULE;

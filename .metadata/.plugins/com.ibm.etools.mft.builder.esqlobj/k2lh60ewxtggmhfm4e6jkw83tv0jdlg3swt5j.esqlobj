@@ -1,0 +1,9 @@
+CREATE PROCEDURE CheckFieldRepetitionsQueryString(IN refQueryString REFERENCE, IN refEnv REFERENCE)
+BEGIN
+	FOR field AS refQueryString.*[] DO
+		SET refEnv.Repeated.Fields[] = SELECT ITEM P FROM refQueryString.*[] AS P WHERE FIELDNAME(P) = FIELDNAME(field);
+		IF CARDINALITY(refEnv.Repeated.Fields[]) > 1 THEN
+			CREATE LASTCHILD OF refEnv.ErrorCodes NAME 'Code' VALUE 'GSS-400-003';
+		END IF;
+	END FOR;
+END;

@@ -1,0 +1,31 @@
+CREATE COMPUTE MODULE UpdateMetadata_MapeoRequest
+	DECLARE TokenUrl EXTERNAL CHARACTER '';
+	DECLARE ClientId EXTERNAL CHARACTER '';
+	DECLARE ClientSecret EXTERNAL CHARACTER '';
+	DECLARE Audience EXTERNAL CHARACTER '';
+	
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		SET OutputLocalEnvironment.Destination.HTTP.RequestURL = TokenUrl;----Url para generar token
+		SET OutputLocalEnvironment.Destination.HTTP.RequestLine.Method = 'POST';
+		
+		SET OutputRoot.JSON.Data."grant_type"		= 'client_credentials';
+		SET OutputRoot.JSON.Data."client_id"		= ClientId;
+		SET OutputRoot.JSON.Data."client_secret"	= ClientSecret;
+		SET OutputRoot.JSON.Data.audience			= Audience;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

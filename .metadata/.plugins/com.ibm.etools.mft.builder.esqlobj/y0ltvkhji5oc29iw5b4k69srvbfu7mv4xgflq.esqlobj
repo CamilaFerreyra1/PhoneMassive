@@ -1,0 +1,49 @@
+CREATE COMPUTE MODULE Backend_Output_Log_MsgJSON_
+    CREATE FUNCTION Main() RETURNS BOOLEAN
+     BEGIN
+        CALL CopyMessageHeaders();
+        CALL CopyEntireMessage();
+        SET OutputRoot.Properties = InputRoot.Properties;
+        SET OutputLocalEnvironment = InputLocalEnvironment;
+        
+        IF (EXISTS(InputRoot.JSON.Data[]) OR EXISTS(InputRoot.HTTPResponseHeader[])) AND NOT EXISTS (InputRoot.SOAP[]) THEN
+           IF EXISTS(InputRoot.JSON.Data[]) THEN
+           	SET Environment.Variables.JSON = NULL;
+                FOR M as InputRoot.JSON.Data.*[] DO
+                    DECLARE N CHARACTER CAST(FIELDNAME(M) AS CHARACTER);
+                    IF STARTSWITH(N,'@') OR STARTSWITH(N,'.') OR STARTSWITH(N,'!') OR STARTSWITH(N,'¡') THEN
+                        SET N = TRANSLATE(N,'@.!¡','');
+                    END IF;
+                    SET OutputRoot.XMLNSC.Data.{N} = FIELDVALUE(M);
+                    SET Environment.Variables.JSON.Data.{N} = FIELDVALUE(M);
+                    
+                    IF NOT EXISTS(OutputRoot.XMLNSC.Data.*[]) THEN
+	                 	SET OutputRoot.XMLNSC.Data.{N} = M;
+	                    SET Environment.Variables.JSON.Data.{N} = M;
+                 	END IF;
+                END FOR;
+           ELSEIF EXISTS (InputRoot.HTTPResponseHeader[]) THEN
+               SET OutputRoot.XMLNSC.Data = InputRoot.HTTPResponseHeader[1];
+               SET Environment.Variables.JSON = OutputRoot.XMLNSC ; 
+           END IF;
+           PROPAGATE TO TERMINAL 2;
+       ELSE
+           PROPAGATE TO TERMINAL 1;
+       END IF;
+       RETURN FALSE;
+    END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

@@ -1,0 +1,62 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		--Backup
+		SET Environment.Variables.GwRequest.Header = InputRoot.HTTPRequestHeader;
+		SET Environment.Variables.GwRequest.Body = InputRoot.JSON.Data;
+		
+		--Decode Authorization y parseo a JSON
+		DECLARE decoded BLOB BASE64DECODE(Environment.Variables.Authorization);	
+		CREATE LASTCHILD OF Environment.Variables.AuthorizationDecode DOMAIN('JSON') PARSE(decoded);
+		
+		SET Environment.Variables.UserData.UserName = Environment.Variables.AuthorizationDecode.JSON.Data.userName;
+		SET Environment.Variables.UserData.BupId	= Environment.Variables.AuthorizationDecode.JSON.Data.bupId;
+		--
+		
+		--Obtener datos de la EdgeUsers
+		CALL GetGWCredentials(
+								Environment.Variables.UserData.UserName,
+								Environment.Variables.UserData.BupId,
+								CAST(Environment.Variables.ApplicationId AS INTEGER),
+								Environment.Variables.GetGWCredentials.Result[]);
+								
+		
+		--TODO: Ver que hacer si el Result viene vacío. Genero 401-403?
+		
+		--Desencriptar pw:
+		SET Environment.Variables.Decrypt.Password[] = PASSTHRU('OPEN SYMMETRIC KEY SymKey_GSS
+ 																	DECRYPTION BY CERTIFICATE Certif_GSS
+																	SELECT UserName,Password AS ''Encrypted_password'',
+														            CONVERT(varchar, DecryptByKey(Password)) AS ''Decrypted_Password''
+														            FROM Users.EdgeUsers WHERE UserName = ?;
+																	CLOSE SYMMETRIC KEY SymKey_GSS' VALUES(Environment.Variables.GetGWCredentials.Result.UserName));
+																	
+		--Pw desencriptada en: Decrypted_Password
+		
+		--Preparo request a Auth0
+		DECLARE form CHARACTER;
+		DECLARE code CHARACTER 'code';
+        DECLARE psw REFERENCE TO Environment.Variables.Decrypt.Password.Decrypted_Password;      
+        DECLARE userName REFERENCE TO Environment.Variables.UserData.UserName;
+ 		SET OutputRoot.HTTPRequestHeader."Content-Type" = 'application/x-www-form-urlencoded';
+		SET form =	'grant_type=http://auth0.com/oauth/grant-type/password-realm&client_id='||client_id||
+					'&client_secret='||client_secret||
+					'&username='||Environment.Variables.GetGWCredentials.Result.UserName||
+					'&password='||psw||
+					'&realm='||realm||
+					'&scope=openid profile scopes'; 
+		SET OutputRoot.BLOB.BLOB = CAST(form AS BLOB CCSID 1208);
+		SET OutputRoot.Properties.CodedCharSetId = 1208;
+		
+		--
+		RETURN TRUE;
+	END;
+	
+	CREATE PROCEDURE GetGWCredentials
+	(
+		IN userName CHARACTER,
+		IN bupId INT,
+		IN applicationId INT
+	)
+	LANGUAGE DATABASE
+	DYNAMIC RESULT SETS 1
+	EXTERNAL NAME "Users.GetGWCredentials";

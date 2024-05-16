@@ -1,0 +1,34 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		SET OutputRoot.Properties = InputRoot.Properties;
+		 CALL CopyMessageHeaders();
+		 CALL CopyEntireMessage();
+		 
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_DEF = '' THEN
+			SET	Environment.Variables.Bussiness_DEF			= COALESCE(InputRoot.XMLNSC.*[>].MessageHeader.Bussiness_DEF,' ');
+		ELSE 	
+			SET Environment.Variables.Bussiness_DEF			= BUSINESS_ENTITY_DEF;
+		END IF;
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_ID = '' THEN
+			SET	Environment.Variables.Bussiness_ID			= COALESCE(InputRoot.XMLNSC.*[>].MessageHeader.Bussiness_ID,' ');
+		ELSE 	
+			SET Environment.Variables.Bussiness_ID			= BUSINESS_ENTITY_ID;
+		END IF;
+
+		SET Environment.Variables.Orchestration_ID  	= COALESCE(InputRoot.XMLNSC.*[>].MessageHeader.UUID,InputRoot.XMLNSC.*:*.OrchestrationId, ' ');
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;

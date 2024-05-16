@@ -1,0 +1,29 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+				
+		SET Environment.Variables.Properties 		= Root.Properties;
+		SET Environment.Variables.MQMD 				= Root.MQMD;
+		SET Environment.Variables.MQRFH2 			= Root.MQRFH2;
+		SET Environment.Variables.XMLNSC 			= '<MESSAGE>INVALID MESSAGE</MESSAGE>';	
+		BEGIN  
+			DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+			SET Environment.Variables.XMLNSC 		= Root.XMLNSC;	
+		END;
+		
+		SET Environment.Variables.Operation_Name 	= Root.MQMD.SourceQueue;
+		SET Environment.Variables.Service_Name		= TRIM(Root.MQMD.ReplyToQMgr) || '/' || CAST( ExecutionGroupLabel AS CHARACTER) || '/' || CAST (ApplicationLabel AS CHARACTER);
+		SET Service_Name							= Environment.Variables.Service_Name;
+		SET Environment.Variables.UserName		 	= Root.MQMD.UserIdentifier;
+		SET ClientIP								= Environment.Variables.ClientIP;
+		SET	Environment.TransactionId 				= COALESCE(Root.XMLNSC.*[>].MessageHeader.UUID,UUIDASCHAR);
+		SET TransactionID							= Environment.TransactionId;
+		SET Environment.Variables.Orchestration_ID	= COALESCE(Root.XMLNSC.*[>].MessageHeader.messageId,UUIDASCHAR);
+		
+		
+		--Valido si no hay error y no viene vacio
+		IF FLAG_ERROR = FALSE AND EXISTS(Root.MQMD []) THEN
+			RETURN FALSE;
+		END IF;
+		
+	END;
+

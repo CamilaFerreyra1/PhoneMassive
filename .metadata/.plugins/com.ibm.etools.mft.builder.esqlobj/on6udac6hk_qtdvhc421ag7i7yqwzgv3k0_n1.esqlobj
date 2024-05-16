@@ -1,0 +1,45 @@
+CREATE COMPUTE MODULE InputREST_Log_PrepareCatchHandler
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+	----Preparo componentes a loguear
+		SET Environment.Variables.Service_Name = InputRoot.HTTPInputHeader."X-Original-HTTP-Command";
+		DECLARE operationString CHARACTER '/';
+		FOR path AS InputLocalEnvironment.HTTP.Input.Path.Segment[] DO
+			SET operationString = operationString || path || '/';
+		END FOR;
+		SET Environment.Service.Operation.NameFallido = operationString;
+		SET Environment.Variables.UserName = COALESCE(InputRoot.HTTPInputHeader.Username, 'NULL');
+		SET Environment.Variables.IP = InputRoot.HTTPInputHeader."X-Remote-Addr";
+
+	----HEADER
+		DECLARE l_originalRecord2 ROW;
+		CREATE FIRSTCHILD OF l_originalRecord2 DOMAIN 'XMLNSC' NAME 'XMLNSC';
+	    SET l_originalRecord2.XMLNSC.Header = InputRoot.HTTPInputHeader;
+		SET Environment.Variables.HeaderFallido = CAST(ASBITSTREAM (l_originalRecord2.XMLNSC) as CHAR CCSID 1208);
+	----JSON/QUERYSTRING
+		IF EXISTS(InputLocalEnvironment.HTTP.Input.QueryString[]) THEN
+			DECLARE l_originalRecord ROW;
+		    CREATE FIRSTCHILD OF l_originalRecord DOMAIN 'XMLNSC' NAME 'XMLNSC';
+		    SET l_originalRecord.XMLNSC.QueryString = InputLocalEnvironment.HTTP.Input.QueryString;
+			SET Environment.Variables.QueryStringFallido = CAST(ASBITSTREAM (l_originalRecord.XMLNSC) as CHAR CCSID 1208);
+			SET Environment.Variables.InputFallido = Environment.Variables.HeaderFallido || Environment.Variables.QueryStringFallido;
+		ELSE
+			DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+			DECLARE l_originalRecord ROW;
+		    CREATE FIRSTCHILD OF l_originalRecord DOMAIN 'XMLNSC' NAME 'XMLNSC';
+		    SET l_originalRecord.XMLNSC.JSON = InputRoot.JSON;
+			SET Environment.Variables.JsonFallido = CAST(ASBITSTREAM (l_originalRecord.XMLNSC) as CHAR CCSID 1208);
+			SET Environment.Variables.InputFallido = Environment.Variables.HeaderFallido || Environment.Variables.JsonFallido;
+			IF Environment.Variables.InputFallido IS NULL THEN
+				SET Environment.Variables.InputFallido = Environment.Variables.HeaderFallido || 'Json corrupto';
+			END IF;
+		END IF;
+		
+		CALL CopyEntireMessage();
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;	
+END MODULE;

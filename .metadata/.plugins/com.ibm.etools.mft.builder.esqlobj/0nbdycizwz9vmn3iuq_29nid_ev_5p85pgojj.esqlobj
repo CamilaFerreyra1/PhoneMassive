@@ -1,0 +1,54 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		SET OutputRoot.HTTPInputHeader."Content-Type"= 'application/xml';
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsCommon NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Commons/v1.0';
+		DECLARE refHeader REFERENCE TO OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader;
+		DECLARE propMsg REFERENCE TO OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property;
+		
+		CREATE FIELD OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader;
+		SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[1].key	= 'ApplicationId'; 
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[1].value 	= Environment.Variables.ApplicationId;
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[2].key 	= 'CompanyCode';
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[2].value 	= Environment.Variables.CompanyCode;
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[3].key 	= 'ClientTypeId';
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[3].value 	= Environment.Variables.ClientTypeId;
+        IF EXISTS(Environment.Variables.RoleId[]) THEN
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[4].key 	= 'RoleId';
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[4].value = Environment.Variables.RoleId;
+        END IF;
+        IF EXISTS(Environment.Variables.ExternalApplicationId[]) THEN
+        	CREATE LASTCHILD OF OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext AS propMsg NAME 'property';
+        	SET propMsg.key = 'ExternalApplicationId';
+        	SET propMsg.value = Environment.Variables.ExternalApplicationId;
+--	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[5].key 	= 'ExternalApplicationId';
+--	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[5].value = Environment.Variables.ExternalApplicationId;
+        END IF;
+        DECLARE refError REFERENCE TO Environment.Variables.IntegrationError.IntegrationCode[1];
+        DECLARE nsIntegrationErrorTransReq NAMESPACE 'http://gruposancorseguros.com/ents/SOI/MessageSvc/IntegrationErrorTranslate/request';
+        CREATE FIELD OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsIntegrationErrorTransReq:IntegrationErrorTranslateRequest;
+       	
+       	/*
+       	IF      CONTAINS(Environment.Variables.Service_Name, 'ss10674')
+			OR 	CONTAINS(Environment.Variables.Service_Name, 'iib-dev')	THEN
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10674.sancorseguros.net:7817/Gss/Person/Process/MessageSvc';
+        ELSEIF  CONTAINS(Environment.Variables.Service_Name, 'ss10675')
+        	OR 	CONTAINS(Environment.Variables.Service_Name, 'iib-tst') THEN
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10675.sancorseguros.net:7801/Gss/Person/Process/MessageSvc';
+        ELSEIF  CONTAINS(Environment.Variables.Service_Name, 'ss10746')
+        	OR 	CONTAINS(Environment.Variables.Service_Name, 'ss10985')
+        	OR	CONTAINS(Environment.Variables.Service_Name, 'iib-pre') THEN
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10746.sancorseguros.net:7086/Gss/Person/Process/MessageSvc';
+        ELSE 
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10766.sancorseguros.net:7086/Gss/Person/Process/MessageSvc';
+        END IF;
+        */
+        
+        WHILE LASTMOVE(refError) DO
+       		SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsIntegrationErrorTransReq:IntegrationErrorTranslateRequest.BackErrorCode = refError;
+			PROPAGATE TO TERMINAL 'out' DELETE NONE;
+			MOVE refError NEXTSIBLING;
+        END WHILE;
+        
+		RETURN TRUE;
+	END;

@@ -1,0 +1,17 @@
+CREATE FUNCTION ValidationHeaderV2(IN Header REFERENCE, IN valueAppId CHARACTER, IN valueCCode CHARACTER, IN valueCTId CHARACTER, IN refError REFERENCE ) RETURNS BOOLEAN
+BEGIN
+	DECLARE castValue CHARACTER;
+
+	IF Header.Applicationid = '' OR UPPER(Header.Applicationid) = 'NULL' OR Header.Applicationid <> valueAppId OR Header.Applicationid IS NULL THEN
+		CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+		RETURN TRUE;
+	ELSEIF Header.Companycode = '' OR UPPER(Header.Companycode)= 'NULL' OR Header.Companycode <> valueCCode OR Header.Companycode IS NULL THEN
+		CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+		RETURN TRUE;
+	ELSEIF Header.Clienttypeid = '' OR UPPER(Header.Clienttypeid) = 'NULL' OR Header.Clienttypeid <> valueCTId OR Header.Clienttypeid IS NULL THEN
+		CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+		RETURN TRUE;
+	ELSE
+		RETURN FALSE;
+	END IF;
+END;

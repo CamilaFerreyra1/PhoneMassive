@@ -1,0 +1,58 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		IF EXISTS(InputExceptionList.*[])  THEN 
+				DECLARE ErrorNumber INTEGER; 
+				DECLARE ErrorText CHARACTER;
+				CALL GetLastExceptionDetail(InputExceptionList,ErrorNumber,ErrorText);
+				
+				SET OutputRoot.XMLNSC.ErrorMsg.ERROR_NUMBER 			= 'ERROR_NUMBER=' || CAST(ErrorNumber AS CHARACTER); 
+				SET OutputRoot.XMLNSC.ErrorMsg.ERROR_TEXT 				= COALESCE(ErrorText, NULL);
+				SET OutputRoot.XMLNSC.ErrorMsg.EXCEPTION_LIST 			= InputExceptionList;
+				SET OutputRoot.XMLNSC.ErrorMsg.ERROR_LABEL 				= SUBSTRING(FIELDVALUE(InputExceptionList.RecoverableException.Label) FROM 1 FOR 300);
+				
+		ELSE 
+				SET OutputRoot.XMLNSC.ErrorMsg.ERROR_NUMBER 			= 'NULL'; 
+				SET OutputRoot.XMLNSC.ErrorMsg.ERROR_TEXT 				= 'NULL';
+				SET OutputRoot.XMLNSC.ErrorMsg.EXCEPTION_LIST 			= 'NULL';
+				SET OutputRoot.XMLNSC.ErrorMsg.ERROR_LABEL 				= 'NULL';
+				
+				
+		END IF;
+		
+		SET OutputRoot.XMLNSC.ErrorMsg.FILTRO_BROKER 					= TRIM(BrokerName);
+		SET OutputRoot.XMLNSC.ErrorMsg.TRANSACTION_ID 					= Environment.TransactionId;
+		SET OutputRoot.XMLNSC.ErrorMsg.SERVICE_NAME 					= COALESCE(Environment.Variables.Service_Name,SUBSTRING(SUBSTRING(InputRoot.HTTPInputHeader."X-Original-HTTP-Command" AFTER ' ') BEFORE ' '));
+		SET OutputRoot.XMLNSC.ErrorMsg.OPERATION_NAME 					= Environment.Service.Operation.NameFallido;
+		SET OutputRoot.XMLNSC.ErrorMsg.USER_NAME 		    			= Environment.Variables.UserName;
+		SET OutputRoot.XMLNSC.ErrorMsg.SECURITY_GROUP 					= 'NULL';
+		SET OutputRoot.XMLNSC.ErrorMsg.ERROR_TIMESTAMP 					= CURRENT_TIMESTAMP;
+		SET OutputRoot.XMLNSC.ErrorMsg.DATETIME		 					= CURRENT_TIMESTAMP;
+		SET OutputRoot.XMLNSC.ErrorMsg.DIRECTION 						= 'ERROR';
+		SET OutputRoot.XMLNSC.ErrorMsg.APPOWNER 						= BrokerName;
+		SET OutputRoot.XMLNSC.ErrorMsg.BACKENDPROVIDER 					= 'NULL';
+		SET OutputRoot.XMLNSC.ErrorMsg.IP 								= COALESCE(InputRoot.HTTPInputHeader."X-Remote-Addr", Environment.Variables.IP);
+		SET OutputRoot.XMLNSC.ErrorMsg.ENDPOINT_NAME 					= 'NULL';
+		SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_INPUT 				= Environment.Variables.InputFallido;
+		
+		
+		IF Environment.Variables.REST THEN
+			SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT = Environment.Variables.JSON_MESSAGE_OUTPUT;
+		ELSE
+			CREATE LASTCHILD OF OutputRoot.XMLNSC.ErrorMsg DOMAIN 'XMLNSC' NAME 'SOAP_MESSAGE_OUTPUT';
+	        SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT.ns85:Envelope.ns85:Header    = InputRoot.XMLNSC.*.Header;
+	        SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT.ns85:Envelope.ns85:Body    	= InputRoot.XMLNSC.*.Body;
+	        SET Environment.ErrorMsg.SOAP_MESSAGE_OUTPUT	= CAST (ASBITSTREAM(OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT) AS CHARACTER CCSID 819);
+	        SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT 			= Environment.ErrorMsg.SOAP_MESSAGE_OUTPUT;
+		END IF;
+		SET OutputRoot.XMLNSC.ErrorMsg.BACKEND_OPERATION_NAME 			= 'NULL';
+		SET OutputRoot.XMLNSC.ErrorMsg.BUSINESS_ENTITY_DEF	 			= COALESCE(Environment.Variables.BUSINESSDEF,Environment.Variables.BUSINESSENTITYDEF,Environment.Variables.Bussiness_DEF);
+		SET OutputRoot.XMLNSC.ErrorMsg.BUSINESS_ENTITY_ID	 			= COALESCE(Environment.Variables.BUSINESSID, Environment.Variables.BUSINESSENTITYID,Environment.Variables.Bussiness_ID);
+		SET OutputRoot.XMLNSC.ErrorMsg.ORCHESTRATION_ID	 				= Environment.Variables.Orchestration_ID;
+		
+		SET OutputRoot.XMLNSC.ErrorMsg.PROCESS_DEF 						= COALESCE(Environment.Variables.PROCESS_DEF,Environment.Variables.PROCESSDEFINITIONID);
+		SET OutputRoot.XMLNSC.ErrorMsg.PROCESS_INSTANCE_ID	 			= COALESCE(Environment.Variables.PROCESS_INSTANCE_ID,Environment.Variables.PROCESSINSTANCEID);
+		SET OutputRoot.XMLNSC.ErrorMsg.ACTIVITY_DEF	 					= COALESCE(Environment.Variables.ACTIVITY_DEF,Environment.Variables.ACTIVITYDEFINITIONID);
+		SET OutputRoot.XMLNSC.ErrorMsg.ACTIVITY_STATUS	 				= '1';
+		
+
+	END;

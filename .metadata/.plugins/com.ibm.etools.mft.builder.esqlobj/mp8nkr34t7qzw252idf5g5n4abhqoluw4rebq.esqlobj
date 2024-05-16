@@ -1,0 +1,24 @@
+CREATE PROCEDURE ValidationStringGet(IN ref REFERENCE, IN option BOOLEAN, IN refError REFERENCE) RETURNS BOOLEAN 
+BEGIN
+    DECLARE err REFERENCE TO refError.Code;
+    IF (UPPER(ref) = 'NULL') THEN
+        IF(option) THEN
+            CREATE LASTCHILD OF refError AS err NAME 'Code';
+            SET err = 'GSS-415-001';    
+        ELSE
+            CREATE LASTCHILD OF refError AS err NAME 'Code';
+            SET err = 'GSS-422-002';
+        END IF;
+        RETURN TRUE;
+    END IF;
+    
+    IF (ref IS NULL) OR (ref = '') THEN
+        IF(option) THEN
+            CREATE LASTCHILD OF refError AS err NAME 'Code';
+            SET err = 'GSS-415-001';
+            RETURN TRUE;
+        END IF;
+        RETURN FALSE;   
+    END IF;
+    RETURN FALSE;
+END;

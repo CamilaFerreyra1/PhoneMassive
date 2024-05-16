@@ -1,0 +1,66 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		DECLARE props REFERENCE TO InputRoot.Properties;
+		
+		SET Environment.TransactionId = UUIDASCHAR;
+		
+		DECLARE refEnv REFERENCE TO Environment.Variables;
+		DECLARE refin REFERENCE TO InputRoot.JSON.Data;
+		
+		SET OutputRoot.HTTPResponseHeader.TransactionId = Environment.TransactionId;
+		SET OutputRoot.JSON.Data.Email = refin.email;
+		SET OutputRoot.JSON.Data.batchId = refin.batchId;
+		SET OutputRoot.JSON.Data.success = TRUE;
+		PROPAGATE TO TERMINAL 1;
+		
+	
+		
+		DECLARE startTime CHARACTER	TimestampToString(CAST(CURRENT_TIMESTAMP AS CHARACTER));
+		DECLARE totalPhonesToProcess INTEGER 0;
+		
+		SET refEnv.Orchestration_ID		= Environment.TransactionId;
+		SET refEnv.Service_Name 		= SUBSTRING(SUBSTRING(InputRoot.HTTPInputHeader."X-Original-HTTP-Command" AFTER ' ') BEFORE ' ');
+		SET refEnv.Operation_Name		= 'BUPPhoneMassive';
+		SET refEnv.ClientIP				= InputRoot.HTTPInputHeader."X-Remote-Addr";
+		
+		DECLARE phonesToProcess ROW;
+		CREATE FIELD phonesToProcess.results;
+		SET phonesToProcess.results[] = PASSTHRU('SELECT ProcessId, TributaryCodeNumber, DocumentNumber, FullName,
+											    		PhoneNumber, PhoneTypeId, AreaCode
+											    FROM BUP.PhoneMassiveProcess (NOLOCK)
+											    WHERE ID = ? AND PhoneId IS NULL' VALUES (refin.batchId));
+        
+      	FOR R AS phonesToProcess.results[] DO
+	      	SET OutputRoot.Properties = props;
+	        CREATE FIELD OutputRoot.XMLNSC.Msg.MessageHeader;
+	        DECLARE refHead REFERENCE TO OutputRoot.XMLNSC.Msg.MessageHeader;
+	        
+	        SET refHead.messageId 			= Environment.TransactionId;
+	        SET refHead.batchId	 			= refin.batchId;
+	        SET refHead.ProcessId		 	= R.ProcessId;
+			SET refHead.TributaryCodeNumber = R.TributaryCodeNumber;
+			SET refHead.DocumentNumber		= R.DocumentNumber;
+			SET refHead.FullName		 	= R.FullName;
+			SET refHead.Phone		 		= R.PhoneNumber;
+			SET refHead.PhoneTypeId		 	= R.PhoneTypeId;
+			SET refHead.AreaCode			= R.AreaCode;
+			
+			SET totalPhonesToProcess = totalPhonesToProcess + 1;
+			
+	        PROPAGATE TO TERMINAL 0;
+      	END FOR;
+ 	--- al finalizar el while se manda un mensaje para detectar el registro final 
+ 		SET OutputRoot.Properties = props;
+ 		CREATE FIELD OutputRoot.XMLNSC.Msg.MessageHeader;
+        SET OutputRoot.XMLNSC.Msg.MessageHeader.messageId	= Environment.TransactionId;
+        SET OutputRoot.XMLNSC.Msg.MessageHeader.batchId		= refin.batchId;
+ 		
+ 		CREATE FIELD OutputRoot.XMLNSC.Msg.MessageBody;
+        SET OutputRoot.XMLNSC.Msg.MessageBody.Message	= 'Final Archivo';
+        SET OutputRoot.XMLNSC.Msg.MessageBody.StartTime	=  startTime;
+        SET OutputRoot.XMLNSC.Msg.MessageBody.Email		= refin.email;
+        SET OutputRoot.XMLNSC.Msg.MessageBody.PhonesToProcess	= totalPhonesToProcess;
+        
+        RETURN TRUE;
+	END;
+	

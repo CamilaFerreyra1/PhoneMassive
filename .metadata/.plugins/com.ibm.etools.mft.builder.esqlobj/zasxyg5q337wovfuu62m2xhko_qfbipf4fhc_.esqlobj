@@ -1,0 +1,24 @@
+CREATE PROCEDURE XpathParser(IN cStringToParse CHARACTER, IN strSeparador CHARACTER, IN refEnv REFERENCE)
+    BEGIN           
+        DECLARE intItem INTEGER 1;
+        WHILE LENGTH(cStringToParse) > 0 DO                 
+            -- Valido si existe algun separador adicional en el string
+            IF CONTAINS(cStringToParse, strSeparador) THEN
+                -- Si existe el separador tomo el valor antes del separador
+                DECLARE strCampoValor CHARACTER SUBSTRING (cStringToParse BEFORE strSeparador);               
+                -- Asigno el valor del Campo Parseado
+                CREATE FIELD refEnv.item[intItem];
+                SET refEnv.item[intItem] = strCampoValor;
+                SET intItem = intItem +1;
+                -- Tomo el resto del string que esta despues del separador, eliminando asi el campo parseado
+                SET cStringToParse = SUBSTRING (cStringToParse AFTER strSeparador);
+            ELSE                 
+                -- Asigno el valor del Campo Parseado
+                CREATE FIELD refEnv.item[intItem];
+                SET refEnv.item[intItem] = cStringToParse;
+                SET intItem = intItem +1;
+                -- Elimino el contenido string para culminar el ciclo
+                SET cStringToParse = '';
+            END IF;
+        END WHILE;           
+    END;

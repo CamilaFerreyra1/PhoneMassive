@@ -1,0 +1,9 @@
+CREATE COMPUTE MODULE SuccessTranslate_SuccessResponse
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsMsgTrasRes NAMESPACE 'http://gruposancorseguros.com/ents/SOI/MessageSvc/MessageTranslate/response';
+		SET Environment.Variables.SuccessCodeRes = InputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsMsgTrasRes:MessageTranslateResponse;
+		RETURN TRUE;
+	END;
+END MODULE;

@@ -1,0 +1,23 @@
+CREATE FUNCTION Canonical_BUP ( IN table CHARACTER, IN CanonicalCode INT) RETURNS CHARACTER
+BEGIN
+	DECLARE valueRef CHARACTER FIELDVALUE(node);
+	IF valueRef <> '' THEN
+		DECLARE query CHARACTER 
+			'SELECT CanonicalCode FROM BUP.Bup.' || table || ' WITH (NOLOCK)'
+			|| ' WHERE CanonicalCode = ' || CAST(CanonicalCode AS CHARACTER) 
+			|| ' AND Name = ''' || valueRef || '''';
+	
+		DECLARE result ROW;
+	
+		SET result.Data[] = PASSTHRU(query);
+	
+		IF CARDINALITY(result.Data[<].*[]) <> 1 THEN
+			THROW USER EXCEPTION MESSAGE 502 
+			VALUES('No se pudo homologar el nodo ' || FIELDNAME(node) || '. El valor ' || valueRef || ' no se encuentra en la tabla ' || table || ' para el systemId ' || CAST(systemId AS CHARACTER) || '.');
+		END IF;
+	
+		RETURN result.Data[<].*[1];
+	ELSE
+		RETURN NULL;
+	END IF;
+END;

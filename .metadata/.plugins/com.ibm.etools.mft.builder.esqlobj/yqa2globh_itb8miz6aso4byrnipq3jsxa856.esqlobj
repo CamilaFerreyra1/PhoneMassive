@@ -1,0 +1,94 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		
+		DECLARE strErrNumber INTEGER;
+		DECLARE strErrText CHARACTER;
+		CALL GetLastExceptionDetail(InputExceptionList,strErrNumber,strErrText);
+	
+		--Guardo datos de la excepcion en el Environment para uso posterior
+		SET Environment.Variables.ExceptionNumber 			= strErrNumber;
+		SET Environment.Variables.ExceptionText 			= strErrText;
+		SET Environment.Variables.ExceptionList 			= InputExceptionList; 
+		
+		SET Environment.Variables.Properties 				= InputRoot.Properties;
+		SET Environment.Variables.MQMD 						= InputRoot.MQMD;
+		SET Environment.Variables.MQRFH2 					= InputRoot.MQRFH2;
+		SET Environment.Variables.XMLNSC 					= InputRoot.XMLNSC;	
+		SET Environment.Variables.Operation.Name 			= InputRoot.MQMD.SourceQueue;
+		SET Environment.Variables.Name			    		= TRIM(InputRoot.MQMD.ReplyToQMgr) || '/' || CAST( ExecutionGroupLabel AS CHARACTER) || '/' || CAST (ApplicationLabel AS CHARACTER);
+	 	SET	Environment.TransactionId 						= COALESCE(InputRoot.XMLNSC.*[>].MessageHeader.UUID,UUIDASCHAR);
+	 	
+	 	IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_DEF = '' THEN
+				SET	 Environment.Variables.Bussiness_DEF = ' ';
+			ELSE
+				SET Environment.Variables.Bussiness_DEF			= BUSINESS_ENTITY_DEF;
+		END IF;
+		IF BUSINESS_ENTITY_ID = NULL OR BUSINESS_ENTITY_ID = '' THEN
+				SET	 Environment.Variables.Bussiness_ID = ' ';
+			ELSE
+				SET Environment.Variables.Bussiness_ID			= BUSINESS_ENTITY_ID;
+		END IF;
+
+		SET Environment.Variables.Orchestration_ID  	= COALESCE(InputRoot.XMLNSC.*:*.OrchestrationId, ' ');
+		
+	 	IF 	CONTAINS(BrokerName,'CHANNEL')THEN
+			SET Environment.Variables.FILTRO_BROKER 		= 'ARG_CHANNEL';
+		ELSEIF CONTAINS(BrokerName,'FICO')THEN
+			SET Environment.Variables.FILTRO_BROKER 		= 'ARG_FICO';
+		ELSE
+			SET Environment.Variables.FILTRO_BROKER 		= 'OTROS';
+		END IF;	
+	 		 	
+	 	SET OutputRoot.XMLNSC.ErrorMsg.FILTRO_BROKER 				= Environment.Variables.FILTRO_BROKER;
+		SET OutputRoot.XMLNSC.ErrorMsg.TRANSACTION_ID 				= Environment.TransactionId;
+		SET OutputRoot.XMLNSC.ErrorMsg.SERVICE_NAME 				= TRIM(InputRoot.MQMD.ReplyToQMgr) || '/' || CAST( ExecutionGroupLabel AS CHARACTER) || '/' || CAST (ApplicationLabel AS CHARACTER);
+		SET OutputRoot.XMLNSC.ErrorMsg.OPERATION_NAME 				= InputRoot.MQMD.SourceQueue;
+		SET OutputRoot.XMLNSC.ErrorMsg.USER_NAME 		    		= InputRoot.MQMD.UserIdentifier;
+			
+		IF (CONTAINS(Environment.Service.Name,'InAppSvc')	= TRUE) THEN	
+			SET OutputRoot.XMLNSC.ErrorMsg.SECURITY_GROUP 		= Environment.BackupHeader.*:HeaderInfo_Internal.*:SecurityGroup;
+		ELSEIF (EXISTS (Environment.SecurityGroup[])) THEN
+			SET OutputRoot.XMLNSC.ErrorMsg.SECURITY_GROUP 		= Environment.SecurityGroup;
+		ELSE
+			SET OutputRoot.XMLNSC.ErrorMsg.SECURITY_GROUP 		= NULL;
+		END IF;
+		SET OutputRoot.XMLNSC.ErrorMsg.ERROR_NUMBER 				= 'ERROR_NUMBER=' || CAST(strErrNumber AS CHARACTER);
+		SET OutputRoot.XMLNSC.ErrorMsg.ERROR_TEXT 				= strErrText;
+		SET OutputRoot.XMLNSC.ErrorMsg.ERROR_LABEL 				= SUBSTRING(InputExceptionList.RecoverableException.Label FROM 1 FOR 300);
+		SET OutputRoot.XMLNSC.ErrorMsg.ERROR_TIMESTAMP 			= CURRENT_TIMESTAMP;
+		SET OutputRoot.XMLNSC.ErrorMsg.EXCEPTION_LIST 			= InputExceptionList;
+		SET OutputRoot.XMLNSC.ErrorMsg.DATETIME		 			= CURRENT_TIMESTAMP;
+		SET OutputRoot.XMLNSC.ErrorMsg.DIRECTION 					= 'ERROR';
+		IF Environment.Variables.systemId IS NOT NULL AND Environment.Variables.systemId <> '' THEN
+			SET OutputRoot.XMLNSC.ErrorMsg.APPOWNER 				= Environment.Variables.systemId;
+		ELSE
+			SET OutputRoot.XMLNSC.ErrorMsg.APPOWNER 				= BrokerName;
+		END IF;
+		SET OutputRoot.XMLNSC.ErrorMsg.BACKENDPROVIDER 			= InputRoot.MQMD.SourceQueue;
+		SET OutputRoot.XMLNSC.ErrorMsg.IP 						= NULL;
+		SET OutputRoot.XMLNSC.ErrorMsg.ENDPOINT_NAME 				= NULL;
+		SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_INPUT 		= NULL;
+		SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT 		= NULL;		
+		SET OutputRoot.XMLNSC.ErrorMsg.BACKEND_OPERATION_NAME 	= NULL;
+		SET OutputRoot.XMLNSC.ErrorMsg.BUSINESS_ENTITY_DEF	 	= Environment.Variables.Bussiness_DEF;
+		SET OutputRoot.XMLNSC.ErrorMsg.BUSINESS_ENTITY_ID	 	= Environment.Variables.Bussiness_ID;
+		SET OutputRoot.XMLNSC.ErrorMsg.ORCHESTRATION_ID	 		= Environment.Variables.Orchestration_ID;
+		
+			
+	
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;

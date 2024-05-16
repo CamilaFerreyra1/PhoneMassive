@@ -1,0 +1,37 @@
+CREATE COMPUTE MODULE OutputLog_GenerateLog
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+	
+		--Guardo el ID en el Env para uso posterior
+		DECLARE id_transaccion CHARACTER UUIDASCHAR;
+		SET Environment.Variables.Parametros.id_transaccion = id_transaccion;
+		
+		SET OutputRoot.XMLNSC.LogMsg.FILTRO_BROKER 				= TRIM(BrokerName);
+		SET OutputRoot.XMLNSC.LogMsg.TRANSACTION_ID 			= id_transaccion;
+		SET OutputRoot.XMLNSC.LogMsg.SERVICE_NAME 				= Environment.Variables.Service_Name;
+		SET OutputRoot.XMLNSC.LogMsg.USER_NAME 					= 'NULL';
+		SET OutputRoot.XMLNSC.LogMsg.TIMESTAMP 					= CURRENT_TIMESTAMP;
+		SET OutputRoot.XMLNSC.LogMsg.DIRECTION 					= NULL;
+		SET OutputRoot.XMLNSC.LogMsg.BACKENDPROVIDER 			= Environment.Variables.fileDirectory; --Directorio de entrada
+		SET OutputRoot.XMLNSC.LogMsg.ENDPOINT_NAME 				= COALESCE(Environment.Variables.fileServer,Environment.Variables.Parametros.FileServer);
+		SET OutputRoot.XMLNSC.LogMsg.OPERATION_NAME 			= Environment.Variables.Operation_Name;
+		SET OutputRoot.XMLNSC.LogMsg.MESSAGE					= 'Archivo Procesado Correctamente';			
+		IF Environment.Variables.systemId IS NOT NULL AND Environment.Variables.systemId <> '' THEN
+				SET OutputRoot.XMLNSC.LogMsg.APPOWNER 			= Environment.Variables.systemId;
+			ELSE
+				SET OutputRoot.XMLNSC.LogMsg.APPOWNER 			= BrokerName;
+		END IF;
+		SET OutputRoot.XMLNSC.LogMsg.IP 						= NULL;	
+		SET OutputRoot.XMLNSC.LogMsg.SERVICE_OPERATION_NAME 	= Environment.Variables.Operation_Name;
+		SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_DEF	 	= Environment.Variables.Bussiness_DEF;
+		SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_ID	 		= Environment.Variables.Bussiness_ID;
+		SET OutputRoot.XMLNSC.LogMsg.ORCHESTRATION_ID	 		= Environment.Variables.Orchestration_ID;
+		
+		SET OutputRoot.XMLNSC.LogMsg.PROCESS_DEF 				= COALESCE(Environment.Variables.PROCESS_DEF,Environment.Variables.PROCESSDEFINITIONID);
+		SET OutputRoot.XMLNSC.LogMsg.PROCESS_INSTANCE_ID	 	= COALESCE(Environment.Variables.PROCESS_INSTANCE_ID,Environment.Variables.PROCESSINSTANCEID);
+		SET OutputRoot.XMLNSC.LogMsg.ACTIVITY_DEF	 			= COALESCE(Environment.Variables.ACTIVITY_DEF,Environment.Variables.ACTIVITYDEFINITIONID);
+		SET OutputRoot.XMLNSC.LogMsg.ACTIVITY_STATUS	 		= '0';
+		
+		RETURN TRUE;
+	END;
+END MODULE;

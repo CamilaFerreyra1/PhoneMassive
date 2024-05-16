@@ -1,0 +1,14 @@
+CREATE PROCEDURE MapeaCabeceraError(IN prefInHeader REFERENCE, IN prefOutHeader REFERENCE)
+    BEGIN
+    /****************************************************************************
+     * Procedimiento que completa los campos de la cabecera del ResponseMessage
+     *      con los valores correspondientes a una excepcion de negocio.
+     * IN prefInHeader:     Referencia a cabecera esb de entrada.
+     * IN prefOutHeader:    Referencia a cabecera es de salida.
+     *****************************************************************************/
+        SET prefOutHeader.systemId                      = prefInHeader.systemId;
+        SET prefOutHeader.messageId						= COALESCE(OrchestrationID,TransactionID);
+       	SET prefOutHeader.timestamp                     = CURRENT_TIMESTAMP;
+        SET prefOutHeader.responseStatus.statusCode     = STR_ID_ESTADO_ERROR;
+    
+    END;

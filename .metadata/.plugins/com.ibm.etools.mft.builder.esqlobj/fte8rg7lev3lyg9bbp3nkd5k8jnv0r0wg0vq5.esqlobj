@@ -1,0 +1,25 @@
+CREATE PROCEDURE ResponseRestError(IN outputRestRef REFERENCE, IN refResponseCodes REFERENCE, IN refEnv REFERENCE)
+BEGIN
+	SET outputRestRef.messages TYPE = JSON.Array;
+	DECLARE refMessages REFERENCE TO outputRestRef.messages;
+	DECLARE refMessage 	REFERENCE TO refMessages.message[1];
+	IF FIELDNAME(refResponseCodes.*) = 'Code' THEN	--Generic y particular
+		DECLARE idx INTEGER 1;
+		FOR errorCode AS refResponseCodes.Code[] DO
+			CREATE LASTCHILD OF refMessages AS refMessage NAME 'message';
+			SET refMessage.status	= COALESCE(errorCode.ErrorStatus, errorCode.Status, '');
+			SET refMessage.code 	= COALESCE(errorCode.ErrorCode, errorCode.Code, '');
+			SET refMessage.text 	= COALESCE(refEnv.DynamicError.Message[idx].text, errorCode.ErrorText, errorCode.Message, '');
+			SET refMessage.help 	= COALESCE(refEnv.DynamicError.Message[idx].help, errorCode.ErrorHelp, errorCode.Detail, '');
+			SET idx = idx + 1;
+		END FOR;
+	ELSE
+		FOR integrationError AS refResponseCodes.GenericError[] DO	--Integration
+			CREATE LASTCHILD OF refMessages AS refMessage NAME 'message';
+			SET refMessage.status	= COALESCE(integrationError.ErrorStatus, '');
+			SET refMessage.code 	= COALESCE(integrationError.ErrorCode, '');
+			SET refMessage.text 	= COALESCE(integrationError.ErrorText, '');
+			SET refMessage.help 	= COALESCE(integrationError.ErrorHelp, '');
+		END FOR;
+	END IF;
+END;

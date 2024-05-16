@@ -1,0 +1,116 @@
+BROKER SCHEMA com.gruposancorseguros.common.Phones
+	
+CREATE PROCEDURE SumValueItem (IN messageId CHAR, IN FileName CHAR, IN RefShared REFERENCE)
+BEGIN
+	DECLARE FoundItem BOOLEAN FALSE;
+	WHILE LASTMOVE (RefShared)and NOT FoundItem DO
+		IF RefShared.ID = messageId THEN
+			SET FoundItem = TRUE;
+			SET RefShared.{FileName} = RefShared.{FileName} + 1;
+		END IF;		
+			MOVE RefShared NEXTSIBLING;
+	END WHILE;
+END;
+
+CREATE PROCEDURE FillValuesForLogs (INOUT refOut REFERENCE, IN refInVars REFERENCE)
+BEGIN
+	SET refOut.ProcessId		= refInVars.ProcessId;
+	SET refOut.messageId		= refInVars.batchId;
+	SET refOut.TributaryCode	= refInVars.TributaryCodeNumber;
+	SET refOut.documentNum		= refInVars.DocumentNumber;
+	SET refOut.registeredName	= refInVars.FullName;
+	SET refOut.AreaCode			= refInVars.AreaCode;
+	SET refOut.Phone			= refInVars.Phone;
+	SET refOut.Error			= refInVars.Item.observations;
+	SET refOut.Timestamp		= TimestampToString(CAST(CURRENT_TIMESTAMP AS CHARACTER));
+END;
+
+CREATE PROCEDURE InsertIntoProcessResults(IN refParams REFERENCE)
+BEGIN
+	DECLARE insertProcessResult ROW;
+	SET insertProcessResult.result[] = PASSTHRU('INSERT INTO BUP.PhoneMassiveProcessResult 
+            (ProcessId, ID, PersonId, PhoneId, TributaryCodeTypeId, TributaryCodeNumber,
+            DocumentTypeId, DocumentNumber, FullName, AreaCode, PhoneNumber, PhoneTypeId,
+            PersonSpreadable, Orden, Error, PhoneIdBUP, ProcessDate)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+			VALUES (refParams.ProcessId, refParams.messageId, refParams.PersonId,
+					refParams.PhoneId, refParams.TributaryCodeType, refParams.TributaryCode,
+          	 	 	refParams.DocumentType, refParams.DocumentNum, refParams.FullName,
+          	 	 	refParams.AreaCode, refParams.Phone, refParams.PhoneCodeType,
+          	 	 	refParams.PersonSpreadable, refParams.Orden, refParams.Error,
+          	 	 	refParams.PhoneId, refParams.Timestamp));
+			
+			/*
+VALUES (RefEnv.ProcessId, Environment.Variables.messageId,'0','0',RefEnv.TributaryCodeType,RefEnv.TributaryCode,
+ 	 	RefEnv.documentType,RefEnv.documentNum,RefEnv.registeredName,Environment.Variables.AreaCode,Environment.Variables.Phone,
+	  	Environment.Variables.PhoneCodeType,Null,Null,RefEnv.Error,Null,Current_timeStamp));
+          	*/
+END;
+
+CREATE FUNCTION concatedErrors (IN refInErrorItem REFERENCE, IN top INTEGER) RETURNS CHARACTER
+BEGIN
+	DECLARE error CHARACTER '';
+	WHILE LASTMOVE (refInErrorItem) DO
+		SET error = error || refInErrorItem.help;
+		MOVE refInErrorItem NEXTSIBLING REPEAT NAME;
+	END WHILE;
+	
+	RETURN SUBSTRING(error FROM 0 FOR top);
+END;
+	
+CREATE FUNCTION TimestampToString (IN dateTime CHARACTER) RETURNS CHARACTER
+BEGIN
+	DECLARE newDateTime CHARACTER dateTime;
+	
+	IF CONTAINS(newDateTime, 'TIMESTAMP') THEN
+		SET newDateTime = SUBSTRING(newDateTime AFTER 'TIMESTAMP ');
+	END IF;
+	SET newDateTime	= SUBSTRING(newDateTime FROM 1 FOR 24);
+	SET newDateTime	= REPLACE(newDateTime, '''', '');
+	SET newDateTime	= REPLACE(newDateTime, ' ', 'T');
+	
+	RETURN newDateTime;
+END;
+
+CREATE FUNCTION Canonical_BUP (IN table CHARACTER, IN CanonicalCode CHARACTER) RETURNS CHARACTER
+BEGIN
+    DECLARE query CHARACTER 
+    
+     'SELECT Name FROM BUP.Bup.' || table || ' WITH (NOLOCK)'
+        || ' WHERE CanonicalCode = ' || CanonicalCode;
+        
+ --     'SELECT Name FROM BUP.Bup.' || table || ' WITH (NOLOCK)' ||
+  --      ' WHERE CanonicalCode = ''' || CAST(CanonicalCode AS CHARACTER) || '''';
+
+    DECLARE result Character;
+
+    SET result = PASSTHRU(query);
+
+    IF result IS NULL THEN
+        THROW USER EXCEPTION MESSAGE 502 
+        VALUES('No se pudo homologar el valor canónico ' || CAST(CanonicalCode AS CHARACTER) || ' en la tabla ' || table || '.');
+    END IF;
+
+    RETURN result;
+
+END;
+
+
+CREATE FUNCTION CanonicalPhone_BUP (IN table CHARACTER, IN Id INT) RETURNS CHARACTER
+BEGIN
+    DECLARE query CHARACTER 
+        'SELECT PhoneDescription FROM BUP.Bup.' || table || ' WITH (NOLOCK)'
+        || ' WHERE Id = ' || CAST(Id AS CHARACTER);
+
+    DECLARE result Character;
+
+    SET result = PASSTHRU(query);
+
+    IF result IS NULL THEN
+        THROW USER EXCEPTION MESSAGE 502 
+        VALUES('No se pudo homologar el valor canónico ' || CAST(Id AS CHARACTER) || ' en la tabla ' || table || '.');
+    END IF;
+
+    RETURN result;
+
+END;

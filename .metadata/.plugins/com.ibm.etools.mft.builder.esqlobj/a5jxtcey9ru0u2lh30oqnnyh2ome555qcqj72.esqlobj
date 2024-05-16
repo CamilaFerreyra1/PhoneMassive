@@ -1,0 +1,13 @@
+CREATE FUNCTION TimestampToString (IN dateTime CHARACTER) RETURNS CHARACTER
+BEGIN
+	DECLARE newDateTime CHARACTER dateTime;
+	
+	IF CONTAINS(newDateTime, 'TIMESTAMP') THEN
+		SET newDateTime = SUBSTRING(newDateTime AFTER 'TIMESTAMP ');
+	END IF;
+	SET newDateTime	= SUBSTRING(newDateTime FROM 1 FOR 24);
+	SET newDateTime	= REPLACE(newDateTime, '''', '');
+	SET newDateTime	= REPLACE(newDateTime, ' ', 'T');
+	
+	RETURN newDateTime;
+END;

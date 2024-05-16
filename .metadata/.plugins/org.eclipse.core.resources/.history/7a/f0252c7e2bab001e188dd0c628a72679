@@ -1,0 +1,35 @@
+BROKER SCHEMA PhoneProcessing.com.gruposancorseguros.flow
+
+PATH com.gruposancorseguros.common.Phones;
+
+CREATE COMPUTE MODULE PhoneProcessing_Final
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE RefEnv		REFERENCE TO Environment.Variables.XMLNSC.Msg.MessageHeader;
+		DECLARE refInJson	REFERENCE TO InputRoot.JSON.Data.phone;
+		CALL SumValueItem(RefEnv.messageId, 'numPhoneForged',cacheCount.Data[1]);
+		
+		DECLARE insertValuesProcessResult ROW;
+		CREATE FIELD insertValuesProcessResult.values;
+		
+		SET insertValuesProcessResult.values.ProcessId		= RefEnv.ProcessId;
+		SET insertValuesProcessResult.values.messageId		= RefEnv.batchId;
+		SET insertValuesProcessResult.values.PersonId		= RefEnv.bupId;
+		SET insertValuesProcessResult.values.PhoneId		= refInJson.phoneID;
+		SET insertValuesProcessResult.values.TributaryCodeType	= RefEnv.TributaryCodeType;
+		SET insertValuesProcessResult.values.TributaryCode	= RefEnv.TributaryCode;
+		SET insertValuesProcessResult.values.DocumentType	= RefEnv.DocumentType;
+		SET insertValuesProcessResult.values.DocumentNum	= RefEnv.DocumentNumber;
+		SET insertValuesProcessResult.values.FullName		= RefEnv.FullName;
+		SET insertValuesProcessResult.values.AreaCode		= RefEnv.AreaCode;
+		SET insertValuesProcessResult.values.Phone			= RefEnv.Phone;
+		SET insertValuesProcessResult.values.PhoneCodeType	= refInJson.phoneType;
+		SET insertValuesProcessResult.values.PersonSpreadable	= refInJson.additionalInfo.Item.value;
+		SET insertValuesProcessResult.values.Timestamp		= TimestampToString(CAST(CURRENT_TIMESTAMP AS CHARACTER));
+		
+		CALL InsertIntoProcessResults(insertValuesProcessResult.values);
+		COMMIT;
+		
+		RETURN FALSE;
+	END;
+END MODULE; 

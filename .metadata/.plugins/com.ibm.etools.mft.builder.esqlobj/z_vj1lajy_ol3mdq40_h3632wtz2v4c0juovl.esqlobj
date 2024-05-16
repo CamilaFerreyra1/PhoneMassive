@@ -1,0 +1,51 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+        SET Environment.Variables.REST = TRUE;
+        CALL validateHeader(InputRoot);
+        IF EXISTS(Environment.Variables.ErrorCodeRes.GenericError[]) THEN
+            THROW USER EXCEPTION;
+        END IF; 
+        RETURN TRUE;
+    END;
+    
+    CREATE PROCEDURE validateHeader(IN refRoot REFERENCE)
+    BEGIN
+        ----Validación de header REST (pensado también para SOAP) -> A implementar en el proximo release de los componentes comunes.
+        SET Environment.Variables.AppID         = CAST(
+                                                  COALESCE (THE (select ITEM P.value from refRoot.XMLNSC.*:Header.*:requestHeader.messageContext.property[]
+                                                            as P where P.key = 'ApplicationId'),InputRoot.HTTPInputHeader.Applicationid)
+                                                  AS CHARACTER);
+        SET Environment.Variables.ComCode       = CAST(
+                                                  COALESCE (THE (select ITEM P.value from refRoot.XMLNSC.*:Header.*:requestHeader.messageContext.property[]
+                                                            as P where P.key = 'CompanyCode') ,InputRoot.HTTPInputHeader.Companycode) 
+                                                  AS CHARACTER);
+        SET Environment.Variables.ClientType    = CAST(
+                                                  COALESCE (THE (select ITEM P.value from refRoot.XMLNSC.*:Header.*:requestHeader.messageContext.property[]
+                                                            as P where P.key = 'ClientTypeId') , InputRoot.HTTPInputHeader.Clienttypeid )
+                                                  AS CHARACTER);
+        
+        DECLARE longAuxAppID    INTEGER LENGTH(TRANSLATE(Environment.Variables.AppID, TRANSLATE (Environment.Variables.AppID,'1234567890', ''),''));
+        DECLARE longAuxComCode  INTEGER LENGTH(TRANSLATE(Environment.Variables.ComCode, TRANSLATE (Environment.Variables.ComCode,'1234567890', ''),''));
+        DECLARE longAuxClientT  INTEGER LENGTH(TRANSLATE(Environment.Variables.ClientType, TRANSLATE (Environment.Variables.ClientType,'1234567890', ''),''));
+        DECLARE genErr REFERENCE TO Environment.Variables.ErrorCodeRes.GenericError;
+        
+        IF  LENGTH(Environment.Variables.AppID) = 0 OR Environment.Variables.AppID IS NULL OR
+            LENGTH(Environment.Variables.ComCode) = 0 OR Environment.Variables.ComCode IS NULL OR
+            LENGTH(Environment.Variables.ClientType) = 0 OR Environment.Variables.ClientType IS NULL THEN
+            
+            CREATE LASTCHILD OF Environment.Variables.ErrorCodeRes AS genErr NAME 'GenericError';
+            SET genErr.ErrorCode = 'GSS-415-001';
+            SET genErr.ErrorHelp = 'Faltan parámetros de entrada obligatorios.';
+            SET genErr.ErrorText = 'Error de esquema';
+        END IF;
+        
+        IF  longAuxAppID <> LENGTH(Environment.Variables.AppID) OR 
+            longAuxComCode <> LENGTH(Environment.Variables.ComCode) OR 
+            longAuxClientT <> LENGTH(Environment.Variables.ClientType) THEN
+            
+            CREATE LASTCHILD OF Environment.Variables.ErrorCodeRes AS genErr NAME 'GenericError';
+            SET genErr.ErrorCode = 'GSS-422-002';
+            SET genErr.ErrorHelp = 'Parámetros de entrada con valores incorrectos.';
+            SET genErr.ErrorText = 'Error de esquema';
+        END IF;
+    END;

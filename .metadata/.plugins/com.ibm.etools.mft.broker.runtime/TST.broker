@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IntegrationNodeConnectionParameters Version="10.0.0" host="ss10675.sancorseguros.net" integrationNodeName="GSS_PERSON_AND_ORGANIZATION" listenerPort="4415" userName="tstuser" xmlns="http://www.ibm.com/xmlns/prod/websphere/iib/8/IntegrationNodeConnectionParameters"/>

@@ -1,0 +1,55 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		--Se repite la salida para el Propagate out1 (logs) y para Return True
+
+		DECLARE soap NAMESPACE 'http://www.w3.org/2003/05/soap-envelope';
+		DECLARE add NAMESPACE 'http://www.w3.org/2005/08/addressing';	
+		DECLARE temp NAMESPACE 'http://tempuri.org/';	
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+		DECLARE nsscs NAMESPACE 'http://schemas.datacontract.org/2004/07/SancorSeguros.Contract.Security';
+		
+		-- Set Properties
+
+		CALL CopyMessageHeaders();
+		SET OutputRoot.HTTPInputHeader.Authorization = InputRoot.SOAP.Header.ns225:requestHeader.TokenType || ' ' || InputRoot.SOAP.Header.ns225:requestHeader.userToken;
+		SET OutputRoot.HTTPInputHeader.ConnectionDomain = InputRoot.SOAP.Header.ns225:requestHeader.ConnectionDomain;
+		-- Set Header
+
+		SET OutputRoot.SOAP.Header.add:To.(XMLNSC.Attribute)soap:mustUnderstand = '1';
+		SET OutputRoot.SOAP.Header.add:To = 'https://externalchannels-pre-ws.gruposancorseguros.com/Authhelper/Security/GeneratorSecurityTokenService.svc';--backend_URI;
+		
+		-- Set Body
+		
+		CREATE FIELD OutputRoot.SOAP.Body.temp:ValidateSecurityToken.temp:request;
+		
+		PROPAGATE TO TERMINAL 'out1' delete none;
+	
+--		-- Set Properties
+--
+--		CALL CopyMessageHeaders();
+--		SET OutputRoot.HTTPInputHeader.Authorization = Environment.BackupHeader.nsc:HeaderInfo.nsc:TokenType || ' ' || Environment.BackupHeader.nsc:HeaderInfo.nsc:Token;
+--		
+--		-- Set Header
+--
+--		SET OutputRoot.SOAP.Header.add:To.(XMLNSC.Attribute)soap:mustUnderstand = '1';
+--		SET OutputRoot.SOAP.Header.add:To = 'https://externalchannels-pre-ws.gruposancorseguros.com/Authhelper/Security/GeneratorSecurityTokenService.svc';--backend_URI;
+--		
+		-- Set Body
+		
+		--CREATE FIELD OutputRoot.SOAP.Body.temp:ValidateSecurityToken.temp:request;
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;

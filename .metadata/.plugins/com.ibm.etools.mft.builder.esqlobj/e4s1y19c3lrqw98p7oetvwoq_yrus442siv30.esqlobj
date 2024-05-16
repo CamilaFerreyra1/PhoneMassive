@@ -1,0 +1,9 @@
+CREATE PROCEDURE RowFieldsToCamelCase(IN ref REFERENCE)
+BEGIN
+	FOR Field AS ref.*[] DO
+		IF FIELDTYPE(Field) = 16777216 THEN
+			CALL RowFieldsToCamelCase(Field);
+		END IF;
+		CALL ToCamel(Field);
+	END FOR;
+END;

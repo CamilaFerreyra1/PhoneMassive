@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workingSetManager>
+<workingSet editPageId="com.ibm.etools.mft.navigator.BrokerWorkingSet.AppLib" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1698927089976_1" label="[CommonFuncsPhones]" name="[CommonFuncsPhones]">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/CommonFuncsPhones" type="4"/>
+</workingSet>
+<workingSet editPageId="com.ibm.etools.mft.navigator.BrokerWorkingSet.AppLib" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1698927089979_2" label="[DataQueuePhoneSvc]" name="[DataQueuePhoneSvc]">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/DataQueuePhoneSvc" type="4"/>
+</workingSet>
+<workingSet editPageId="com.ibm.etools.mft.navigator.BrokerWorkingSet.AppLib" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1698927089992_3" label="[FuncsInJavaLib]" name="[FuncsInJavaLib]">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/FuncsInJavaLib" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/BupPhoneMassiveConcatStrings" type="4"/>
+</workingSet>
+<workingSet editPageId="com.ibm.etools.mft.navigator.BrokerWorkingSet.AppLib" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1698927090002_4" label="[PhoneProcessing]" name="[PhoneProcessing]">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/PhoneProcessing" type="4"/>
+</workingSet>
+<workingSet editPageId="com.ibm.etools.mft.navigator.BrokerWorkingSet.AppLib" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1698927112726_5" label="[CommonErrors]" name="[CommonErrors]">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/CommonErrors" type="4"/>
+</workingSet>
+<workingSet editPageId="com.ibm.etools.mft.navigator.BrokerWorkingSet.AppLib" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1701194285179_12" label="[PhoneProcessSendMail]" name="[PhoneProcessSendMail]">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/BupPhoneMassiveConcatStrings" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/PhoneProcessSendMail" type="4"/>
+</workingSet>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1698927026540_0" label="Window Working Set" name="Aggregate for window 1698927026540"/>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1698947550659_7" label="Window Working Set" name="Aggregate for window 1698947550659"/>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1699831527129_8" label="Window Working Set" name="Aggregate for window 1699831527129"/>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1700050846191_9" label="Window Working Set" name="Aggregate for window 1700050846191"/>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1700575291671_10" label="Window Working Set" name="Aggregate for window 1700575291671"/>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1700673428031_11" label="Window Working Set" name="Aggregate for window 1700673428031"/>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1704385660608_12" label="Window Working Set" name="Aggregate for window 1704385660608"/>
+</workingSetManager>

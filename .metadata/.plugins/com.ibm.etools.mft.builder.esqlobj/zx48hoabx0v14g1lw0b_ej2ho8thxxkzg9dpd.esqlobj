@@ -1,0 +1,196 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		DECLARE nss NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/SecurityTypes';
+		DECLARE nssm NAMESPACE 'http://GrupoSancorSeguros/xsd/service/SecuritySvcMsg';
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+
+		IF 		CONTAINS(BrokerName,'CHANNEL')	THEN
+			SET Environment.Variables.FILTRO_BROKER 	= 'ARG_CHANNEL';
+		ELSEIF 	CONTAINS(BrokerName,'FICO')		THEN
+			SET Environment.Variables.FILTRO_BROKER 	= 'ARG_FICO';
+		ELSE
+			SET Environment.Variables.FILTRO_BROKER 	= 'OTROS'; 
+		END IF;
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------	
+		IF Environment.Variables.FILTRO_BROKER 	= 'ARG_CHANNEL' THEN
+			IF (EXISTS (Environment.Backup.XMLNSC.LogMsg[]) )THEN
+				SET Environment.ErrorMsg 	= Environment.Backup.XMLNSC.LogMsg;
+			ELSE
+			IF InputExceptionList <> NULL THEN 
+				DECLARE ErrorNumber INTEGER;
+				DECLARE ErrorText CHARACTER;
+				CALL getLastExceptionDetail(InputExceptionList,ErrorNumber,ErrorText);
+				
+				SET Environment.ErrorMsg.ERROR_NUMBER 				= 'ERROR_NUMBER=' || CAST(ErrorNumber AS CHARACTER); 
+				SET Environment.ErrorMsg.ERROR_TEXT 				= COALESCE(ErrorText, NULL);
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------			
+				SET Environment.ErrorMsg.EXCEPTION_LIST 			= InputExceptionList;
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			END IF;
+				
+				SET Environment.ErrorMsg.FILTRO_BROKER 				= Environment.Variables.FILTRO_BROKER;
+				SET Environment.ErrorMsg.TRANSACTION_ID 			= Environment.TransactionId;
+				SET Environment.ErrorMsg.SERVICE_NAME 				= Environment.Service.Name;
+				SET Environment.ErrorMsg.OPERATION_NAME 			= Environment.Variables.Operation_Name;
+				SET Environment.ErrorMsg.USER_NAME 		    		= Environment.UserName;
+				IF (CONTAINS(Environment.Service.Name,'InAppSvc')	= TRUE) THEN	
+					SET Environment.ErrorMsg.SECURITY_GROUP 		= Environment.BackupHeader.*:HeaderInfo_Internal.*:SecurityGroup;
+				ELSEIF (EXISTS (Environment.SecurityGroup[])) THEN
+					SET Environment.ErrorMsg.SECURITY_GROUP 		= Environment.SecurityGroup;
+				ELSE
+					SET Environment.ErrorMsg.SECURITY_GROUP = 'NULL';
+				END IF;
+				SET Environment.ErrorMsg.ERROR_LABEL 				= COALESCE(SUBSTRING(FIELDVALUE(InputExceptionList.RecoverableException.Label) FROM 1 FOR 300), NULL);
+				SET Environment.ErrorMsg.ERROR_TIMESTAMP 			= CURRENT_TIMESTAMP;			
+
+				SET Environment.ErrorMsg.DATETIME		 			= CURRENT_TIMESTAMP;
+				SET Environment.ErrorMsg.DIRECTION 					= 'BACKEND_ERROR';
+				IF Environment.Variables.systemId IS NOT NULL AND Environment.Variables.systemId <> '' THEN
+					SET Environment.ErrorMsg.APPOWNER 				= Environment.Variables.systemId;
+				ELSE
+					SET Environment.ErrorMsg.APPOWNER 				= BrokerName;
+				END IF;
+				SET Environment.ErrorMsg.BACKENDPROVIDER 			= Environment.Variables.Backend_Provider;
+				SET Environment.ErrorMsg.IP 						= Environment.Variables.ClientIP;
+				SET Environment.ErrorMsg.ENDPOINT_NAME 				= Environment.Variables.Endpoint_Name;
+				
+				SET Environment.ErrorMsg.SOAP_MESSAGE_INPUT 		= Environment.Variables.LastInputBeforeError;
+				
+				CREATE LASTCHILD OF OutputRoot.XMLNSC.ErrorMsg DOMAIN 'XMLNSC' NAME 'SOAP_MESSAGE_OUTPUT';
+				SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT.ns85:Envelope.ns85:Header	= InputRoot.SOAP.Header;
+				SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT.ns85:Envelope.ns85:Body	= InputRoot.SOAP.Body;					
+				SET Environment.ErrorMsg.SOAP_MESSAGE_OUTPUT = CAST(ASBITSTREAM(OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT)   AS CHARACTER CCSID 819);
+				
+				SET Environment.ErrorMsg.BACKEND_OPERATION_NAME 	= Environment.Service.Operation.Name;
+				SET Environment.ErrorMsg.BUSINESS_ENTITY_DEF	 	= Environment.Variables.Bussiness_DEF;
+				SET Environment.ErrorMsg.BUSINESS_ENTITY_ID	 		= Environment.Variables.Bussiness_ID;
+				SET Environment.ErrorMsg.ORCHESTRATION_ID	 		= Environment.Variables.Orchestration_ID;
+				
+			END IF;
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------	
+		ELSEIF Environment.Variables.FILTRO_BROKER 	= 'ARG_FICO' THEN
+			IF (EXISTS (Environment.Backup.XMLNSC.LogMsg[]) )THEN
+				SET Environment.ErrorMsg 	= Environment.Backup.XMLNSC.LogMsg;
+			ELSE
+
+				DECLARE ErrorNumber INTEGER;
+				DECLARE ErrorText CHARACTER;
+				CALL getLastExceptionDetail(InputExceptionList,ErrorNumber,ErrorText);
+				
+				SET Environment.ErrorMsg.ERROR_NUMBER 				= 'ERROR_NUMBER=' || CAST(ErrorNumber AS CHARACTER); 
+				SET Environment.ErrorMsg.ERROR_TEXT 				= COALESCE(ErrorText, NULL);
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------			
+				SET Environment.ErrorMsg.EXCEPTION_LIST 			= InputExceptionList;
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+							
+				SET Environment.ErrorMsg.FILTRO_BROKER 				= Environment.Variables.FILTRO_BROKER;
+				SET Environment.ErrorMsg.TRANSACTION_ID 			= Environment.TransactionId;
+				SET Environment.ErrorMsg.SERVICE_NAME 				= Environment.Service.Name;
+				SET Environment.ErrorMsg.OPERATION_NAME 			= Environment.Variables.Operation_Name;
+				SET Environment.ErrorMsg.USER_NAME 		    		= Environment.UserName;
+				IF (CONTAINS(Environment.Service.Name,'InAppSvc')	= TRUE) THEN	
+					SET Environment.ErrorMsg.SECURITY_GROUP 		= Environment.BackupHeader.*:HeaderInfo_Internal.*:SecurityGroup;
+				ELSEIF (EXISTS (Environment.SecurityGroup[])) THEN
+					SET Environment.ErrorMsg.SECURITY_GROUP 		= Environment.SecurityGroup;
+				ELSE
+					SET Environment.ErrorMsg.SECURITY_GROUP = 'NULL';
+				END IF;
+				SET Environment.ErrorMsg.ERROR_LABEL 				= COALESCE(SUBSTRING(FIELDVALUE(InputExceptionList.RecoverableException.Label) FROM 1 FOR 300), NULL);
+				SET Environment.ErrorMsg.ERROR_TIMESTAMP 			= CURRENT_TIMESTAMP;			
+
+				SET Environment.ErrorMsg.DATETIME		 			= CURRENT_TIMESTAMP;
+				SET Environment.ErrorMsg.DIRECTION 					= 'BACKEND_ERROR';
+				IF Environment.Variables.systemId IS NOT NULL AND Environment.Variables.systemId <> '' THEN
+					SET Environment.ErrorMsg.APPOWNER 				= Environment.Variables.systemId;
+				ELSE
+					SET Environment.ErrorMsg.APPOWNER 				= BrokerName;
+				END IF;
+				SET Environment.ErrorMsg.BACKENDPROVIDER 			=  Environment.Variables.Backend_Provider;
+				SET Environment.ErrorMsg.IP 						= Environment.Variables.ClientIP;
+				SET Environment.ErrorMsg.ENDPOINT_NAME 				= Environment.Variables.Endpoint_Name;
+				
+				SET Environment.ErrorMsg.SOAP_MESSAGE_INPUT 		= Environment.Variables.LastInputBeforeError;
+				SET Environment.ErrorMsg.SOAP_MESSAGE_OUTPUT 		= CAST(ASBITSTREAM(InputRoot.[<])   AS CHARACTER CCSID 819);
+				
+				SET Environment.ErrorMsg.BACKEND_OPERATION_NAME 	= Environment.Service.Operation.Name;
+				SET Environment.ErrorMsg.BUSINESS_ENTITY_DEF	 	= Environment.Variables.Bussiness_DEF;
+				SET Environment.ErrorMsg.BUSINESS_ENTITY_ID	 		= Environment.Variables.Bussiness_ID;
+				SET Environment.ErrorMsg.ORCHESTRATION_ID	 		= Environment.Variables.Orchestration_ID;
+				
+			END IF;
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------	
+		ELSEIF Environment.Variables.FILTRO_BROKER 	= 'OTROS' THEN
+			IF (EXISTS (Environment.Backup.XMLNSC.LogMsg[]) )THEN
+				SET Environment.ErrorMsg 	= Environment.Backup.XMLNSC.LogMsg;
+				ELSE
+				IF InputExceptionList <> NULL THEN 
+					DECLARE ErrorNumber INTEGER;
+					DECLARE ErrorText CHARACTER;
+					CALL getLastExceptionDetail(InputExceptionList,ErrorNumber,ErrorText);
+					
+					SET Environment.ErrorMsg.ERROR_NUMBER 				= 'ERROR_NUMBER=' || CAST(ErrorNumber AS CHARACTER); 
+					SET Environment.ErrorMsg.ERROR_TEXT 				= COALESCE(ErrorText, NULL);
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------			
+					SET Environment.ErrorMsg.EXCEPTION_LIST 			= InputExceptionList;
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				END IF;
+				
+				SET Environment.ErrorMsg.FILTRO_BROKER 				= Environment.Variables.FILTRO_BROKER;
+				SET Environment.ErrorMsg.TRANSACTION_ID 			= Environment.TransactionId;
+				SET Environment.ErrorMsg.SERVICE_NAME 				= Environment.Service.Name;
+				SET Environment.ErrorMsg.OPERATION_NAME 			= Environment.Variables.Operation_Name;
+				SET Environment.ErrorMsg.USER_NAME 		    		= Environment.UserName;
+				IF (CONTAINS(Environment.Service.Name,'InAppSvc')	= TRUE) THEN	
+					SET Environment.ErrorMsg.SECURITY_GROUP 		= Environment.BackupHeader.*:HeaderInfo_Internal.*:SecurityGroup;
+				ELSEIF (EXISTS (Environment.SecurityGroup[])) THEN
+					SET Environment.ErrorMsg.SECURITY_GROUP 		= Environment.SecurityGroup;
+				ELSE
+					SET Environment.ErrorMsg.SECURITY_GROUP 		= 'NULL';
+				END IF;
+				SET Environment.ErrorMsg.ERROR_LABEL 				= COALESCE(SUBSTRING(FIELDVALUE(InputExceptionList.RecoverableException.Label) FROM 1 FOR 300), NULL);
+				SET Environment.ErrorMsg.ERROR_TIMESTAMP 			= CURRENT_TIMESTAMP;			
+
+				SET Environment.ErrorMsg.DATETIME		 			= CURRENT_TIMESTAMP;
+				SET Environment.ErrorMsg.DIRECTION 					= 'BACKEND_ERROR';
+				IF Environment.Variables.systemId IS NOT NULL AND Environment.Variables.systemId <> '' THEN
+					SET Environment.ErrorMsg.APPOWNER 				= Environment.Variables.systemId;
+				ELSE
+					SET Environment.ErrorMsg.APPOWNER 				= BrokerName;
+				END IF;
+				SET Environment.ErrorMsg.BACKENDPROVIDER 			= Environment.Variables.Backend_Provider;
+				SET Environment.ErrorMsg.IP 						= Environment.Variables.ClientIP;
+				SET Environment.ErrorMsg.ENDPOINT_NAME 				= Environment.Variables.Endpoint_Name;
+				
+				SET Environment.ErrorMsg.SOAP_MESSAGE_INPUT 		= Environment.Variables.LastInputBeforeError;
+				SET Environment.ErrorMsg.SOAP_MESSAGE_OUTPUT 		= CAST(ASBITSTREAM(InputRoot.[<])   AS CHARACTER CCSID 819);
+				
+				SET Environment.ErrorMsg.BACKEND_OPERATION_NAME 	= Environment.Service.Operation.Name;
+				SET Environment.ErrorMsg.BUSINESS_ENTITY_DEF	 	= Environment.Variables.Bussiness_DEF;
+				SET Environment.ErrorMsg.BUSINESS_ENTITY_ID	 		= Environment.Variables.Bussiness_ID;
+				SET Environment.ErrorMsg.ORCHESTRATION_ID	 		= Environment.Variables.Orchestration_ID;
+				
+			END IF;
+	
+		END IF;
+		
+		SET OutputRoot.XMLNSC.ErrorMsg 				= Environment.ErrorMsg;
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;

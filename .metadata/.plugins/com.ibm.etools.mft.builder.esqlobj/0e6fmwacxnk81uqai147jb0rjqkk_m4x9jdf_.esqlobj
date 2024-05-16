@@ -1,0 +1,9 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+
+		SET Environment.MsgID = InputLocalEnvironment.WrittenDestination.MQ.DestinationData.msgId;
+
+		RETURN TRUE;
+	END;
+
+

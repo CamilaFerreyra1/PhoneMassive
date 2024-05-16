@@ -1,0 +1,50 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+	        
+	        DECLARE ResultSpCount ROW;
+	        CREATE FIELD ResultSpCount.Result;      
+			DECLARE PersonasEncontradasEnBup INTEGER;
+			DECLARE PersonasNoEncontradasEnBup INTEGER;
+			DECLARE TelefonosCreados INTEGER;
+			DECLARE TelefonosNoCreados INTEGER;
+
+			CALL ContabilizarTelefonos(Environment.Variables.batchId, ResultSpCount.Result[]);
+
+			SET PersonasEncontradasEnBup = CAST(ResultSpCount.Result.PersonasEncontradasEnBup AS INTEGER);
+			SET PersonasNoEncontradasEnBup = CAST(ResultSpCount.Result.PersonasNoEncontradasEnBup AS INTEGER);
+			SET TelefonosCreados = CAST(ResultSpCount.Result.TelefonosCreados AS INTEGER);
+			SET TelefonosNoCreados = CAST(ResultSpCount.Result.TelefonosNoCreados AS INTEGER);
+
+					
+			SET Environment.Variables.InsertEmail = 
+			PASSTHRU(REPLACE('INSERT INTO BUP.PhoneMassiveProcessHeader 
+				VALUES (?, ?, ?, ?, ? ,''{1}'' ,?, ?, ?, ?)', '{1}', Environment.Variables.Duration)
+	            VALUES (RefEnv.MessageHeader.batchId, RefEnv.MessageBody.Email, '0',
+	           	RefEnv.MessageBody.StartTime, Environment.Variables.EndTime, PersonasEncontradasEnBup, PersonasNoEncontradasEnBup,
+	            TelefonosCreados, TelefonosNoCreados));
+
+
+			CREATE FIELD OutputRoot.XMLNSC.Msg.MessageHeader;
+	        DECLARE refHead REFERENCE TO OutputRoot.XMLNSC.Msg.MessageHeader;
+	
+	 		SET refHead.batchId 					= Environment.Variables.batchId;
+			SET refHead.EmailEntered 				= Environment.Variables.EmailEntered;			
+			SET refHead.TotalPerson 				= Environment.Variables.TotalPerson;	  		
+			SET refHead.StartTime 					= Environment.Variables.StartTime; 				
+			SET refHead.EndTime 					= Environment.Variables.EndTime; 	
+			SET refHead.Duration 					= Environment.Variables.Duration; 			
+			SET refHead.numPeopleFound				= PersonasEncontradasEnBup;	  		
+			SET refHead.numPeopleNOTFound			= PersonasNoEncontradasEnBup;				
+			SET refHead.numPhoneForged 				= TelefonosCreados; 			
+			SET refHead.numPhoneNOTForged 			= TelefonosNoCreados;	    
+			
+			PROPAGATE TO TERMINAL 0;
+		RETURN FALSE;		
+	END;
+
+
+	CREATE PROCEDURE ContabilizarTelefonos (IN Id CHARACTER)
+	LANGUAGE DATABASE
+	DYNAMIC RESULT SETS 1
+	EXTERNAL NAME "Bup.ContabilizarTelefonosNew";
+	

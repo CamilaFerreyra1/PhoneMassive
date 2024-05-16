@@ -1,0 +1,19 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		SET OutputRoot = InputRoot;
+		SET OutputRoot.[<] = NULL;
+		
+		DECLARE soapenv NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		SET OutputRoot.XMLNSC.soapenv:Fault.faultcode	= 'SOA-GSS-1000';
+		SET OutputRoot.XMLNSC.soapenv:Fault.faultstring	= 'The operation could not be completed due to timeout';
+		SET OutputRoot.XMLNSC.soapenv:Fault.detail.TransactionId = Environment.TransactionId;
+		SET OutputLocalEnvironment.Destination.SOAP.Reply.Transport.HTTP.ReplyStatusCode = 500;
+		
+		SET Environment.Service.Operation.NameFallido	 = Environment.Variables.MensajeCompleto.Context.operation;
+		SET Environment.Variables.UserName				 = Environment.Variables.MensajeCompleto.Header.userName;
+		SET Environment.Variables.InputFallido			 = Environment.Variables.MensajeCompleto.Body;
+		
+		
+		RETURN TRUE;
+	END;
+

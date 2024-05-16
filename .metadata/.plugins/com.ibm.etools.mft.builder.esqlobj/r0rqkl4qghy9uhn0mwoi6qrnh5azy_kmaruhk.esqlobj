@@ -1,0 +1,55 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		DECLARE nss NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/SecurityTypes';
+		DECLARE nssm NAMESPACE 'http://GrupoSancorSeguros/xsd/service/SecuritySvcMsg';
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+		DECLARE temp NAMESPACE 'http://tempuri.org/';			
+		DECLARE nsscs NAMESPACE 'http://schemas.datacontract.org/2004/07/SancorSeguros.Contract.Security';
+		DECLARE nsup NAMESPACE 'http://schemas.datacontract.org/2004/07/Sancor.Issuance.PremiumCalculator.Services.Contract.UserParameters';
+		DECLARE nsss NAMESPACE 'http://sancorseguros.com/issuance/premiumcalculator/services';
+		DECLARE nsscg NAMESPACE 'http://schemas.datacontract.org/2004/07/System.Collections.Generic';
+		
+		
+		IF EXISTS(Environment.Variables.JSON[]) THEN
+            SET OutputRoot.XMLNSC.LogMsg.MESSAGE    = Environment.Variables.JSON;
+        ELSE
+            CREATE LASTCHILD OF OutputRoot.XMLNSC.LogMsg DOMAIN 'XMLNSC' NAME 'MESSAGE';
+            SET OutputRoot.XMLNSC.LogMsg.MESSAGE.ns85:Envelope.ns85:Header  = InputRoot.XMLNSC.*.Header;
+            SET OutputRoot.XMLNSC.LogMsg.MESSAGE.ns85:Envelope.ns85:Body    = InputRoot.XMLNSC.*.Body;
+        END IF;
+                
+        SET OutputRoot.XMLNSC.LogMsg.FILTRO_BROKER                       	= TRIM(BrokerName);
+        
+        SET OutputRoot.XMLNSC.LogMsg.TRANSACTION_ID                     	= COALESCE(Environment.TransactionId,TransactionID);
+        
+        SET OutputRoot.XMLNSC.LogMsg.SERVICE_NAME                         	= COALESCE(Environment.Variables.Service_Name,Service_Name);
+        SET OutputRoot.XMLNSC.LogMsg.USER_NAME                             	= Environment.Variables.UserName;
+        SET OutputRoot.XMLNSC.LogMsg.TIMESTAMP                             	= CURRENT_TIMESTAMP;
+        SET OutputRoot.XMLNSC.LogMsg.DIRECTION                             	= 'BACKEND_RESPONSE';
+        SET OutputRoot.XMLNSC.LogMsg.BACKENDPROVIDER                     	= COALESCE(Environment.Variables.Backend_Provider,InputRoot.XMLNSC.*.Context.service,InputRoot.XMLNSC.*);
+        SET OutputRoot.XMLNSC.LogMsg.ENDPOINT_NAME                         	= COALESCE(Environment.Variables.Endpoint_Name,InputLocalEnvironment.WrittenDestination.SOAP.Request.Transport.HTTP.WebServiceURL);
+        SET OutputRoot.XMLNSC.LogMsg.OPERATION_NAME                     	= COALESCE(Environment.Variables.Backend_Operation,InputRoot.XMLNSC.*.Context.operation,InputRoot.XMLNSC.*);
+
+        SET OutputRoot.XMLNSC.LogMsg.APPOWNER                             	= BrokerName;
+        SET OutputRoot.XMLNSC.LogMsg.IP                                 	= COALESCE(Environment.Variables.ClientIP,ClientIP);
+        SET OutputRoot.XMLNSC.LogMsg.SERVICE_OPERATION_NAME             	= COALESCE(Environment.Variables.Operation_Name,Operation_Name);
+        SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_DEF	 				= COALESCE(Environment.Variables.BUSINESSDEF,Environment.Variables.BUSINESSENTITYDEF,Environment.Variables.Bussiness_DEF);
+		SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_ID	 					= COALESCE(Environment.Variables.BUSINESSID, Environment.Variables.BUSINESSENTITYID,Environment.Variables.Bussiness_ID);
+		SET OutputRoot.XMLNSC.LogMsg.ORCHESTRATION_ID                     	= Environment.Variables.Orchestration_ID;
+		
+		SET OutputRoot.XMLNSC.LogMsg.PROCESS_DEF 							= COALESCE(Environment.Variables.PROCESS_DEF,Environment.Variables.PROCESSDEFINITIONID);
+		SET OutputRoot.XMLNSC.LogMsg.PROCESS_INSTANCE_ID	 				= COALESCE(Environment.Variables.PROCESS_INSTANCE_ID,Environment.Variables.PROCESSINSTANCEID);
+		SET OutputRoot.XMLNSC.LogMsg.ACTIVITY_DEF	 						= COALESCE(Environment.Variables.ACTIVITY_DEF,Environment.Variables.ACTIVITYDEFINITIONID);
+		SET OutputRoot.XMLNSC.LogMsg.ACTIVITY_STATUS	 					= '0';
+		
+		SET Environment.Variables.JSON = NULL;
+		SET Environment.Variables.Backend_Provider 	= 	NULL;
+        SET Environment.Variables.Endpoint_Name 	= 	NULL;
+        SET Environment.Variables.Backend_Operation =   NULL;
+		
+		
+		
+		
+        RETURN TRUE;
+	END;
+

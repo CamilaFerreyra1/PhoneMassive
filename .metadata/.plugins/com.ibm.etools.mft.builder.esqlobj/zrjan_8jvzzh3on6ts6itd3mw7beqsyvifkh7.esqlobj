@@ -1,0 +1,8 @@
+CREATE PROCEDURE FreeParsers(IN refToFree REFERENCE)
+	/***********************************************************************************
+	 * Procedimiento que elimina el parser utilizado para hacer logeos de base de datos*
+	 * Se toma de referencia la raiz de salida										   *
+	 ***********************************************************************************/
+    BEGIN
+		SET refToFree.XMLNSC =NULL;
+    END;

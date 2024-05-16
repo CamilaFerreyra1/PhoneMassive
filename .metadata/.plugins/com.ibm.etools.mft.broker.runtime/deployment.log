@@ -1,0 +1,619 @@
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1698931222975
+2871<<Administration Result<<2023-11-02 10:20:37.891 ART<<mqm[devuser]<<deploy<<C:/AARepositos Sancor/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1698931275990
+2871<<Administration Result<<2023-11-02 10:21:17.635 ART<<mqm[tstuser]<<deploy<<C:/AARepositos Sancor/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1698931301407
+2087<<Runtime Response<<2023-11-02 10:21:42.355 ART<<GSS_PERSON_AND_ORGANIZATION<<4b743c36-47ec-11e8-a0a1-ac14154b0000
+4041<<Runtime Response<<2023-11-02 10:21:42.355 ART<<OPERATIONS_BUP_ONLINE<<e1328c8c-28fa-4b9c-ae21-e570e6456e73
+4502<<Runtime Response<<2023-11-02 10:21:42.355 ART<</var/mqsi/components/GSS_PERSON_AND_ORGANIZATION/e1328c8c-28fa-4b9c-ae21-e570e6456e73/config/5140fef3-e756-46fc-82fb-28085dcbcc73/JAR/FuncsInJavaLib.mqsiLibrary/
+3202<<Runtime Response<<2023-11-02 10:21:42.355 ART<<com.gruposancorseguros.subflow.SendMail_MapReqSendMail.ConcatStringFound<<1.2<<com.gruposancorseguros.java.BupPersonMassiveSearch.ConcatString.concatStringFound<<ConcatStringFound
+2943<<Runtime Response<<2023-11-02 10:21:42.355 ART<<com.gruposancorseguros.java.BupPersonMassiveSearch.ConcatString.concatStringFound
+2871<<Administration Result<<2023-11-02 10:21:42.355 ART<<mqm[preuser]<<deploy<<C:/AARepositos Sancor/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<FAILED
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1698931397586
+2087<<Runtime Response<<2023-11-02 10:23:17.857 ART<<GSS_PERSON_AND_ORGANIZATION<<4b743c36-47ec-11e8-a0a1-ac14154b0000
+4041<<Runtime Response<<2023-11-02 10:23:17.858 ART<<OPERATIONS_BUP_ONLINE<<e1328c8c-28fa-4b9c-ae21-e570e6456e73
+4502<<Runtime Response<<2023-11-02 10:23:17.858 ART<</var/mqsi/components/GSS_PERSON_AND_ORGANIZATION/e1328c8c-28fa-4b9c-ae21-e570e6456e73/config/ebebfa89-f9a7-40a3-9be1-50b12bba879b/JAR/FuncsInJavaLib.mqsiLibrary/
+3202<<Runtime Response<<2023-11-02 10:23:17.858 ART<<com.gruposancorseguros.subflow.SendMail_MapReqSendMail.ConcatMsgBody<<1.2<<com.gruposancorseguros.java.BupPersonMassiveSearch.ConcatString.concatMsgBody<<ConcatMsgBody
+2943<<Runtime Response<<2023-11-02 10:23:17.858 ART<<com.gruposancorseguros.java.BupPersonMassiveSearch.ConcatString.concatMsgBody
+2871<<Administration Result<<2023-11-02 10:23:17.858 ART<<mqm[preuser]<<deploy<<C:/AARepositos Sancor/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<FAILED
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1698931445733
+2087<<Runtime Response<<2023-11-02 10:24:36.972 ART<<GSS_PERSON_AND_ORGANIZATION<<4aed17f4-43f7-11e8-89ae-ac14144a0000
+4041<<Runtime Response<<2023-11-02 10:24:36.972 ART<<OPERATIONS_BUP_ONLINE<<9e5ae10c-b384-40f7-830e-2baf91f3f7ae
+4502<<Runtime Response<<2023-11-02 10:24:36.972 ART<</var/mqsi/components/GSS_PERSON_AND_ORGANIZATION/9e5ae10c-b384-40f7-830e-2baf91f3f7ae/config/d1203f1a-e321-4cc7-b995-3dc3d5286ad8/JAR/FuncsInJavaLib.mqsiLibrary/
+3202<<Runtime Response<<2023-11-02 10:24:36.972 ART<<com.gruposancorseguros.subflow.SendMail_MapReqSendMail.ConcatStringFound<<1.2<<com.gruposancorseguros.java.BupPersonMassiveSearch.ConcatString.concatStringFound<<ConcatStringFound
+2943<<Runtime Response<<2023-11-02 10:24:36.972 ART<<com.gruposancorseguros.java.BupPersonMassiveSearch.ConcatString.concatStringFound
+2871<<Administration Result<<2023-11-02 10:24:36.973 ART<<mqm[devuser]<<deploy<<C:/AARepositos Sancor/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<FAILED
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1698933118007
+2871<<Administration Result<<2023-11-02 10:51:59.109 ART<<mqm[tstuser]<<deploy<<C:/AARepositos Sancor/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+FuncsInJavaLib>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1698935351565
+2871<<Administration Result<<2023-11-02 11:29:11.558 ART<<mqm[preuser]<<deploy<<C:/AARepositos Sancor/massivephonesprocess/GeneratedBarFiles/FuncsInJavaLibproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699009517269
+2871<<Administration Result<<2023-11-03 08:05:17.280 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699368528249
+2871<<Administration Result<<2023-11-07 11:48:48.958 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699368696662
+2871<<Administration Result<<2023-11-07 11:51:36.702 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699373746179
+2871<<Administration Result<<2023-11-07 13:15:48.428 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699373770769
+2871<<Administration Result<<2023-11-07 13:16:17.044 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699528026726
+2871<<Administration Result<<2023-11-09 08:07:08.370 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699528973856
+2871<<Administration Result<<2023-11-09 08:22:56.447 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699549426517
+2871<<Administration Result<<2023-11-09 14:03:47.882 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699554637776
+2871<<Administration Result<<2023-11-09 15:30:44.694 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699554726954
+2871<<Administration Result<<2023-11-09 15:32:09.590 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699559176143
+2871<<Administration Result<<2023-11-09 16:46:19.952 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699559337125
+2871<<Administration Result<<2023-11-09 16:49:01.290 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699615720884
+2871<<Administration Result<<2023-11-10 08:28:47.318 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699626197075
+2871<<Administration Result<<2023-11-10 11:23:17.327 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699626707504
+2871<<Administration Result<<2023-11-10 11:31:54.577 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699627017002
+2871<<Administration Result<<2023-11-10 11:37:06.783 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699627057834
+2871<<Administration Result<<2023-11-10 11:37:45.078 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699627066491
+2871<<Administration Result<<2023-11-10 11:37:47.784 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699627098899
+2871<<Administration Result<<2023-11-10 11:38:24.238 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699627158337
+2871<<Administration Result<<2023-11-10 11:39:20.550 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699627208623
+2871<<Administration Result<<2023-11-10 11:40:11.980 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699627218563
+2871<<Administration Result<<2023-11-10 11:40:23.494 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699631057717
+2871<<Administration Result<<2023-11-10 12:44:18.906 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699631073433
+2871<<Administration Result<<2023-11-10 12:44:38.034 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699631717986
+2871<<Administration Result<<2023-11-10 12:55:19.002 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699631740423
+2871<<Administration Result<<2023-11-10 12:55:45.836 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699631771106
+2871<<Administration Result<<2023-11-10 12:56:14.792 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699631972778
+2871<<Administration Result<<2023-11-10 12:59:32.725 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699632150520
+2871<<Administration Result<<2023-11-10 13:02:35.579 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699632870337
+2871<<Administration Result<<2023-11-10 13:14:35.961 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+CommonFuncsPhones>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1699637256189
+2851<<GSS_PERSON_AND_ORGANIZATION<<2023-11-10 14:27:35.607 ART<<deploy<<ExecutionGroup<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<9e5ae10c-b384-40f7-830e-2baf91f3f7ae<<<<<<<<<<
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1699637312424
+2851<<GSS_PERSON_AND_ORGANIZATION<<2023-11-10 14:28:31.815 ART<<deploy<<ExecutionGroup<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<9e5ae10c-b384-40f7-830e-2baf91f3f7ae<<<<<<<<<<
+CommonFuncsPhones>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1699638576452
+2851<<GSS_PERSON_AND_ORGANIZATION<<2023-11-10 14:49:35.837 ART<<deploy<<ExecutionGroup<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<9e5ae10c-b384-40f7-830e-2baf91f3f7ae<<<<<<<<<<
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>CONTAINER_1>>2>>1699638988729
+2087<<Runtime Response<<2023-11-10 14:56:29.720 ART<<GSS_PERSON_AND_ORGANIZATION<<4aed17f4-43f7-11e8-89ae-ac14144a0000
+4041<<Runtime Response<<2023-11-10 14:56:29.721 ART<<CONTAINER_1<<8530c681-ca52-4d39-9309-ebfb7cc6414d
+1301<<Runtime Response<<2023-11-10 14:56:29.721 ART<<PhoneProcessing<<CommonErrors<<PhoneProcessing
+2871<<Administration Result<<2023-11-10 14:56:29.722 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<CONTAINER_1<<ExecutionGroup<<FAILED
+CommonErrors>>GSS_PERSON_AND_ORGANIZATION>>CONTAINER_1>>0>>1699639023142
+2871<<Administration Result<<2023-11-10 14:57:11.998 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/CommonErrorsproject.generated.bar<<BAR<<CONTAINER_1<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>CONTAINER_1>>0>>1699639044722
+2871<<Administration Result<<2023-11-10 14:57:25.727 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<CONTAINER_1<<ExecutionGroup<<COMPLETE
+CommonFuncsPhones>>GSS_PERSON_AND_ORGANIZATION>>CONTAINER_1>>0>>1699639061157
+2871<<Administration Result<<2023-11-10 14:57:40.742 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/CommonFuncsPhonesproject.generated.bar<<BAR<<CONTAINER_1<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699641226383
+2871<<Administration Result<<2023-11-10 15:33:46.464 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699641235450
+2871<<Administration Result<<2023-11-10 15:34:17.760 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699641325614
+2871<<Administration Result<<2023-11-10 15:35:27.341 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699641355168
+2871<<Administration Result<<2023-11-10 15:35:55.334 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+CommonFuncsPhones>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699641372831
+2871<<Administration Result<<2023-11-10 15:36:12.325 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/CommonFuncsPhonesproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+FuncsInJavaLib>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699641381759
+2871<<Administration Result<<2023-11-10 15:36:25.019 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/FuncsInJavaLibproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699641961284
+2871<<Administration Result<<2023-11-10 15:46:03.099 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699706221475
+2871<<Administration Result<<2023-11-11 09:37:06.808 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+CommonFuncsPhones>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699708653393
+2871<<Administration Result<<2023-11-11 10:17:33.055 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/CommonFuncsPhonesproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+CommonFuncsPhones>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699708674751
+2871<<Administration Result<<2023-11-11 10:17:54.434 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/CommonFuncsPhonesproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+FuncsInJavaLib>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699708696329
+2871<<Administration Result<<2023-11-11 10:18:17.108 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/FuncsInJavaLibproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699792471411
+2871<<Administration Result<<2023-11-12 09:34:37.224 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699794113782
+2871<<Administration Result<<2023-11-12 10:01:58.518 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699794530958
+2871<<Administration Result<<2023-11-12 10:08:54.523 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699795796528
+2871<<Administration Result<<2023-11-12 10:30:00.919 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699828113334
+2871<<Administration Result<<2023-11-12 19:28:38.126 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699828601041
+2871<<Administration Result<<2023-11-12 19:36:42.071 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699830270486
+2871<<Administration Result<<2023-11-12 20:04:34.290 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699830892117
+2871<<Administration Result<<2023-11-12 20:14:56.847 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699830905716
+2871<<Administration Result<<2023-11-12 20:15:08.080 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699831382149
+2871<<Administration Result<<2023-11-12 20:23:07.799 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699831682079
+2871<<Administration Result<<2023-11-12 20:28:06.592 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699834668230
+2871<<Administration Result<<2023-11-12 21:17:48.836 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+CommonFuncsPhones>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699834677414
+2871<<Administration Result<<2023-11-12 21:17:57.706 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/CommonFuncsPhonesproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+CommonFuncsPhones>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699835426383
+2871<<Administration Result<<2023-11-12 21:30:26.471 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/CommonFuncsPhonesproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+CommonFuncsPhones>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699835988050
+2871<<Administration Result<<2023-11-12 21:39:48.072 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/CommonFuncsPhonesproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699835998113
+2871<<Administration Result<<2023-11-12 21:41:58.911 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699836126759
+2871<<Administration Result<<2023-11-12 21:42:09.809 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699836188640
+2871<<Administration Result<<2023-11-12 21:43:10.742 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699837367555
+2871<<Administration Result<<2023-11-12 22:02:52.015 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699837802768
+2871<<Administration Result<<2023-11-12 22:10:07.901 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699838278814
+2871<<Administration Result<<2023-11-12 22:18:03.816 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699838366847
+2871<<Administration Result<<2023-11-12 22:19:29.593 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699838556528
+2871<<Administration Result<<2023-11-12 22:22:40.567 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699838920077
+2871<<Administration Result<<2023-11-12 22:28:45.167 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699845738078
+2871<<Administration Result<<2023-11-13 00:22:18.366 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699845750049
+2871<<Administration Result<<2023-11-13 00:22:33.100 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699845764783
+2871<<Administration Result<<2023-11-13 00:22:49.376 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699846188174
+2871<<Administration Result<<2023-11-13 00:29:49.606 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699846248553
+2871<<Administration Result<<2023-11-13 00:30:49.587 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699875022681
+2871<<Administration Result<<2023-11-13 08:30:25.809 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699875412235
+2871<<Administration Result<<2023-11-13 08:37:05.820 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699875437463
+2871<<Administration Result<<2023-11-13 08:37:21.363 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699875951157
+2871<<Administration Result<<2023-11-13 08:45:54.985 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699878998494
+2871<<Administration Result<<2023-11-13 09:36:43.592 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699879256378
+2871<<Administration Result<<2023-11-13 09:40:59.137 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699879633885
+2871<<Administration Result<<2023-11-13 09:47:14.919 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699883287014
+2871<<Administration Result<<2023-11-13 10:48:11.013 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699883653944
+2871<<Administration Result<<2023-11-13 10:54:16.572 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699884258812
+2871<<Administration Result<<2023-11-13 11:04:22.605 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699884834446
+2871<<Administration Result<<2023-11-13 11:13:58.216 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699885395774
+2871<<Administration Result<<2023-11-13 11:23:18.722 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1699886371794
+2087<<Runtime Response<<2023-11-13 11:39:35.256 ART<<GSS_PERSON_AND_ORGANIZATION<<4b743c36-47ec-11e8-a0a1-ac14154b0000
+4041<<Runtime Response<<2023-11-13 11:39:35.257 ART<<OPERATIONS_BUP_ONLINE<<2692dd06-326a-4228-9340-f34b0c4dfe41
+2560<<Runtime Response<<2023-11-13 11:39:35.257 ART<<PhoneProcessing.com.gruposancorseguros.flow.PhoneProcessing_SendQueueMail.Main<<18.9
+2871<<Administration Result<<2023-11-13 11:39:35.257 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<FAILED
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699886949986
+2871<<Administration Result<<2023-11-13 11:49:10.872 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699887132709
+2871<<Administration Result<<2023-11-13 11:52:17.283 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699891790238
+2871<<Administration Result<<2023-11-13 13:09:54.859 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699891983226
+2871<<Administration Result<<2023-11-13 13:13:08.137 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699892509707
+2871<<Administration Result<<2023-11-13 13:21:56.211 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699894712606
+2871<<Administration Result<<2023-11-13 13:58:37.120 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699894932342
+2871<<Administration Result<<2023-11-13 14:02:17.817 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699971738986
+2871<<Administration Result<<2023-11-14 11:22:28.744 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699971758141
+2871<<Administration Result<<2023-11-14 11:22:40.998 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699971770367
+2871<<Administration Result<<2023-11-14 11:22:51.885 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699972901257
+2871<<Administration Result<<2023-11-14 11:41:42.265 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1699978589470
+2087<<Runtime Response<<2023-11-14 13:16:29.735 ART<<GSS_PERSON_AND_ORGANIZATION<<4b743c36-47ec-11e8-a0a1-ac14154b0000
+4041<<Runtime Response<<2023-11-14 13:16:29.735 ART<<OPERATIONS_BUP_ONLINE<<e1328c8c-28fa-4b9c-ae21-e570e6456e73
+2940<<Runtime Response<<2023-11-14 13:16:29.735 ART<<com.gruposancorseguros.subflow.SendMail_SendMail.Main<<35.50<<<<ConcatStringFound<<11<<9
+2871<<Administration Result<<2023-11-14 13:16:29.735 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<FAILED
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699978924479
+2871<<Administration Result<<2023-11-14 13:22:05.328 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699978990343
+2871<<Administration Result<<2023-11-14 13:23:14.908 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1699979242517
+2871<<Administration Result<<2023-11-14 13:27:25.778 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699979345675
+2871<<Administration Result<<2023-11-14 13:29:10.644 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699979609755
+2871<<Administration Result<<2023-11-14 13:33:30.037 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1699979617825
+2871<<Administration Result<<2023-11-14 13:33:41.748 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700053138465
+2871<<Administration Result<<2023-11-15 09:59:03.322 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700053746901
+2871<<Administration Result<<2023-11-15 10:09:10.285 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700053778496
+2871<<Administration Result<<2023-11-15 10:09:42.008 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700054350059
+2871<<Administration Result<<2023-11-15 10:19:13.689 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700055074167
+2871<<Administration Result<<2023-11-15 10:31:27.576 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>5>>1700054808815
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700056353744
+2871<<Administration Result<<2023-11-15 10:52:41.231 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1700056765261
+2087<<Runtime Response<<2023-11-15 11:00:26.080 ART<<GSS_PERSON_AND_ORGANIZATION<<4b743c36-47ec-11e8-a0a1-ac14154b0000
+4041<<Runtime Response<<2023-11-15 11:00:26.080 ART<<OPERATIONS_BUP_ONLINE<<2692dd06-326a-4228-9340-f34b0c4dfe41
+2266<<Runtime Response<<2023-11-15 11:00:26.080 ART<<72ccc22b-3412-43a4-beac-a18f2f131212<<PhoneProcessing<<.APPZIP<<OPERATIONS_BUP_ONLINE
+2871<<Administration Result<<2023-11-15 11:00:26.080 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<FAILED
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>2>>1700056823751
+2087<<Runtime Response<<2023-11-15 11:00:26.118 ART<<GSS_PERSON_AND_ORGANIZATION<<4b743c36-47ec-11e8-a0a1-ac14154b0000
+4041<<Runtime Response<<2023-11-15 11:00:26.118 ART<<OPERATIONS_BUP_ONLINE<<2692dd06-326a-4228-9340-f34b0c4dfe41
+2266<<Runtime Response<<2023-11-15 11:00:26.118 ART<<72ccc22b-3412-43a4-beac-a18f2f131212<<PhoneProcessing<<.APPZIP<<OPERATIONS_BUP_ONLINE
+2871<<Administration Result<<2023-11-15 11:00:26.118 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<FAILED
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700056896468
+2871<<Administration Result<<2023-11-15 11:01:42.384 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700057075321
+2871<<Administration Result<<2023-11-15 11:04:41.450 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700057185815
+2871<<Administration Result<<2023-11-15 11:06:34.201 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700057420861
+2871<<Administration Result<<2023-11-15 11:10:21.368 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700057811289
+2871<<Administration Result<<2023-11-15 11:16:58.253 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700057865658
+2871<<Administration Result<<2023-11-15 11:17:48.488 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700063669197
+2871<<Administration Result<<2023-11-15 12:54:35.970 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700063863997
+2871<<Administration Result<<2023-11-15 12:57:49.033 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700064484013
+2871<<Administration Result<<2023-11-15 13:08:08.002 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700064514356
+2871<<Administration Result<<2023-11-15 13:08:41.446 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700154125989
+2871<<Administration Result<<2023-11-16 14:02:09.130 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700155174203
+2871<<Administration Result<<2023-11-16 14:19:35.123 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700241247218
+2871<<Administration Result<<2023-11-17 14:14:07.818 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700242323965
+2871<<Administration Result<<2023-11-17 14:33:42.144 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700242366602
+2871<<Administration Result<<2023-11-17 14:33:47.958 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700242427428
+2871<<Administration Result<<2023-11-17 14:33:53.768 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+SendMailPhone.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700242922677
+2871<<Administration Result<<2023-11-17 14:42:05.225 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/SendMailPhone.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700244492312
+2871<<Administration Result<<2023-11-17 15:09:04.312 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700244552281
+2871<<Administration Result<<2023-11-17 15:09:15.345 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700575555848
+2871<<Administration Result<<2023-11-21 11:05:57.164 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700575572304
+2871<<Administration Result<<2023-11-21 11:06:18.256 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700575595074
+2871<<Administration Result<<2023-11-21 11:06:42.703 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700575806339
+2871<<Administration Result<<2023-11-21 11:10:07.602 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700576207390
+2871<<Administration Result<<2023-11-21 11:16:54.736 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700576865356
+2871<<Administration Result<<2023-11-21 11:28:11.339 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700576947178
+2871<<Administration Result<<2023-11-21 11:29:13.693 ART<<mqm[tstuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700576962894
+2871<<Administration Result<<2023-11-21 11:29:33.753 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700577273036
+2871<<Administration Result<<2023-11-21 11:34:41.076 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700577324990
+2871<<Administration Result<<2023-11-21 11:35:29.551 ART<<mqm[devuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700577427402
+2871<<Administration Result<<2023-11-21 11:37:09.223 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700577443052
+2871<<Administration Result<<2023-11-21 11:37:28.283 ART<<mqm[preuser]<<deploy<<C:/AA ReposBUP/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700606094353
+2871<<Administration Result<<2023-11-21 19:34:57.176 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700665716113
+2871<<Administration Result<<2023-11-22 12:08:40.192 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700665735663
+2871<<Administration Result<<2023-11-22 12:08:58.522 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700667375273
+2871<<Administration Result<<2023-11-22 12:36:19.048 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700667386911
+2871<<Administration Result<<2023-11-22 12:36:29.418 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700735123353
+2871<<Administration Result<<2023-11-23 07:25:27.319 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700735135103
+2871<<Administration Result<<2023-11-23 07:25:38.974 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700735150334
+2871<<Administration Result<<2023-11-23 07:25:54.233 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700735159561
+2871<<Administration Result<<2023-11-23 07:26:05.429 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700735174296
+2871<<Administration Result<<2023-11-23 07:26:16.134 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700735184202
+2871<<Administration Result<<2023-11-23 07:26:27.899 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700739367459
+2871<<Administration Result<<2023-11-23 08:36:13.335 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700739381227
+2871<<Administration Result<<2023-11-23 08:36:22.606 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700740892891
+2871<<Administration Result<<2023-11-23 09:01:38.540 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700741082995
+2871<<Administration Result<<2023-11-23 09:04:44.524 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700742094731
+2871<<Administration Result<<2023-11-23 09:21:37.808 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700742213995
+2871<<Administration Result<<2023-11-23 09:23:39.113 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+DataQueuePhoneSvc>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700742289586
+2871<<Administration Result<<2023-11-23 09:24:55.371 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/DataQueuePhoneSvcproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700744308059
+2871<<Administration Result<<2023-11-23 09:58:28.908 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700744934893
+2871<<Administration Result<<2023-11-23 10:08:55.882 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700745068510
+2871<<Administration Result<<2023-11-23 10:11:09.647 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700745179587
+2871<<Administration Result<<2023-11-23 10:13:00.161 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1700745188115
+2871<<Administration Result<<2023-11-23 10:13:13.336 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700748607808
+2871<<Administration Result<<2023-11-23 11:10:09.267 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700748617354
+2871<<Administration Result<<2023-11-23 11:10:20.840 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700748626608
+2871<<Administration Result<<2023-11-23 11:10:30.241 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700753642748
+2871<<Administration Result<<2023-11-23 12:34:07.343 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700753656850
+2871<<Administration Result<<2023-11-23 12:34:18.193 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700778998696
+2871<<Administration Result<<2023-11-23 19:36:40.401 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700779007957
+2871<<Administration Result<<2023-11-23 19:36:50.560 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700779029411
+2871<<Administration Result<<2023-11-23 19:37:10.801 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700779037316
+2871<<Administration Result<<2023-11-23 19:37:20.859 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700824636064
+2871<<Administration Result<<2023-11-24 08:17:19.264 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1700824647549
+2871<<Administration Result<<2023-11-24 08:18:38.628 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701081096386
+2871<<Administration Result<<2023-11-27 07:31:41.083 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701081108205
+2871<<Administration Result<<2023-11-27 07:31:53.872 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701081982686
+2871<<Administration Result<<2023-11-27 07:46:25.449 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701082132211
+2871<<Administration Result<<2023-11-27 07:48:55.617 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701083075148
+2871<<Administration Result<<2023-11-27 08:04:44.608 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701083092959
+2871<<Administration Result<<2023-11-27 08:04:54.975 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701083297239
+2871<<Administration Result<<2023-11-27 08:08:19.477 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701083842843
+2871<<Administration Result<<2023-11-27 08:17:27.807 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701084151576
+2871<<Administration Result<<2023-11-27 08:22:35.392 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701084324753
+2871<<Administration Result<<2023-11-27 08:25:29.617 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701084836469
+2871<<Administration Result<<2023-11-27 08:34:01.266 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701085090929
+2871<<Administration Result<<2023-11-27 08:38:16.343 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701086413750
+2871<<Administration Result<<2023-11-27 09:02:48.590 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701086445564
+2871<<Administration Result<<2023-11-27 09:02:53.888 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701086489439
+2871<<Administration Result<<2023-11-27 09:02:59.233 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701086576546
+2871<<Administration Result<<2023-11-27 09:03:04.533 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701086923397
+2871<<Administration Result<<2023-11-27 09:09:04.406 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701086952440
+2871<<Administration Result<<2023-11-27 09:09:14.930 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701087210962
+2871<<Administration Result<<2023-11-27 09:13:34.781 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701087225553
+2871<<Administration Result<<2023-11-27 09:13:50.249 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701087588754
+2871<<Administration Result<<2023-11-27 09:19:50.672 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701087971504
+2871<<Administration Result<<2023-11-27 09:26:16.069 ART<<mqm[tstuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701088095390
+2871<<Administration Result<<2023-11-27 09:28:20.277 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701088110347
+2871<<Administration Result<<2023-11-27 09:28:31.049 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701109317637
+2871<<Administration Result<<2023-11-27 15:21:57.913 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701109326161
+2871<<Administration Result<<2023-11-27 15:22:10.663 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701110138997
+2871<<Administration Result<<2023-11-27 15:35:39.561 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701110145942
+2871<<Administration Result<<2023-11-27 15:35:49.564 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701110160264
+2871<<Administration Result<<2023-11-27 15:36:01.705 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701110167854
+2871<<Administration Result<<2023-11-27 15:36:11.311 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701110854003
+2871<<Administration Result<<2023-11-27 15:47:34.976 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701110862369
+2871<<Administration Result<<2023-11-27 15:47:45.525 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701113500836
+2871<<Administration Result<<2023-11-27 16:31:42.349 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701113509287
+2871<<Administration Result<<2023-11-27 16:31:50.603 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701113559148
+2871<<Administration Result<<2023-11-27 16:32:44.489 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701113570577
+2871<<Administration Result<<2023-11-27 16:32:53.317 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701133355050
+2871<<Administration Result<<2023-11-27 22:02:40.052 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701133369170
+2871<<Administration Result<<2023-11-27 22:02:53.542 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701133727280
+2871<<Administration Result<<2023-11-27 22:08:50.908 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701133738037
+2871<<Administration Result<<2023-11-27 22:09:00.548 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701134118764
+2871<<Administration Result<<2023-11-27 22:15:21.102 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701134127810
+2871<<Administration Result<<2023-11-27 22:15:30.777 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701134191684
+2871<<Administration Result<<2023-11-27 22:16:34.558 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701134200309
+2871<<Administration Result<<2023-11-27 22:16:41.057 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701174203915
+2871<<Administration Result<<2023-11-28 09:23:25.119 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701174213077
+2871<<Administration Result<<2023-11-28 09:23:33.611 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701195237708
+2871<<Administration Result<<2023-11-28 15:14:06.241 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701195253968
+2871<<Administration Result<<2023-11-28 15:14:18.605 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701195496716
+2871<<Administration Result<<2023-11-28 15:18:27.055 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701195513523
+2871<<Administration Result<<2023-11-28 15:18:40.406 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701195722901
+2871<<Administration Result<<2023-11-28 15:22:12.845 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701195739746
+2871<<Administration Result<<2023-11-28 15:22:26.631 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701195921576
+2871<<Administration Result<<2023-11-28 15:25:28.554 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701195937181
+2871<<Administration Result<<2023-11-28 15:25:46.074 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701196233438
+2871<<Administration Result<<2023-11-28 15:30:39.168 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701196247419
+2871<<Administration Result<<2023-11-28 15:30:56.687 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701217189172
+2871<<Administration Result<<2023-11-28 21:19:58.568 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701217206015
+2871<<Administration Result<<2023-11-28 21:20:15.512 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701218333950
+2871<<Administration Result<<2023-11-28 21:39:03.584 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701218350896
+2871<<Administration Result<<2023-11-28 21:39:16.031 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701218887276
+2871<<Administration Result<<2023-11-28 21:48:14.290 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701218906629
+2871<<Administration Result<<2023-11-28 21:48:36.380 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701219409147
+2871<<Administration Result<<2023-11-28 21:56:54.898 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701219423351
+2871<<Administration Result<<2023-11-28 21:57:10.338 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701219525505
+2871<<Administration Result<<2023-11-28 21:58:55.657 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701219549444
+2871<<Administration Result<<2023-11-28 21:59:16.381 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701219563821
+2871<<Administration Result<<2023-11-28 21:59:31.956 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701255831196
+2871<<Administration Result<<2023-11-29 08:03:56.850 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701255843661
+2871<<Administration Result<<2023-11-29 08:04:10.509 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701256090103
+2871<<Administration Result<<2023-11-29 08:08:17.531 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701256104396
+2871<<Administration Result<<2023-11-29 08:08:31.431 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701257358047
+2871<<Administration Result<<2023-11-29 08:29:26.349 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701257372857
+2871<<Administration Result<<2023-11-29 08:29:39.469 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701257662609
+2871<<Administration Result<<2023-11-29 08:34:32.052 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701257685717
+2871<<Administration Result<<2023-11-29 08:34:52.808 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701257700188
+2871<<Administration Result<<2023-11-29 08:35:03.710 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701257806745
+2871<<Administration Result<<2023-11-29 08:36:50.223 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701257818822
+2871<<Administration Result<<2023-11-29 08:37:04.171 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701258372353
+2871<<Administration Result<<2023-11-29 08:46:16.581 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701258384350
+2871<<Administration Result<<2023-11-29 08:46:28.079 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701258483144
+2871<<Administration Result<<2023-11-29 08:48:09.661 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701258496274
+2871<<Administration Result<<2023-11-29 08:48:24.064 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701258562924
+2871<<Administration Result<<2023-11-29 08:49:30.136 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701258574477
+2871<<Administration Result<<2023-11-29 08:49:41.632 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701258587412
+2871<<Administration Result<<2023-11-29 08:49:55.526 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701272168664
+2871<<Administration Result<<2023-11-29 12:36:09.368 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701272177233
+2871<<Administration Result<<2023-11-29 12:36:17.267 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701272386364
+2871<<Administration Result<<2023-11-29 12:39:48.838 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701272399220
+2871<<Administration Result<<2023-11-29 12:39:58.861 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701275109480
+2871<<Administration Result<<2023-11-29 13:25:15.887 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+ProcessMassivePhoene.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701275122986
+2871<<Administration Result<<2023-11-29 13:25:29.139 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/ProcessMassivePhoene.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701280856460
+2871<<Administration Result<<2023-11-29 15:01:00.752 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701347684327
+2871<<Administration Result<<2023-11-30 09:34:46.994 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701347712562
+2871<<Administration Result<<2023-11-30 09:35:12.775 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701347720826
+2871<<Administration Result<<2023-11-30 09:35:22.102 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701356202383
+2871<<Administration Result<<2023-11-30 11:56:45.412 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1701356213796
+2871<<Administration Result<<2023-11-30 11:56:53.205 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessing>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1701356290961
+2871<<Administration Result<<2023-11-30 11:58:14.485 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessingproject.generated.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1704715846094
+2871<<Administration Result<<2024-01-08 09:10:48.242 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1704715854128
+2871<<Administration Result<<2024-01-08 09:10:58.551 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+SendMailPhone.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1704715935815
+2871<<Administration Result<<2024-01-08 09:12:21.627 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/SendMailPhone.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+SendMailPhone.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1704715949564
+2871<<Administration Result<<2024-01-08 09:12:35.386 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/SendMailPhone.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1704722447036
+2871<<Administration Result<<2024-01-08 11:00:53.456 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+OnlyProcessPhone-PRE.bar>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_ONLINE>>0>>1704722471896
+2871<<Administration Result<<2024-01-08 11:01:15.081 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/BARfiles/OnlyProcessPhone-PRE.bar<<BAR<<OPERATIONS_BUP_ONLINE<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1704805066537
+2871<<Administration Result<<2024-01-09 09:57:50.257 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE
+PhoneProcessSendMail>>GSS_PERSON_AND_ORGANIZATION>>OPERATIONS_BUP_BATCH>>0>>1704805076545
+2871<<Administration Result<<2024-01-09 09:58:00.434 ART<<mqm[preuser]<<deploy<<C:/AA ServiciosCross/massivephonesprocess/GeneratedBarFiles/PhoneProcessSendMailproject.generated.bar<<BAR<<OPERATIONS_BUP_BATCH<<ExecutionGroup<<COMPLETE

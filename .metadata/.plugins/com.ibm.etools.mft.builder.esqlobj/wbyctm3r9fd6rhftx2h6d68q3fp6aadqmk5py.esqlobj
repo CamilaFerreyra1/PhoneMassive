@@ -1,0 +1,35 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		
+	 	--SET OutputRoot = InputRoot;
+	 	 		
+		DECLARE ErrorNumber INTEGER;
+		DECLARE ErrorText CHARACTER;
+		 		
+		CALL getLastExceptionDetail(InputExceptionList,ErrorNumber,ErrorText);
+		
+		SET Environment.ErrorMsg.TRANSACTION_ID = Environment.TransactionId;
+		SET Environment.ErrorMsg.SERVICE_NAME = Environment.Service.Name;
+		SET Environment.ErrorMsg.OPERATION_NAME = Environment.Service.Operation.Name;
+		SET Environment.ErrorMsg.USER = Environment.User;
+		
+		SET Environment.ErrorMsg.SECURITY_GROUP = '';
+		SET Environment.ErrorMsg.ERROR_NUMBER = ErrorNumber;
+		SET Environment.ErrorMsg.ERROR_TEXT = ErrorText;
+		SET Environment.ErrorMsg.ERROR_LABEL = InputExceptionList.RecoverableException.Label;
+		SET Environment.ErrorMsg.TIMESTAMP = CURRENT_TIMESTAMP;
+		SET Environment.ErrorMsg.EXCEPTION_LIST = InputExceptionList;
+		SET Environment.ErrorMsg.APPOWNER = BrokerName;
+		
+		SET Environment.ErrorMsg.BACKEND_PROVIDER = Environment.BackendProvider;
+		SET Environment.ErrorMsg.IP = Environment.Ip;
+		SET Environment.ErrorMsg.ENDPOINT_NAME = Environment.EndpointName;
+		SET Environment.ErrorMsg.DIRECTION = Environment.Direction;				
+		
+		SET OutputRoot.XMLNSC = null;
+		SET OutputRoot.XMLNSC.ErrorMsg = Environment.ErrorMsg;				
+			
+		RETURN TRUE;
+	END;
+	
+

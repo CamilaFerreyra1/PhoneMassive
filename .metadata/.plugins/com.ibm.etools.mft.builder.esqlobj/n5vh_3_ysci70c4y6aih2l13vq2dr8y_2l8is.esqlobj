@@ -1,0 +1,23 @@
+CREATE PROCEDURE NotDateTimeQueryString(IN ref REFERENCE, IN option BOOLEAN, IN refError REFERENCE) RETURNS BOOLEAN
+BEGIN 
+	DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+     IF (ref IS NULL OR (UPPER(ref) = 'NULL' OR TRIM(ref) = '')) AND option = TRUE THEN
+    	CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-415-001';
+    	RETURN TRUE;
+     ELSEIF (ref IS NULL OR (UPPER(ref) = 'NULL' OR TRIM(ref) = '')) AND option = FALSE THEN
+    	CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+    	RETURN TRUE;
+    END IF;
+    
+    IF ref IS NOT NULL THEN
+        DECLARE aux TIMESTAMP;
+        DECLARE defaultTimestamp TIMESTAMP CAST('1900-01-10 00:00:00' AS TIMESTAMP);        
+        SET aux = CAST(REPLACE(ref, 'T', ' ') AS TIMESTAMP DEFAULT defaultTimestamp);
+        IF(aux <> defaultTimestamp) THEN
+            RETURN FALSE;
+        END IF;
+    END IF;
+    
+    CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+    RETURN TRUE;
+END;

@@ -1,0 +1,66 @@
+CREATE COMPUTE MODULE PhoneProcessing_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE RefEnv REFERENCE TO Environment.Variables.XMLNSC.Msg;
+		DECLARE cacheElement REFERENCE TO cacheCount.Data[1];
+		
+		DECLARE foundItem ROW;
+		DECLARE found BOOLEAN FALSE;
+		DECLARE endTimestamp TIMESTAMP CURRENT_TIMESTAMP;
+		DECLARE endTimestampStr CHARACTER TimestampToString(CAST(endTimestamp AS CHARACTER));
+		DECLARE duration INTERVAL (endTimestamp - CAST(REPLACE(RefEnv.MessageBody.StartTime, 'T', ' ') AS TIMESTAMP FORMAT 'yyyy-MM-dd HH:mm:ss.SSS')) HOUR TO SECOND;
+		DECLARE durationStr CHARACTER REPLACE(SUBSTRING(SUBSTRING(CAST(duration AS CHARACTER) BEFORE ' HOUR TO SECOND') AFTER 'INTERVAL '), '''', '');
+		
+		-- valido que esten todos los datos insertados en la result antes de hacer el insert en la header
+		DECLARE synchronized BOOLEAN FALSE;
+		DECLARE sleep_count INTEGER 0;
+		DECLARE totalFromDb INTEGER CAST(RefEnv.MessageBody.PhonesToProcess AS INTEGER);
+		WHILE (NOT synchronized) DO
+			
+			SET Environment.Variables.Count[] = PASSTHRU('select count (ID) as Total from BUP.PhoneMassiveProcessResult (nolock)
+															where ID =  ?' VALUES(RefEnv.MessageHeader.batchId));
+			
+			SET synchronized = (totalFromDb = Environment.Variables.Count.Total);
+			IF NOT synchronized THEN
+				-- Esperar 500ms, y no mas de 60s total
+				SET Environment.Variables.sleep = SLEEP(500);
+				SET sleep_count = sleep_count + 1;
+				IF sleep_count = 120 THEN
+					THROW USER EXCEPTION;
+				END IF;
+			END IF;
+		END WHILE;
+		SET Environment.Variables.sleep = SLEEP(500);
+		
+		WHILE LASTMOVE (cacheElement) AND NOT found DO
+			IF cacheElement.ID = RefEnv.MessageHeader.messageId THEN
+				SET found = TRUE;
+				SET foundItem = cacheElement;
+			END IF;
+				MOVE cacheElement NEXTSIBLING;
+		END WHILE;
+
+			SET Environment.Variables.InsertEmail = 
+			PASSTHRU(REPLACE('INSERT INTO BUP.PhoneMassiveProcessHeader 
+				VALUES (?, ?, ?, ?, ? ,''{1}'' ,?, ?, ?, ?)', '{1}', durationStr)
+	            VALUES (RefEnv.MessageHeader.batchId, RefEnv.MessageBody.Email, '0',
+	           	 RefEnv.MessageBody.StartTime, endTimestampStr, foundItem.numPeopleFound, foundItem.numPeopleNOTFound,
+	             foundItem.numPhoneForged, foundItem.numPhoneNOTForged));
+	             
+	             
+	        SET Environment.Variables.batchId 				= RefEnv.MessageHeader.batchId;
+			SET Environment.Variables.EmailEntered 			= RefEnv.MessageBody.Email;
+			SET Environment.Variables.TotalPerson	  		= totalFromDb;
+			SET Environment.Variables.StartTime 			= RefEnv.MessageBody.StartTime;
+			SET Environment.Variables.EndTime 				= endTimestampStr;
+			SET Environment.Variables.Duration 				= durationStr;		
+			SET Environment.Variables.numPeopleFound	  	= foundItem.numPeopleFound;
+			SET Environment.Variables.numPeopleNOTFound		= foundItem.numPeopleNOTFound;
+			SET Environment.Variables.numPhoneForged		= foundItem.numPhoneForged;
+			SET Environment.Variables.numPhoneNOTForged	  	= foundItem.numPhoneNOTForged;
+	             
+		PROPAGATE TO TERMINAL 0;
+		RETURN FALSE;
+	END;
+	
+END MODULE;

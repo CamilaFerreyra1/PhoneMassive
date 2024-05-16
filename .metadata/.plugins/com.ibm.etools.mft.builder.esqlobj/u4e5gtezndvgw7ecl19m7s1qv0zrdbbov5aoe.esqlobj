@@ -1,0 +1,42 @@
+CREATE FUNCTION NotBooleanGet(IN ref REFERENCE, IN opcion BOOLEAN, IN refError REFERENCE) RETURNS BOOLEAN
+BEGIN
+	IF (ref IS NULL) THEN
+		IF opcion = FALSE THEN
+			RETURN FALSE;
+		ELSE
+			CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-415-001';
+		END IF;
+	ELSE
+		DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+		IF NotIntGetAux(ref, TRUE) THEN
+			DECLARE aux CHARACTER;
+			SET aux = UPPER(CAST(ref AS CHARACTER));
+			IF aux = 'TRUE' OR aux = 'FALSE' THEN
+				IF aux = 'TRUE' THEN
+					SET ref = TRUE;
+				ELSE
+					SET ref = FALSE;
+				END IF;
+				RETURN FALSE;
+			ELSE
+				CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+				RETURN TRUE;
+			END IF;
+		ELSE
+			DECLARE aux CHARACTER;
+			SET aux = CAST(ref AS CHARACTER);
+			IF aux = '0' OR aux = '1'THEN
+				IF aux = '1' THEN
+					SET ref = TRUE;
+				ELSE
+					SET ref = FALSE;
+				END IF;
+				RETURN FALSE;
+			ELSE
+				CREATE LASTCHILD OF refError NAME 'Code' VALUE 'GSS-422-002';
+				RETURN TRUE;
+			END IF;
+		END IF;
+	END IF;
+	RETURN TRUE;
+	END;

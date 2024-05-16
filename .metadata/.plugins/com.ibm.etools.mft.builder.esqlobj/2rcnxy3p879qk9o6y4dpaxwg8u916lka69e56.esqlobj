@@ -1,0 +1,44 @@
+CREATE COMPUTE MODULE DatabaseInput_log_GenerationLog
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+
+		SET OutputRoot.XMLNSC.LogMsg.FILTRO_BROKER			= TRIM(BrokerName);
+		SET OutputRoot.XMLNSC.LogMsg.TRANSACTION_ID 		= Environment.TransactionId;
+		SET OutputRoot.XMLNSC.LogMsg.SERVICE_NAME 			= CAST (BrokerName AS CHARACTER) || '/' || CAST( ExecutionGroupLabel AS CHARACTER) || '/' || CAST (ApplicationLabel AS CHARACTER);
+		SET OutputRoot.XMLNSC.LogMsg.USER_NAME 				= BrokerUserId;
+		SET OutputRoot.XMLNSC.LogMsg.TIMESTAMP 				= CURRENT_TIMESTAMP;
+		SET OutputRoot.XMLNSC.LogMsg.DIRECTION 				= 'NULL';
+		SET OutputRoot.XMLNSC.LogMsg.BACKENDPROVIDER 		= ApplicationLabel;
+		SET OutputRoot.XMLNSC.LogMsg.ENDPOINT_NAME 			= 'NULL';
+		SET OutputRoot.XMLNSC.LogMsg.OPERATION_NAME 		= ApplicationLabel;
+		SET OutputRoot.XMLNSC.LogMsg.MESSAGE    			= InputRoot.XMLNSC; 
+		SET OutputRoot.XMLNSC.LogMsg.APPOWNER 				= BrokerName;
+		SET OutputRoot.XMLNSC.LogMsg.IP 					= NULL;		
+		SET OutputRoot.XMLNSC.LogMsg.SERVICE_OPERATION_NAME = ApplicationLabel;
+		SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_DEF	= Environment.Variables.Bussiness_DEF;
+		SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_ID	 	= Environment.Variables.Bussiness_ID;
+		SET OutputRoot.XMLNSC.LogMsg.ORCHESTRATION_ID	 	= Environment.Variables.Orchestration_ID;
+		
+		SET OutputRoot.XMLNSC.LogMsg.PROCESS_DEF 			= COALESCE(Environment.Variables.PROCESS_DEF,Environment.Variables.PROCESSDEFINITIONID);
+		SET OutputRoot.XMLNSC.LogMsg.PROCESS_INSTANCE_ID	= COALESCE(Environment.Variables.PROCESS_INSTANCE_ID,Environment.Variables.PROCESSINSTANCEID);
+		SET OutputRoot.XMLNSC.LogMsg.ACTIVITY_DEF	 		= COALESCE(Environment.Variables.ACTIVITY_DEF,Environment.Variables.ACTIVITYDEFINITIONID);
+		SET OutputRoot.XMLNSC.LogMsg.ACTIVITY_STATUS	 	= '0';
+		
+				
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

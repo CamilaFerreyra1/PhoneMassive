@@ -1,0 +1,10 @@
+CREATE FUNCTION concatedErrors (IN refInErrorItem REFERENCE, IN top INTEGER) RETURNS CHARACTER
+BEGIN
+	DECLARE error CHARACTER '';
+	WHILE LASTMOVE (refInErrorItem) DO
+		SET error = error || refInErrorItem.help;
+		MOVE refInErrorItem NEXTSIBLING REPEAT NAME;
+	END WHILE;
+	
+	RETURN SUBSTRING(error FROM 0 FOR top);
+END;

@@ -1,0 +1,52 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+	        
+	        DECLARE ResultSpCount ROW; 
+			DECLARE PersonasEncontradasEnBup INTEGER;
+			DECLARE PersonasNoEncontradasEnBup INTEGER;
+			DECLARE TelefonosCreados INTEGER;
+			DECLARE TelefonosNoCreados INTEGER;
+		
+
+			CALL ContabilizarTelefonos(Environment.Variables.batchId, ResultSpCount.Result[]);
+			
+			SET PersonasEncontradasEnBup = CAST(ResultSpCount.Result[1].PersonasEncontradasEnBup AS INTEGER);
+			SET PersonasNoEncontradasEnBup = CAST(ResultSpCount.Result[1].PersonasNoEncontradasEnBup AS INTEGER);
+			SET TelefonosCreados = CAST(ResultSpCount.Result[1].TelefonosCreados AS INTEGER);
+			SET TelefonosNoCreados = CAST(ResultSpCount.Result[1].TelefonosNOCreados AS INTEGER);
+						
+--			SET PersonaEncontradaEnBup = CAST(SUBSTRING(ResultSpCount.Result.PersonaEncontradaEnBup BEFORE ',') AS INTEGER);
+----			SET ResultSpCount.Result = SUBSTRING(ResultSpCount.Result AFTER ',' BEFORE LENGTH(Result));
+--			SET PersonaNoEncontradaEnBup = CAST(SUBSTRING(ResultSpCount.Result.PersonaNoEncontradaEnBup BEFORE ',') AS INTEGER);
+----			SET ResultSpCount.Result = SUBSTRING(ResultSpCount.Result AFTER ',' BEFORE LENGTH(Result));
+--			SET TelefonosCreados = CAST(SUBSTRING(ResultSpCount.Result.TelefonosCreados BEFORE ',') AS INTEGER);
+----			SET ResultSpCount.Result = SUBSTRING(ResultSpCount.Result AFTER ',' BEFORE LENGTH(Result));
+--			SET TelefonosNoCreados = CAST(ResultSpCount.Result.TelefonosNoCreados AS INTEGER);
+
+
+
+			CREATE FIELD OutputRoot.XMLNSC.Msg.MessageHeader;
+	        DECLARE refHead REFERENCE TO OutputRoot.XMLNSC.Msg.MessageHeader;
+	
+	 		SET refHead.batchId 					= Environment.Variables.batchId;
+			SET refHead.EmailEntered 				= Environment.Variables.EmailEntered;			
+			SET refHead.TotalPerson 				= Environment.Variables.TotalPerson;	  		
+			SET refHead.StartTime 					= Environment.Variables.StartTime; 				
+			SET refHead.EndTime 					= Environment.Variables.EndTime; 	
+			SET refHead.Duration 					= Environment.Variables.Duration; 			
+			SET refHead.numPeopleFound				= PersonasEncontradasEnBup;	  		
+			SET refHead.numPeopleNOTFound			= PersonasNoEncontradasEnBup;				
+			SET refHead.numPhoneForged 				= TelefonosCreados; 			
+			SET refHead.numPhoneNOTForged 			= TelefonosNoCreados;	    
+			
+			PROPAGATE TO TERMINAL 0;
+		RETURN FALSE;		
+	END;
+--END MODULE;
+
+
+	CREATE PROCEDURE ContabilizarTelefonos (IN Id CHARACTER)
+	LANGUAGE DATABASE
+	DYNAMIC RESULT SETS 1
+	EXTERNAL NAME "Bup.ContabilizarTelefonos";
+	

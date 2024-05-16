@@ -1,0 +1,369 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		----Error en el json (o algun error que no haya sido contemplado)
+		IF Environment.Variables.REST AND NOT EXISTS(Environment.Variables.ErrorCodes.Code[]) AND NOT EXISTS(Environment.Variables.ParticularError.Code[]) AND NOT EXISTS(Environment.Variables.ErrorHeader[]) AND NOT EXISTS(Environment.Variables.IntegrationError.IntegrationCode[]) THEN
+			CREATE LASTCHILD OF Environment.Variables.ErrorCodes NAME 'Code' VALUE 'GSS-400-003';
+		END IF;
+		----Si existe ErrorCodes.Code, entonces hubo algún error de validación/de backend generado por código.
+		----Si existe ErrorHeader, hubo error al validar el header (compute dentro de InputREST)
+		IF EXISTS(Environment.Variables.ErrorCodes.Code[]) OR EXISTS(Environment.Variables.ParticularError.Code[]) THEN
+			PROPAGATE TO TERMINAL 'out1' DELETE NONE;
+		END IF;
+		----Si existe IntegrationError.IntegrationCode, hubo un error controlado en algun backend.
+		IF EXISTS(Environment.Variables.IntegrationError.IntegrationCode[])THEN
+			PROPAGATE TO TERMINAL 'out2' DELETE NONE;
+		END IF;
+		
+		IF EXISTS(Environment.Variables.ErrorCodeRes.Code[]) OR EXISTS(Environment.Variables.ErrorHeader.Code[]) OR EXISTS(Environment.Variables.IntegrationError.GenericError[]) THEN
+			IF Environment.Variables.REST THEN
+				IF EXISTS (Environment.Variables.IntegrationError.GenericError[]) AND SUBSTRING(Environment.Variables.IntegrationError.GenericError.ErrorCode FROM 1 FOR 3) = 'MSO' THEN
+					IF Environment.Variables.IntegrationError.IntegrationCode = 2 THEN
+						SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = 200;
+					ELSE
+						SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = SUBSTRING(Environment.Variables.IntegrationError.GenericError.ErrorCode FROM 7 FOR 3);
+					END IF;
+				ELSE
+					IF EXISTS (Environment.Variables.IntegrationError.GenericError.ErrorCode[]) THEN
+						SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = SUBSTRING(SUBSTRING(SUBSTRING(Environment.Variables.IntegrationError.GenericError.ErrorCode AFTER '-') AFTER '-')BEFORE '-');
+					ELSE
+						SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = COALESCE(SUBSTRING(Environment.Variables.ErrorCodeRes.Code.ErrorCode FROM 5 FOR 3), SUBSTRING(Environment.Variables.ErrorCodeRes.Code.Code FROM 5 FOR 3), SUBSTRING(Environment.Variables.ErrorHeader.Code.ErrorCode FROM 5 FOR 3));
+					END IF;
+				END IF;
+				----MAPEO OUTPUT HEADER HTTP ERROR
+				CREATE FIELD OutputRoot.HTTPReplyHeader;
+				CALL MapeoCabeceraErrorREST(OutputRoot.HTTPReplyHeader, InputRoot.HTTPInputHeader);
+				SET OutputRoot.HTTPReplyHeader.messageId = COALESCE(InputRoot.HTTPInputHeader.Messageid, Environment.TransactionId, UUIDASCHAR);
+				----MAPEO OUTPUT JSON ERROR
+				CREATE FIELD OutputRoot.JSON.Data;
+				IF EXISTS(Environment.Variables.ErrorCodeRes.Code[]) THEN
+					CALL ResponseRestError(OutputRoot.JSON.Data, Environment.Variables.ErrorCodeRes, Environment.Variables);
+				ELSEIF EXISTS(Environment.Variables.IntegrationError.GenericError[])THEN
+					IF SUBSTRING(Environment.Variables.IntegrationError.GenericError.ErrorCode FROM 1 FOR 3) = 'MSO' THEN
+						--msoQuestions
+						IF Environment.Variables.IntegrationError.ElementName IS NOT NULL THEN
+							CREATE LASTCHILD OF OutputRoot.JSON.Data NAME Environment.Variables.IntegrationError.ElementName;
+							IF Environment.Variables.IntegrationError.IsArray  THEN
+								SET OutputRoot.JSON.Data.[<] TYPE = JSON.Array;
+							END IF;
+						END IF;
+						SET OutputRoot.JSON.Data.paging.offset   = 1;
+						SET OutputRoot.JSON.Data.paging.limit    = 1;
+						SET OutputRoot.JSON.Data.paging.total 	 = 1;
+					END IF;
+					CALL ResponseRestError(OutputRoot.JSON.Data,Environment.Variables.IntegrationError, Environment.Variables);
+				ELSE
+					CALL ResponseRestError(OutputRoot.JSON.Data, Environment.Variables.ErrorHeader, Environment.Variables);
+				END IF;
+				DECLARE l_originalRecord ROW;
+				CREATE FIRSTCHILD OF l_originalRecord DOMAIN 'XMLNSC' NAME 'XMLNSC';
+				SET l_originalRecord.XMLNSC.JSON = OutputRoot.JSON;
+				SET Environment.Variables.JsonFallido = CAST(ASBITSTREAM (l_originalRecord.XMLNSC) as CHAR CCSID 1208);
+				DECLARE l_originalRecord2 ROW;
+				CREATE FIRSTCHILD OF l_originalRecord2 DOMAIN 'XMLNSC' NAME 'XMLNSC';
+				SET l_originalRecord2.XMLNSC.Header = OutputRoot.HTTPReplyHeader;
+				SET Environment.Variables.HeaderFallido = CAST(ASBITSTREAM (l_originalRecord2.XMLNSC) as CHAR CCSID 1208);
+				SET Environment.Variables.JSON_MESSAGE_OUTPUT = Environment.Variables.HeaderFallido || Environment.Variables.JsonFallido;
+				DELETE FIELD Environment.Variables.HeaderFallido;
+				DELETE FIELD Environment.Variables.JsonFallido;
+				RETURN TRUE;
+				----SOAP Con error manejado por código.
+			ELSE
+				IF EXISTS(Environment.Variables.IntegrationError.GenericError[]) AND SUBSTRING(Environment.Variables.IntegrationError.GenericError.ErrorCode FROM 1 FOR 3) = 'MSO' THEN
+					SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = SUBSTRING(Environment.Variables.IntegrationError.GenericError.ErrorCode FROM 7 FOR 3);
+				ELSE					
+					SET OutputLocalEnvironment.Destination.SOAP.Reply.Transport.HTTP.ReplyStatusCode = COALESCE(SUBSTRING(Environment.Variables.ErrorCodeRes.Code.ErrorCode FROM 5 FOR 3), SUBSTRING(Environment.Variables.ErrorCodeRes.Code.Code FROM 5 FOR 3), SUBSTRING(Environment.Variables.ErrorHeader.Code.ErrorCode FROM 5 FOR 3));
+				END IF;
+				----Creo estructura header response (se setea dentro de los procedures de body)
+				DECLARE nsCommons NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Commons/v1.0';
+				CREATE FIELD OutputRoot.SOAP.Header.nsCommons:responseHeader;
+				----MAPEO OUTPUT BODY SOAP ERROR
+				DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+				CREATE FIELD OutputRoot.SOAP.Body.nsSoap:Fault;
+				IF EXISTS(Environment.Variables.ErrorCodeRes.Code[]) THEN
+					CALL MapeaSOAPErrorNewErrorHandler(InputRoot.SOAP.Header.nsCommons:requestHeader, OutputRoot.SOAP.Header.nsCommons:responseHeader, OutputRoot.SOAP.Body.nsSoap:Fault, 'Hay un error en el formato, verifique los tipos de datos de los campos', Environment.Variables.ErrorCodeRes);
+				ELSEIF EXISTS(Environment.Variables.IntegrationError.GenericError[])THEN
+					CALL MapeaSOAPErrorNewErrorHandler(InputRoot.SOAP.Header.nsCommons:requestHeader, OutputRoot.SOAP.Header.nsCommons:responseHeader, OutputRoot.SOAP.Body.nsSoap:Fault, 'Hay un error en los datos, verifique los datos enviados', Environment.Variables.IntegrationError);
+				ELSE
+					CALL MapeaSOAPErrorNewErrorHandler(InputRoot.SOAP.Header.nsCommons:requestHeader, OutputRoot.SOAP.Header.nsCommons:responseHeader, OutputRoot.SOAP.Body.nsSoap:Fault, 'Hay un error en el header, verifique los tipos de datos de los campos', Environment.Variables.ErrorHeader);
+				END IF;
+				RETURN TRUE;
+			END IF;
+		END IF;
+		--------EN CASO DE NO EXISTIR ALGUNA DE LAS ANTERIORES LISTAS DE ERROR, ENTONCES HAY ERROR:
+		-------- -EN EL PARSEO DEL MENSAJE SOAP O
+		-------- -EXISTE ALGÚN ERROR NO CONTEMPLADO POR CÓDIGO.
+		--------POR LO QUE SE DEBERÍA REVISAR LA EXCEPTION LIST PARA GENERAR EL MENSAJE DE ERROR DE SALIDA.
+
+		CREATE LASTCHILD OF Environment DOMAIN 'XMLNSC' NAME 'Backup';
+		SET Environment.Backup.XMLNSC = InputRoot.XMLNSC;
+		DECLARE soapenv NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+
+		DECLARE ErrorNumber INTEGER;
+		DECLARE ErrorText CHARACTER;
+
+		SET OutputExceptionList = InputExceptionList;
+
+		CALL GetLastExceptionDetail(InputExceptionList, ErrorNumber, ErrorText);
+
+		SET Environment.MensajeDeEntrada = CAST(ASBITSTREAM(InputRoot.XMLNSC.LogMsg.MESSAGE) AS CHARACTER CCSID 819);
+		BEGIN
+			DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+			SET Environment.MensajeDeEntrada = CAST(ASBITSTREAM(InputRoot) AS CHARACTER CCSID 819);
+		END;
+
+		CREATE FIELD OutputRoot.SOAP.Header.ns225:responseHeader;
+		CREATE FIELD OutputRoot.SOAP.Body.soapenv:Fault;
+		DECLARE statusCode CHARACTER '500';
+
+		SET Environment.Variables.ApplicationId = COALESCE(Environment.Variables.ApplicationId, '11');
+		SET Environment.Variables.CompanyCode = COALESCE (Environment.Variables.CompanyCode, '1');
+		----Para cada caso, se debería recuperar los mensajes de MessageSvc.
+		
+		CASE ErrorNumber
+		WHEN '100' THEN
+			CALL MapeaBodyErrorCom('100', 'GeneralException', 'Access is denied due to invalid credentials', 'Proporcione datos de autenticación válidos', OutputRoot.SOAP.Body);
+		WHEN '101' THEN
+			CALL MapeaBodyErrorCom('100', 'GeneralException','Could not get the security group', 'No se pudo obtener el SecurityGroup', OutputRoot.SOAP.Body);
+			----Error de validación de esquema nuevo.
+		
+		WHEN '5025' THEN
+			CALL GetInnermostException(InputExceptionList.RecoverableException);
+			DECLARE RecoverableException ROW Environment.Variables.InnerException;
+           DECLARE ErrorField CHAR RecoverableException.ParserException.ParserException.ParserException.[<].Text;
+           DECLARE ErrorMsg CHAR RecoverableException.ParserException.ParserException.ParserException.[<2].Text;
+           CALL GetErrorMessage('GSS-400-001', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+           CALL MapeaBodyErrorCom('GSS-400-001', 'GeneralException', Environment.Variables.ErrorMessage.ErrorTitle, SUBSTRING(ErrorField FROM POSITION(':' IN ErrorField REPEAT -1) + 1) || ': ' || COALESCE(NULLIF(TRIM(SUBSTRING(ErrorMsg AFTER ':')), ''), ' ' || ErrorMsg), OutputRoot.SOAP.Body);
+        WHEN '3602' THEN
+			CALL GetErrorMessage('GSS-400-999', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-999', 'GeneralException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '5004' THEN
+			CALL GetInnermostException(InputExceptionList.RecoverableException);
+			DECLARE RecoverableException ROW Environment.Variables.InnerException;
+			CALL GetErrorMessage('GSS-400-001', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			DECLARE ErrorField CHAR RecoverableException.ParserException.ParserException.ParserException.[<2].Text;
+			CALL MapeaBodyErrorCom('GSS-400-001', 'GeneralException', Environment.Variables.ErrorMessage.ErrorTitle, ErrorField, OutputRoot.SOAP.Body);
+		WHEN '3001' THEN
+			CALL GetErrorMessage('GSS-400-001', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-001', 'GeneralException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '3150' THEN
+			CALL GetErrorMessage('GSS-301-001', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-301-001', 'SystemException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '3165' THEN
+			CALL GetErrorMessage('GSS-301-001', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-301-001', 'SystemException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '3691' THEN
+			CALL GetErrorMessage('GSS-301-001', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-301-001', 'SystemException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '301' THEN
+			CALL GetErrorMessage('GSS-301-001', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-301-001', 'SystemException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '4310' THEN
+			CALL GetErrorMessage('GSS-400-001', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-001', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0401' THEN
+			CALL GetErrorMessage('GSS-400-002', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-002', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0402' THEN
+			CALL GetErrorMessage('GSS-400-003', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-003', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0403' THEN
+			CALL GetErrorMessage('GSS-400-004', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-004', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0404' THEN
+			CALL GetErrorMessage('GSS-400-005', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-005', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0405' THEN
+			CALL GetErrorMessage('GSS-400-006', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-006', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0406' THEN
+			CALL GetErrorMessage('GSS-400-007', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-007', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0407' THEN
+			CALL GetErrorMessage('GSS-400-008', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-008', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0408' THEN
+			CALL GetErrorMessage('GSS-400-009', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-009', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0409' THEN
+			CALL GetErrorMessage('GSS-400-010', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-010', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0410' THEN
+			CALL GetErrorMessage('GSS-400-011', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-011', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0411' THEN
+			CALL GetErrorMessage('GSS-400-012', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-012', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0412' THEN
+			CALL GetErrorMessage('GSS-400-013', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-013', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0413' THEN
+			CALL GetErrorMessage('GSS-400-014', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-014', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0414' THEN
+			CALL GetErrorMessage('GSS-400-015', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-015', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0415' THEN
+			CALL GetErrorMessage('GSS-400-016', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-016', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0416' THEN
+			CALL GetErrorMessage('GSS-400-017', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-017', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0417' THEN
+			CALL GetErrorMessage('GSS-400-018', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-018', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '0499' THEN
+			CALL GetErrorMessage('GSS-400-019', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-019', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		WHEN '1003' THEN
+			CALL GetErrorMessage('GSS-400-020', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-400-020', 'BusinessException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		ELSE
+			CALL GetErrorMessage('GSS-500-001', Environment.Variables.ApplicationId, Environment.Variables.CompanyCode, Environment.Variables.ClientTypeId);
+			CALL MapeaBodyErrorCom('GSS-500-001', 'GeneralException', Environment.Variables.ErrorMessage.ErrorTitle, Environment.Variables.ErrorMessage.ErrorHelpMessage, OutputRoot.SOAP.Body);
+		END CASE;
+
+		SET OutputLocalEnvironment.Destination.SOAP.Reply.Transport.HTTP.ReplyStatusCode = statusCode;
+
+		RETURN TRUE;
+
+		END;
+		
+	CREATE PROCEDURE GetInnermostException(IN ExceptionList REFERENCE)
+	/***********************************************************************************
+	* Procedimiento para obtener el elemento RecoverableException más interno que tiene la información útil *
+	***********************************************************************************/
+	BEGIN
+		FOR E AS ExceptionList.*[] DO
+			IF FIELDNAME(E) = 'RecoverableException' THEN
+				SET Environment.Variables.InnerException = E;
+				CALL GetInnermostException(E);
+			END IF;
+		END FOR;
+		
+		IF NOT EXISTS(Environment.Variables.InnerException[]) THEN
+			SET Environment.Variables.InnerException = ExceptionList;
+		END IF;
+	END;
+
+	CREATE PROCEDURE GetErrorMessage(IN ErrorCode CHAR, IN ApplicationId CHAR, IN CompanyCode CHAR, IN ClientTypeId CHAR)
+	/***********************************************************************************
+	* Procedimiento para obtener error de la tabla GenericErrors* *
+	***********************************************************************************/
+	BEGIN
+		IF ClientTypeId IS NULL THEN
+			SET Environment.Variables.ErrorMessage = PASSTHRU('select top 1 * from OtherIntegrationArg.ArgChannelsInt.GenericErrors WHERE Code = ? AND ApplicationId = ? AND CompanyCode = ?' VALUES (ErrorCode, ApplicationId, CompanyCode));
+		ELSE
+			SET Environment.Variables.ErrorMessage = PASSTHRU('select top 1 * from OtherIntegrationArg.ArgChannelsInt.GenericErrors WHERE Code = ? AND ApplicationId = ? AND CompanyCode = ? AND ClientTypeId = ?' VALUES (ErrorCode, ApplicationId, CompanyCode, ClientTypeId));
+		END IF;
+
+		IF Environment.Variables.ErrorMessage.ErrorTitle IS NULL THEN
+			SET Environment.Variables.ErrorMessage.ErrorTitle = 'Ocurrió un error en el servicio';
+			SET Environment.Variables.ErrorMessage.ErrorHelpMessage = 'Intente de nuevo más tarde';
+		END IF;
+	END;
+	----Referencia al fault, referencia al environment.variables
+	CREATE PROCEDURE MapeaSOAPErrorNewErrorHandler(IN refInHeader REFERENCE, IN refOutHeader REFERENCE, IN refFault REFERENCE, IN faultString CHARACTER, IN refError REFERENCE)
+	BEGIN
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsError NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Err/v1.0';
+		DECLARE nsCommons NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Commons/v1.0';
+
+		DECLARE errorText CHARACTER;
+		IF FIELDNAME(refError) = 'ErrorHeader' THEN
+			SET errorText = 'GeneralException';
+		ELSE
+			SET errorText = 'BusinessException';
+		END IF;
+
+		CALL MapeaCabeceraErrorCom(refInHeader, refOutHeader, errorText);
+
+		SET refFault.faultcode.(XMLNSC.Attribute)xmlns:s='http://schemas.xmlsoap.org/soap/envelope/';
+		SET refFault.faultcode = 's:Server';
+		SET refFault.faultstring = faultString; --'GeneralException';--errorText;
+
+		CREATE FIELD refFault.detail.nsError:businessFault.errorDetails;
+		DECLARE refErrorDetail REFERENCE TO refFault.detail.nsError:businessFault.errorDetails.errorDetail[1];
+		FOR E AS refError.Code[] DO
+			CREATE LASTCHILD OF refFault.detail.nsError:businessFault.errorDetails AS refErrorDetail NAME 'errorDetail';
+			SET refErrorDetail.errorCode = E.ErrorCode; --Se cambia el dataType, int -> string.
+			SET refErrorDetail.errorType = errorText; --Aca va si es business, general o system.
+			SET refErrorDetail.errorDesc = E.ErrorText;
+			SET refErrorDetail.errorHelp = E.ErrorHelp; --Campo agregado
+		END FOR;
+	END;
+	----Mapeo los nuevos mensajes de error
+	CREATE PROCEDURE MapeaNewBodyError(IN errorCode CHARACTER, IN errorType CHARACTER, IN errorDesc CHARACTER, IN errorHelp CHARACTER, IN faultString CHARACTER, IN refFault REFERENCE)
+	BEGIN
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsError NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Err/v1.0';
+
+		CALL MapeaCabeceraErrorCom(InputRoot.SOAP.Header.*:requestHeader,OutputRoot.SOAP.Header.ns225:responseHeader, errorType);
+
+		SET refFault.faultcode.(XMLNSC.Attribute)xmlns:s='http://schemas.xmlsoap.org/soap/envelope/';
+		SET refFault.faultcode = 's:Server';
+		SET refFault.faultstring = faultString;
+		--Mapeo body
+		CREATE FIELD refFault.detail.nsError:businessFault.errorDetails.errorDetail;
+		DECLARE refOutBodyError REFERENCE TO refFault.detail.nsError:businessFault.errorDetails.errorDetail;
+
+		SET refOutBodyError.errorCode = errorCode;
+		SET refOutBodyError.errorType = errorType;
+		SET refOutBodyError.errorDesc = errorDesc;
+		SET refOutBodyError.errorHelp = errorHelp;
+	END;
+
+
+	CREATE PROCEDURE MapeaBodyErrorCom(IN pfaultCode CHARACTER, IN pfaultActor CHARACTER, IN pfaulString CHARACTER, IN pfaulDesc CHARACTER, IN prefOutBody REFERENCE)
+	BEGIN
+		/****************************************************************************
+		* Procedimiento que completa los campos del body con los valores
+		* correspondientes a una excepcion de negocio.
+		* IN pfaultCode: faultcode del backend
+		* IN pfaultActor: faultactor del backend
+		* IN pfaultString: faultstring del backend
+		* IN prefOutHeader: Referencia al SOAP Body de salida
+		*****************************************************************************/
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsError NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Err/v1.0';
+
+		CALL MapeaCabeceraErrorCom(InputRoot.SOAP.Header.*:requestHeader,OutputRoot.SOAP.Header.ns225:responseHeader, pfaultActor);
+
+		SET prefOutBody.nsSoap:Fault.faultcode.(XMLNSC.Attribute)xmlns:s='http://schemas.xmlsoap.org/soap/envelope/';
+		SET prefOutBody.nsSoap:Fault.faultcode = 's:Server';
+		SET prefOutBody.nsSoap:Fault.faultstring = pfaulDesc;
+		--Mapeo body
+		CREATE FIELD prefOutBody.nsSoap:Fault.detail.nsError:businessFault.errorDetails.errorDetail;
+		DECLARE refOutBodyError REFERENCE TO prefOutBody.nsSoap:Fault.detail.nsError:businessFault.errorDetails.errorDetail;
+
+		SET refOutBodyError.errorCode = pfaultCode;
+		SET refOutBodyError.errorType = pfaultActor;
+		SET refOutBodyError.errorDesc = pfaulString;
+
+	END;
+
+	CREATE PROCEDURE MapeaCabeceraErrorCom(IN prefInHeader REFERENCE, IN prefOutHeader REFERENCE, IN statusCode CHARACTER)
+	BEGIN
+		/****************************************************************************
+		* Procedimiento que completa los campos de la cabecera del ResponseMessage
+		* con los valores correspondientes a una excepcion de negocio.
+		* IN prefInHeader: Referencia a cabecera esb de entrada.
+		* IN prefOutHeader: Referencia a cabecera es de salida.
+		*****************************************************************************/
+
+		SET prefOutHeader.systemId = prefInHeader.systemId;
+		CREATE FIELD prefOutHeader.messageId;
+		SET prefOutHeader.timestamp = CURRENT_TIMESTAMP;
+		--SET prefOutHeader.messageContext = prefInHeader.messageContext;
+		SET prefOutHeader.responseStatus.statusCode = statusCode;
+		SET prefOutHeader.messageId = COALESCE(prefInHeader.messageId, Environment.TransactionId);
+
+	END;
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;

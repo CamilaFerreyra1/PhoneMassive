@@ -1,0 +1,10 @@
+CREATE COMPUTE MODULE Set_TransactionID_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+
+		SET OutputRoot.XMLNSC.Transaction.Id = Environment.TransactionId;
+
+		RETURN TRUE;
+	END;
+
+END MODULE;

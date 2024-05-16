@@ -1,0 +1,9 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		IF (EXISTS(InputRoot.XMLNSC.Transaction.Id[]))THEN
+			SET Environment.TransactionId = InputRoot.XMLNSC.Transaction.Id;
+		END IF;
+		
+		RETURN TRUE;
+	END;
+

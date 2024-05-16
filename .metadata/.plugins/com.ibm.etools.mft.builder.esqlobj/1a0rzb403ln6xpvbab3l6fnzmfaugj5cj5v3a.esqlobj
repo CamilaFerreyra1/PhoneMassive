@@ -1,0 +1,7 @@
+CREATE PROCEDURE MapeoCabeceraErrorREST(IN refOutputHeader REFERENCE, IN refInHeader REFERENCE)
+BEGIN
+	SET refOutputHeader.systemId		=	refInHeader.Systemid;
+	SET refOutputHeader.messageId		=	refInHeader.Messageid;
+	SET refOutputHeader.timestamp		=	CURRENT_TIMESTAMP;
+	SET refOutputHeader.statusCode		=	'BusinessException';
+END;

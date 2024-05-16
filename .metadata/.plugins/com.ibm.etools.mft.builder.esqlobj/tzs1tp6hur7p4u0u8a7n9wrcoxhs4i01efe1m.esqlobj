@@ -1,0 +1,41 @@
+CREATE PROCEDURE MapLogToDB(IN refout REFERENCE,IN refinEnv REFERENCE, IN refinMsg REFERENCE, IN datasource CHARACTER, IN DB CHARACTER, IN spName CHARACTER, IN direction BOOLEAN)
+    BEGIN
+	/****************************************************************************
+     * Procedimiento que arma el mensaje para enviar a la cola de logeos de base de datos
+     *      con los valores correspondientes tanto para entrada como para salida de datos.
+     * IN refout:     Referencia a raiz de salida valor fijo OutputRoot.
+     * IN refinEnv:   Referencia a Environment, valor fijo Environment.
+     * IN refinMsg    Referencia a mensaje creado, se recomienda que sea Environment.Variables.{estructuraPadre}.{Estructura} y se mapee la estructura padre.
+     * IN datasource  Datasource configurado en el compute.
+     * IN DB		  Servidor de base de datos.
+     * IN spName	  Nombre para denominar al sp o la query.
+     * IN Direction   True => Request, False => Response
+     *****************************************************************************/
+    	DECLARE nss NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/SecurityTypes';
+		DECLARE nssm NAMESPACE 'http://GrupoSancorSeguros/xsd/service/SecuritySvcMsg';
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+        SET refinEnv.Variables.Bussiness_DEF		=	COALESCE(refinEnv.Variables.Bussiness_DEF,BUSINESS_ENTITY_DEF);
+        SET refinEnv.Variables.Bussiness_ID		=	COALESCE(refinEnv.Variables.Bussiness_ID,BUSINESS_ENTITY_ID);
+		
+		CREATE LASTCHILD OF refout.XMLNSC.LogMsg DOMAIN 'XMLNSC' NAME 'MESSAGE';
+			
+		SET refout.XMLNSC.LogMsg.MESSAGE	= refinMsg; -- InputRoot.XMLNSC;
+			
+		SET refout.XMLNSC.LogMsg.FILTRO_BROKER					= TRIM(BrokerName);
+		SET refout.XMLNSC.LogMsg.TRANSACTION_ID 				= refinEnv.TransactionId;
+		SET refout.XMLNSC.LogMsg.SERVICE_NAME 					= refinEnv.Variables.Service_Name;
+		SET refout.XMLNSC.LogMsg.USER_NAME 						= refinEnv.Variables.UserName;
+		SET refout.XMLNSC.LogMsg.TIMESTAMP 						= CURRENT_TIMESTAMP;
+		SET refout.XMLNSC.LogMsg.DIRECTION 						= CASE WHEN direction THEN 'BACKEND_REQUEST_BD' ELSE 'BACKEND_RESPONSE_BD' END;
+		SET refout.XMLNSC.LogMsg.BACKENDPROVIDER 				= DB;--refinEnv.Variables.BD;
+		SET refout.XMLNSC.LogMsg.ENDPOINT_NAME 					= datasource; --refinEnv.Variables.DATA_SOURCE;
+		SET refout.XMLNSC.LogMsg.OPERATION_NAME 				= spName; --refinEnv.Variables.SP_NAME;
+
+		SET refout.XMLNSC.LogMsg.APPOWNER 						= BrokerName;
+		SET refout.XMLNSC.LogMsg.IP 							= refinEnv.Variables.ClientIP;
+		SET refout.XMLNSC.LogMsg.SERVICE_OPERATION_NAME 		= refinEnv.Variables.Operation_Name;
+		SET refout.XMLNSC.LogMsg.BUSINESS_ENTITY_DEF			= refinEnv.Variables.Bussiness_DEF;
+		SET refout.XMLNSC.LogMsg.BUSINESS_ENTITY_ID	 			= refinEnv.Variables.Bussiness_ID;
+		SET refout.XMLNSC.LogMsg.ORCHESTRATION_ID	 			= refinEnv.Variables.Orchestration_ID;
+    	
+    END;

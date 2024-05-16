@@ -1,0 +1,41 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+
+		SET Environment.TransactionId	    				= UUIDASCHAR;
+		SET Environment.Variables.Orchestration_ID			= COALESCE(InputRoot.XMLNSC.*:*.*:Header.*:requestHeader.messageId,Environment.TransactionId);
+		SET TransactionID									= Environment.TransactionId;
+		SET OrchestrationID									= Environment.Variables.Orchestration_ID;
+		
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_DEF = '' THEN
+			SET	Environment.Variables.Bussiness_DEF					= COALESCE(Environment.Variables.Bussiness_DEF,'NULL');
+		ELSE
+			SET Environment.Variables.Bussiness_DEF					= BUSINESS_ENTITY_DEF;
+			BEGIN  
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_DEF				= EVAL (BUSINESS_ENTITY_DEF);
+					
+				END;
+		END IF;
+		
+		IF BUSINESS_ENTITY_DEF = NULL OR BUSINESS_ENTITY_ID = '' THEN
+			SET	Environment.Variables.Bussiness_ID			= COALESCE(Environment.Variables.Bussiness_ID,'NULL');
+		ELSE 	
+			SET Environment.Variables.Bussiness_ID			= BUSINESS_ENTITY_ID;
+			BEGIN 
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.Variables.Bussiness_ID		= EVAL(BUSINESS_ENTITY_ID);
+			END;
+		END IF;
+
+		FOR M as InputRoot.XMLNSC.*:*.*:Header.*:requestHeader.messageContext.*[] do
+			DECLARE Key CHARACTER UPPER (M.key);
+			DECLARE Value CHARACTER M.value;
+			
+			IF Key IS NOT NULL AND NOT TRIM(Key) = '' THEN
+                SET Environment.Variables.{Key} = Value;
+			END IF;
+
+		END FOR;
+				
+		RETURN TRUE;
+	END;

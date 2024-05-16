@@ -1,0 +1,43 @@
+CREATE COMPUTE MODULE PhoneProcessing_ReqGetPerson
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		DECLARE data ROW THE (SELECT Counter FROM cacheCount.Data[] AS Counter
+		WHERE Counter.ID = InputRoot.XMLNSC.Msg.MessageHeader.messageId);
+		
+		IF data.ID IS NUll THEN
+			DECLARE lastSon REFERENCE TO cacheCount.Data[1];
+			CREATE LASTCHILD OF cacheCount AS lastSon NAME 'Data';
+			SET lastSon.ID = InputRoot.XMLNSC.Msg.MessageHeader.messageId;
+			SET lastSon.numPeopleFound = 0; -- los encontro en bup
+			SET lastSon.numPeopleNOTFound = 0; -- no los encontro en bup
+			SET lastSon.numPhoneForged = 0; -- telefonos procesados
+			SET lastSon.numPhoneNOTForged = 0; -- errores
+		END IF;
+		
+		-- Busqueda del ultimo registro y completo la tabla de cabecera
+		IF Exists (InputRoot.XMLNSC.Msg.MessageBody[])THEN	
+			SET Environment.Variables.StartTime = InputRoot.XMLNSC.Msg.MessageBody.StartTime;
+
+			PROPAGATE TO TERMINAL 1;
+			RETURN FALSE;
+		END IF;
+		
+      	DECLARE refIn REFERENCE TO InputRoot.XMLNSC.Msg.MessageHeader;
+		
+		
+		SET OutputRoot.HTTPRequestHeader.Authorization = Token;
+		-- querystring
+		IF refIn.TributaryCodeNumber IS NOT NULL THEN
+			CREATE FIELD OutputLocalEnvironment.Destination.HTTP.QueryString;
+	
+			SET OutputLocalEnvironment.Destination.HTTP.QueryString.identificationNumber   		= refIn.DocumentNumber;
+			SET OutputLocalEnvironment.Destination.HTTP.QueryString.taxIdentificationNumber     = refIn.TributaryCodeNumber;
+			SET OutputLocalEnvironment.Destination.HTTP.QueryString.registeredName			    = refIn.FullName;
+			
+			PROPAGATE TO TERMINAL 0;
+		END IF;
+		
+		RETURN FALSE;
+	END;
+END MODULE;

@@ -1,0 +1,132 @@
+CREATE COMPUTE MODULE SalidaBackend_SalidaBackend_Log
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE nss NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/SecurityTypes';
+		DECLARE nssm NAMESPACE 'http://GrupoSancorSeguros/xsd/service/SecuritySvcMsg';
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+		DECLARE temp NAMESPACE 'http://tempuri.org/';			
+		DECLARE nsscs NAMESPACE 'http://schemas.datacontract.org/2004/07/SancorSeguros.Contract.Security';
+		DECLARE nsup NAMESPACE 'http://schemas.datacontract.org/2004/07/Sancor.Issuance.PremiumCalculator.Services.Contract.UserParameters';
+		DECLARE nsss NAMESPACE 'http://sancorseguros.com/issuance/premiumcalculator/services';
+		DECLARE nsscg NAMESPACE 'http://schemas.datacontract.org/2004/07/System.Collections.Generic';
+			
+		CREATE FIELD Environment.Variables.RespuestaValidatorSecurity;
+		SET Environment.Variables.RespuestaValidatorSecurity = InputRoot.SOAP.Body.temp:ValidateSecurityTokenResponse.temp:ValidateSecurityTokenResult.nsscs:isValid;
+		CREATE FIELD Environment.Variables.RespuestaGetSecurityGroup;
+		SET Environment.Variables.RespuestaGetSecurityGroup = InputRoot.SOAP.Body.nsss:GetUserRolesResponse.nsss:GetUserRolesResult.nsup:Roles.nsscg:KeyValuePairOfintstring.nsscg:value;
+		
+		IF 		CONTAINS(BrokerName,'CHANNEL')	THEN
+			SET Environment.Variables.FILTRO_BROKER 	= 'ARG_CHANNEL';
+		ELSEIF 	CONTAINS(BrokerName,'FICO')		THEN
+			SET Environment.Variables.FILTRO_BROKER 	= 'ARG_FICO';
+		ELSE
+			SET Environment.Variables.FILTRO_BROKER 	= 'OTROS'; 
+		END IF;
+-------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------		
+		IF Environment.Variables.FILTRO_BROKER 			= 'ARG_CHANNEL' THEN
+			
+			SET OutputRoot.XMLNSC.LogMsg.FILTRO_BROKER				= Environment.Variables.FILTRO_BROKER;
+			SET OutputRoot.XMLNSC.LogMsg.TRANSACTION_ID 			= Environment.TransactionId;
+			SET OutputRoot.XMLNSC.LogMsg.SERVICE_NAME 				= Environment.Service.Name;
+			SET OutputRoot.XMLNSC.LogMsg.USER_NAME 					= Environment.UserName;
+			SET OutputRoot.XMLNSC.LogMsg.TIMESTAMP 					= CURRENT_TIMESTAMP;
+			SET OutputRoot.XMLNSC.LogMsg.DIRECTION 					= 'BACKEND_RESPONSE';
+			SET OutputRoot.XMLNSC.LogMsg.BACKENDPROVIDER 			= InputRoot.SOAP.Context.service;
+			SET OutputRoot.XMLNSC.LogMsg.ENDPOINT_NAME 				= InputLocalEnvironment.WrittenDestination.SOAP.Request.Transport.HTTP.WebServiceURL;
+			SET OutputRoot.XMLNSC.LogMsg.OPERATION_NAME 			= InputRoot.SOAP.Context.operation;
+			SET OutputRoot.XMLNSC.LogMsg.MESSAGE.ns85:Envelope.ns85:Header	= InputRoot.SOAP.Header;
+			SET OutputRoot.XMLNSC.LogMsg.MESSAGE.ns85:Envelope.ns85:Body	= InputRoot.SOAP.Body;
+			IF Environment.Variables.systemId IS NOT NULL AND Environment.Variables.systemId <> '' THEN
+					SET OutputRoot.XMLNSC.LogMsg.APPOWNER 				= Environment.Variables.systemId;
+				ELSE
+					SET OutputRoot.XMLNSC.LogMsg.APPOWNER 				= BrokerName;
+			END IF;
+			SET OutputRoot.XMLNSC.LogMsg.IP 						= Environment.Variables.ClientIP;
+			SET OutputRoot.XMLNSC.LogMsg.SERVICE_OPERATION_NAME 	= Environment.Service.Operation.Name;
+			SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_DEF			= Environment.Variables.Bussiness_DEF;
+			SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_ID	 			= Environment.Variables.Bussiness_ID;
+			SET OutputRoot.XMLNSC.LogMsg.ORCHESTRATION_ID	 			= Environment.Variables.Orchestration_ID;
+		
+-------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+		ELSEIF Environment.Variables.FILTRO_BROKER 			= 'ARG_FICO' THEN
+		
+			SET OutputRoot.XMLNSC.LogMsg.FILTRO_BROKER			= Environment.Variables.FILTRO_BROKER;
+			SET OutputRoot.XMLNSC.LogMsg.TRANSACTION_ID 			= Environment.TransactionId;
+			SET OutputRoot.XMLNSC.LogMsg.SERVICE_NAME 			= COALESCE(Environment.Service.Name,Environment.Variables.Name) ;
+			SET OutputRoot.XMLNSC.LogMsg.USER_NAME 				= Environment.UserName;
+			SET OutputRoot.XMLNSC.LogMsg.TIMESTAMP 				= CURRENT_TIMESTAMP;
+			SET OutputRoot.XMLNSC.LogMsg.DIRECTION 				= 'BACKEND_RESPONSE';
+			SET OutputRoot.XMLNSC.LogMsg.BACKENDPROVIDER 			= InputRoot.SOAP.Context.service;
+			SET OutputRoot.XMLNSC.LogMsg.ENDPOINT_NAME 			= InputLocalEnvironment.WrittenDestination.SOAP.Request.Transport.HTTP.WebServiceURL;
+			SET OutputRoot.XMLNSC.LogMsg.OPERATION_NAME 			= InputRoot.SOAP.Context.operation;
+			
+			IF (EXISTS(InputRoot.SOAP.Body[]))THEN
+				SET OutputRoot.XMLNSC.LogMsg.MESSAGE   			=  CAST (ASBITSTREAM(InputRoot.SOAP.Body)AS CHAR CCSID 1208); 
+			ELSE  
+				SET OutputRoot.XMLNSC.LogMsg.MESSAGE  			= CAST (ASBITSTREAM(InputRoot.XMLNSC)AS CHAR CCSID 1208); 
+			END IF;
+		
+			IF Environment.Variables.systemId IS NOT NULL AND Environment.Variables.systemId <> '' THEN
+					SET OutputRoot.XMLNSC.LogMsg.APPOWNER 				= Environment.Variables.systemId;
+				ELSE
+					SET OutputRoot.XMLNSC.LogMsg.APPOWNER 				= BrokerName;
+			END IF;
+			SET OutputRoot.XMLNSC.LogMsg.IP 						= Environment.Variables.ClientIP;
+			SET OutputRoot.XMLNSC.LogMsg.SERVICE_OPERATION_NAME 	= COALESCE(Environment.Service.Operation.Name,InputRoot.SOAP.Context.operation);
+			SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_DEF			= Environment.Variables.Bussiness_DEF;
+			SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_ID	 			= Environment.Variables.Bussiness_ID;
+			SET OutputRoot.XMLNSC.LogMsg.ORCHESTRATION_ID	 			= Environment.Variables.Orchestration_ID;
+		
+-------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+		ELSEIF Environment.Variables.FILTRO_BROKER 			= 'OTROS' THEN
+		
+			SET OutputRoot.XMLNSC.LogMsg.FILTRO_BROKER				= Environment.Variables.FILTRO_BROKER;
+			SET OutputRoot.XMLNSC.LogMsg.TRANSACTION_ID 			= Environment.TransactionId;
+			SET OutputRoot.XMLNSC.LogMsg.SERVICE_NAME 				= Environment.Service.Name;
+			SET OutputRoot.XMLNSC.LogMsg.USER_NAME 					= Environment.UserName;
+			SET OutputRoot.XMLNSC.LogMsg.TIMESTAMP 					= CURRENT_TIMESTAMP;
+			SET OutputRoot.XMLNSC.LogMsg.DIRECTION 					= 'BACKEND_RESPONSE';
+			SET OutputRoot.XMLNSC.LogMsg.BACKENDPROVIDER 			= InputRoot.SOAP.Context.service;
+			SET OutputRoot.XMLNSC.LogMsg.ENDPOINT_NAME 				= InputLocalEnvironment.WrittenDestination.SOAP.Request.Transport.HTTP.WebServiceURL;
+			SET OutputRoot.XMLNSC.LogMsg.OPERATION_NAME 			= InputRoot.SOAP.Context.operation;
+			
+			IF (EXISTS(InputRoot.SOAP.Body[]))THEN
+				SET OutputRoot.XMLNSC.LogMsg.MESSAGE   				=  InputRoot.SOAP.Body;
+			ELSE  
+				SET OutputRoot.XMLNSC.LogMsg.MESSAGE  				= CAST (ASBITSTREAM(InputRoot.XMLNSC)AS CHAR CCSID 1208); 
+			END IF;
+		
+			IF Environment.Variables.systemId IS NOT NULL AND Environment.Variables.systemId <> '' THEN
+					SET OutputRoot.XMLNSC.LogMsg.APPOWNER 			= Environment.Variables.systemId;
+				ELSE
+					SET OutputRoot.XMLNSC.LogMsg.APPOWNER 			= BrokerName;
+			END IF;
+			SET OutputRoot.XMLNSC.LogMsg.IP 						= Environment.Variables.ClientIP;
+			SET OutputRoot.XMLNSC.LogMsg.SERVICE_OPERATION_NAME 	= COALESCE(Environment.Service.Operation.Name,InputRoot.SOAP.Context.operation);
+			SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_DEF		= Environment.Variables.Bussiness_DEF;
+			SET OutputRoot.XMLNSC.LogMsg.BUSINESS_ENTITY_ID	 		= Environment.Variables.Bussiness_ID;
+			SET OutputRoot.XMLNSC.LogMsg.ORCHESTRATION_ID	 		= Environment.Variables.Orchestration_ID;
+		
+
+		END IF;
+
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

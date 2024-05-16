@@ -1,0 +1,295 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		
+		DECLARE refIn REFERENCE TO InputRoot.XMLNSC.Msg;
+		DECLARE refEnv REFERENCE TO Environment.Variables;
+		
+--		DECLARE foundExternalSources CHARACTER '0';
+		DECLARE crlf CHAR CAST(X'0D0A' AS CHAR CCSID 1208);
+		DECLARE utf8BOM CHAR CAST(X'EFBBBF' AS CHAR CCSID 1208);
+		DECLARE fileName CHARACTER TimestampToString(CAST(CURRENT_TIMESTAMP AS CHARACTER)) || '_' ||
+																	 refIn.Header.batchId || '.txt';
+		
+		DECLARE queryResultFound ROW;
+--		DECLARE queryResultNotFound ROW;
+		DECLARE countItems INTEGER 0;
+		DECLARE top INTEGER 100;
+		DECLARE toFileSystem BOOLEAN FALSE;
+		
+--		IF CAST(refIn.Body.External AS BOOLEAN) THEN
+--			SET foundExternalSources = CAST(COALESCE(refIn.Body.FoundInExternalSources, 0) AS CHARACTER);
+--		END IF;
+		
+--		DECLARE query CHARACTER 'SET NOCOUNT ON; exec qc.sp_GetPeopleMassiveSearchResults ?';
+--		SET refEnv.Req.PeopleMassiveEnrichment.Query = REPLACE(query, '?', refIn.Body.RequestId);
+--		CALL common.MapLogToDB(OutputRoot, Environment, refEnv.Req, DataSource, Server, 'qc.sp_GetPeopleMassiveSearchResults', TRUE);
+--		PROPAGATE TO TERMINAL 1 DELETE NONE;
+--		CALL common.FreeParsers(OutputRoot);
+		
+---		CALL GetPeopleMassiveSearchResults(refIn.Body.RequestId, queryResultFound.Results[]);
+
+		SET Environment.Variables.SendEmail[] = PASSTHRU('SELECT ProcessId, TributaryCodeNumber, DocumentNumber, FullName,
+											    		PhoneNumber, PhoneTypeId, AreaCode, Error
+											    FROM BUP.PhoneMassiveProcessResult (NOLOCK)
+											    WHERE ID = ?' VALUES (refIn.Header.batchId));
+											    
+--		SET Environment.Variables.SendEmail[] = PASSTHRU('SELECT ProcessId, TributaryCodeNumber, DocumentNumber, FullName,
+--											    		PhoneNumber, PhoneTypeId, AreaCode, Error
+--											    FROM BUP.PhoneMassiveProcessResult (NOLOCK)
+--											    WHERE ID = ?, AND Error is not null' VALUES (refIn.Header.batchId));
+		
+		SET toFileSystem = CARDINALITY( Environment.Variables.SendEmail[]) > 20000;
+--		SET refEnv.Req = NULL;
+		
+--		SET query = 'SET NOCOUNT ON; EXEC qc.sp_GetPeopleMassiveSearchResultsNotFound ?';
+--		SET refEnv.Req.PeopleMassiveEnrichment.Query = REPLACE(query, '?', refIn.Body.RequestId);
+--		CALL common.MapLogToDB(OutputRoot, Environment, refEnv.Req, DataSource, Server, 'qc.sp_GetPeopleMassiveSearchResultsNotFound', TRUE);
+--		PROPAGATE TO TERMINAL 1 DELETE NONE;
+--		CALL common.FreeParsers(OutputRoot);
+		
+--		CALL GetPeopleMassiveSearchResultsNotFound(refIn.Body.RequestId, queryResultNotFound.NotFound[]);
+--		DECLARE cardNotFound BOOLEAN CARDINALITY(queryResultNotFound.NotFound[]) > 0;
+		
+		DECLARE foundResults REFERENCE TO  Environment.Variables.SendEmail[1];
+	--	DECLARE notFoundResults REFERENCE TO queryResultNotFound.NotFound[1];
+--		DECLARE notFoundLastOne BOOLEAN FALSE;
+		
+--		IF LASTMOVE(foundResults) THEN
+--			--Mergear resultados agregando a foundResults
+--			-- Insertar notFound al principio
+--			WHILE LASTMOVE(notFoundResults) AND notFoundResults.Order < COALESCE(foundResults.Order, 0) DO
+--				DECLARE newAttachElement REFERENCE TO notFoundResults;
+--				MOVE notFoundResults NEXTSIBLING REPEAT NAME;
+--				
+--				DETACH newAttachElement;
+--				SET newAttachElement.isNotFound = TRUE;
+--				ATTACH newAttachElement TO foundResults AS PREVIOUSSIBLING;
+--			END WHILE;
+--			WHILE LASTMOVE(foundResults) AND LASTMOVE(notFoundResults) DO
+--					IF notFoundResults.Order > foundResults.Order THEN
+--						MOVE foundResults NEXTSIBLING NAME 'Results';
+--					ELSE
+--						DECLARE newAttachElement REFERENCE TO notFoundResults;
+--						MOVE notFoundResults NEXTSIBLING REPEAT NAME;
+--						DETACH newAttachElement;
+--						SET newAttachElement.isNotFound = TRUE;
+--						ATTACH newAttachElement TO foundResults AS PREVIOUSSIBLING;
+--					END IF;
+--			END WHILE;
+--			MOVE foundResults TO queryResultFound.Results[<];
+			-- Agregar el remanente no encontrado
+			-- Si cortamos por LASTMOVE(foundResults)=FALSE ya apunta al ultimo, y sino LASTMOVE(notFoundResults)=FALSE no entra al while
+--			WHILE LASTMOVE(notFoundResults) DO
+--				DECLARE newAttachElement REFERENCE TO notFoundResults;
+--				MOVE notFoundResults NEXTSIBLING REPEAT NAME;
+--				
+--				DETACH newAttachElement;
+--				SET newAttachElement.isNotFound = TRUE;
+--				ATTACH newAttachElement TO foundResults AS NEXTSIBLING;
+--				MOVE foundResults NEXTSIBLING;
+--			END WHILE;
+--		ELSE
+--			CREATE FIELD queryResultFound.ResultsTmp;
+--			MOVE foundResults TO queryResultFound.ResultsTmp;
+--			WHILE LASTMOVE(notFoundResults) DO
+--				DECLARE newAttachElement REFERENCE TO notFoundResults;
+--				MOVE notFoundResults NEXTSIBLING REPEAT NAME;
+--				
+--				DETACH newAttachElement;
+--				SET newAttachElement.isNotFound = TRUE;
+--				ATTACH newAttachElement TO foundResults AS NEXTSIBLING;
+--				MOVE foundResults NEXTSIBLING;
+--			END WHILE;
+--			DELETE FIELD queryResultFound.ResultsTmp;
+--		END IF;
+
+
+		--Encabezado del mail 
+		DECLARE attachmentMessage CHARACTER utf8BOM || 'NOMBRE;TIPO DOCUMENTO;NRO DOCUMENTO;TIPO COD. TRIBUTARIO; COD. TRIBUTARIO;' ||
+													'NUM. TELEFONO;PERSONID;PHONEID; ERROR' || crlf;
+		
+--		SET queryResultNotFound.NotFound = NULL;
+		MOVE foundResults TO Environment.Variables.SendEmail.*[1];
+		
+		WHILE LASTMOVE(foundResults) DO
+--			IF foundResults.isNotFound THEN
+				SET attachmentMessage = attachmentMessage || ConcatStringFound (	COALESCE(CAST(foundResults.FullName AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.DocumentTypeId AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.DocumentNumber AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.TributaryCodeTypeId AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.TributaryCodeNumber AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.PhoneNumber AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.PersonId AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.PhoneId AS CHARACTER), ''),
+																					COALESCE(CAST(foundResults.Error AS CHARACTER), ''));
+																					
+																				
+																		--			COALESCE(NULLIF(CAST(foundResults.OriginID AS CHARACTER), 'NULL'), ''));
+				SET countItems = countItems + 1;
+--			ELSE
+--				SET attachmentMessage = attachmentMessage || ConcatStringFound(COALESCE(CAST(foundResults.DocumentNumberSrh AS CHARACTER), ''),
+--																						COALESCE(CAST(foundResults.TributaryCodeNumberSrh AS CHARACTER), ''),
+--																						COALESCE(CAST(foundResults.FullNameSrh AS CHARACTER), ''),
+--																						COALESCE(NULLIF(CAST(foundResults.OriginID AS CHARACTER), 'NULL'), ''),
+--																						COALESCE(CAST(foundResults.PersonIDRes AS CHARACTER), ''),
+--																						COALESCE(foundResults.DocumentTypeRes, ''),
+--																						COALESCE(foundResults.DocumentNumberRes, ''),
+--																						COALESCE(foundResults.TributaryCodeTypeRes, ''),
+--																						COALESCE(foundResults.TributaryCodeNumberRes, ''),
+--																						COALESCE(foundResults.LastNameRes, ''),
+--																						COALESCE(foundResults.FirstNameRes, ''),
+--																						COALESCE(CAST(foundResults.BirthDateRes AS CHARACTER), ''),
+--																						COALESCE(CAST(foundResults.DeathDateRes AS CHARACTER), ''),
+--																						COALESCE(CAST(foundResults.GenderRes AS CHARACTER), ''),
+--																						COALESCE(CAST(foundResults.EntityTypeRes AS CHARACTER), ''));
+--				SET countItems = countItems + 1;
+--			END IF;
+			
+			MOVE foundResults NEXTSIBLING;
+			DELETE PREVIOUSSIBLING OF foundResults;
+			
+			IF toFileSystem AND countItems = top THEN
+				SET OutputLocalEnvironment.Destination.File.Directory	= FileDirectory;
+				SET OutputLocalEnvironment.Destination.File.Name		= fileName;
+				SET OutputRoot.BLOB.BLOB = CAST(attachmentMessage AS BLOB CCSID 1208 ENCODING 546);
+				PROPAGATE TO TERMINAL 2;
+				
+				SET attachmentMessage = '';
+				SET countItems = 0;				
+			END IF;
+		END WHILE;
+		
+		IF toFileSystem AND countItems > 0 THEN
+			SET OutputLocalEnvironment.Destination.File.Directory	= FileDirectory;
+			SET OutputLocalEnvironment.Destination.File.Name		= fileName;
+			SET OutputRoot.BLOB.BLOB = CAST(attachmentMessage AS BLOB CCSID 1208  ENCODING 546);
+			PROPAGATE TO TERMINAL 2;
+			
+			SET attachmentMessage = '';
+			SET countItems = 0;
+		END IF;
+		
+--		SET queryResultFound.Results = NULL;
+		
+		IF toFileSystem THEN
+			SET OutputLocalEnvironment.Destination.File.Directory	= FileDirectory;
+			SET OutputLocalEnvironment.Destination.File.Name		= fileName;
+			SET OutputRoot.BLOB.BLOB = CAST(attachmentMessage AS BLOB CCSID 1208  ENCODING 546);
+			PROPAGATE TO TERMINAL 3;
+			
+			SET attachmentMessage = '';
+			SET countItems = 0;
+		END IF;
+		
+---		DECLARE Si_No CHARACTER 'NO';
+--		IF CAST(refIn.Body.External AS BOOLEAN) THEN
+--			SET Si_No = 'SI';
+--		END IF;
+		
+		DECLARE DurationSeconds CHARACTER CAST(CAST(CAST(CAST(refIn.MessageHeader.Duration AS INTERVAL HOUR TO SECOND) AS INTERVAL SECOND) AS DECIMAL) AS CHARACTER) || ' segundos';
+		DECLARE EndTimeString CHARACTER CAST(CAST(REPLACE(refIn.MessageHeader.EndTime, 'T', ' ') AS TIMESTAMP) AS CHARACTER FORMAT 'yyyy-MM-dd HH:mm:ss');
+		DECLARE StartTimeString CHARACTER CAST(CAST(REPLACE(refIn.MessageHeader.StartTime, 'T', ' ') AS TIMESTAMP) AS CHARACTER FORMAT 'yyyy-MM-dd HH:mm:ss');
+		DECLARE msgBody CHARACTER ConcatMsgBody(StartTimeString, EndTime, Duration,
+			CAST(refIn.MessageHeader.TotalPerson AS CHARACTER),
+			CAST(refIn.MessageHeader.numPeopleFound AS CHARACTER),CAST(refIn.MessageHeader.numPeopleNOTFound AS CHARACTER),
+			CAST(refIn.MessageHeader.numPhoneForged AS CHARACTER),CAST(refIn.MessageHeader.numPhoneNOTForged AS CHARACTER));
+		
+		IF toFileSystem THEN
+			SET OutputLocalEnvironment.Destination.File.Directory	= FileDirectory;
+			SET OutputLocalEnvironment.Destination.File.Name		= fileName;
+			SET OutputRoot.BLOB.BLOB = CAST(attachmentMessage AS BLOB CCSID 1208  ENCODING 546);
+			PROPAGATE TO TERMINAL 2;
+			
+			SET attachmentMessage = '';
+			SET msgBody = msgBody || crlf || 'El archivo ' || fileName || ' está alojado en \\ss1039\Apps\BUP\PhoneProcessing\' || Environments;
+		END IF;
+
+		CREATE FIELD OutputRoot.EmailOutputHeader;
+		DECLARE refOutEmail REFERENCE TO OutputRoot.EmailOutputHeader;
+
+		SET refOutEmail.To = refIn.Header.EmailEntered;
+		SET refOutEmail.From = 'Comunicaciones@gruposancorseguros.com' ;
+		SET refOutEmail.Subject = 'Enriqucimiento de Telefonos - ' || refIn.Header.batchId;
+		
+		CREATE FIELD OutputRoot.MIME;
+		DECLARE mimeContent REFERENCE TO OutputRoot.MIME;
+		
+		CREATE FIELD mimeContent."Content-Type" VALUE 'multipart/related; boundary=myBoundary';
+		CREATE FIELD mimeContent."Content-ID" VALUE 'new MIME document';
+		
+		CREATE LASTCHILD OF mimeContent NAME 'Parts';
+		CREATE LASTCHILD OF mimeContent.Parts NAME 'Part';
+		DECLARE bodyContent REFERENCE TO mimeContent.Parts.Part;
+		
+		CREATE FIELD bodyContent."Content-Type" VALUE 'text/plain; charset=utf-8';
+		CREATE FIELD bodyContent."Content-Transfer-Encoding" VALUE 'base64';
+		
+		CREATE LASTCHILD OF bodyContent NAME 'Data';
+		CREATE LASTCHILD OF bodyContent.Data DOMAIN('BLOB') PARSE(CAST(BASE64ENCODE(msgBody) AS BLOB CCSID 1208));
+		
+		IF NOT toFileSystem THEN
+			CREATE LASTCHILD OF mimeContent.Parts NAME 'Part';
+			DECLARE attachmentContent REFERENCE TO mimeContent.Parts.Part[2];
+			
+			
+			CREATE FIELD attachmentContent."Content-Type" VALUE 'text/plain; charset=utf-8; name=' 
+																|| fileName;
+			-- this line informs the email client not to display attachment inline
+			CREATE FIELD attachmentContent."Content-Dispostion" VALUE 'attachment; filename="attachment.txt"';
+			CREATE FIELD attachmentContent."Content-Transfer-Encoding" VALUE '8bit';
+			CREATE LASTCHILD OF attachmentContent NAME 'Data';
+			CREATE LASTCHILD OF attachmentContent.Data DOMAIN('BLOB') PARSE(CAST(attachmentMessage AS BLOB CCSID 1208));
+		END IF;
+		
+		
+		PROPAGATE TO TERMINAL 0;
+		RETURN FALSE;
+	END;
+	
+	CREATE PROCEDURE ConcatMsgBody(IN StartTime CHARACTER, IN EndTime CHARACTER, 
+									IN Duration CHARACTER, IN TotalPerson CHARACTER, IN numPeopleFound CHARACTER,
+									IN numPeopleNOTFound CHARACTER, IN numPhoneForged CHARACTER, IN numPhoneNOTForged CHARACTER)
+	RETURNS CHARACTER
+	LANGUAGE JAVA
+	EXTERNAL NAME "com.gruposancorseguros.java.BupPersonMassiveSearch.ConcatString.concatMsgBody";
+	
+	CREATE PROCEDURE ConcatStringFound(IN FullName CHARACTER, IN DocumentTypeId CHARACTER, IN DocumentNumber CHARACTER, 
+												IN TributaryCodeTypeId CHARACTER, IN tributaryCodeNumber CHARACTER, 
+												IN PhoneNumber CHARACTER, IN PersonId CHARACTER,
+												IN PhoneId CHARACTER, IN Error CHARACTER)
+	RETURNS CHARACTER
+	LANGUAGE JAVA
+	EXTERNAL NAME "com.gruposancorseguros.java.BupPersonMassiveSearch.ConcatString.concatStringFound";
+	
+--	CREATE PROCEDURE ConcatStringFound(IN documentNumberSrh CHARACTER, IN tributaryCodeNumberSrh CHARACTER, 
+--												IN fullNameSrh CHARACTER, IN originIDSrh CHARACTER, IN personIDRes CHARACTER,
+--												IN documentTypeIDRes CHARACTER, IN documentNumberRes CHARACTER, IN tributaryCodeTypeIDRes CHARACTER,
+--												IN tributaryCodeNumberRes CHARACTER, IN lastNameRes CHARACTER, IN firstNameRes CHARACTER,
+--												IN birthDateRes CHARACTER, IN deathDateRes CHARACTER, IN genderIDRes CHARACTER, IN entityTypeIDRes CHARACTER) 
+--	RETURNS CHARACTER
+--	LANGUAGE JAVA
+--	EXTERNAL NAME "com.gruposancorseguros.java.BupPersonMassiveSearch.ConcatString.concatStringFound";
+	
+--	CREATE PROCEDURE GetPeopleMassiveSearchResults (IN Id CHARACTER )
+--	LANGUAGE DATABASE
+--	DYNAMIC RESULT SETS 1
+--	EXTERNAL NAME "qc.sp_GetPeopleMassiveSearchResults";
+--	
+--	CREATE PROCEDURE GetPeopleMassiveSearchResultsNotFound (IN Id CHARACTER )
+--	LANGUAGE DATABASE
+--	DYNAMIC RESULT SETS 1
+--	EXTERNAL NAME "qc.sp_GetPeopleMassiveSearchResultsNotFound";
+	
+	CREATE FUNCTION TimestampToString (IN dateTime CHARACTER) RETURNS CHARACTER
+	BEGIN
+		DECLARE newDateTime CHARACTER dateTime;
+		
+		IF CONTAINS(newDateTime, 'TIMESTAMP') THEN
+			SET newDateTime = SUBSTRING(newDateTime AFTER 'TIMESTAMP ');
+		END IF;
+		SET newDateTime	= SUBSTRING(newDateTime FROM 1 FOR 24);
+		SET newDateTime	= REPLACE(newDateTime, '''', '');
+		SET newDateTime	= REPLACE(newDateTime, ' ', 'T');
+		
+		RETURN newDateTime;
+	END;

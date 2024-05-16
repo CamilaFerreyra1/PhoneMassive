@@ -1,0 +1,192 @@
+CREATE COMPUTE MODULE Catch_Handler_Catch_Handler
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+
+		CREATE LASTCHILD OF Environment DOMAIN 'XMLNSC' NAME 'Backup';
+		SET Environment.Backup.XMLNSC=InputRoot.XMLNSC;
+		CALL CopyMessageHeaders();
+		DECLARE soapenv NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE ErrorNumber INTEGER;
+		DECLARE ErrorText CHARACTER;
+		DECLARE ErrorDesc CHARACTER;
+
+		CALL GetLastExceptionDetailV2(InputExceptionList,ErrorNumber,ErrorText,ErrorDesc);
+		
+		SET Environment.MensajeDeEntrada = CAST(ASBITSTREAM(InputRoot.XMLNSC.LogMsg.MESSAGE) AS CHARACTER CCSID 819);
+			BEGIN  
+				DECLARE CONTINUE HANDLER FOR SQLSTATE LIKE '%' BEGIN END;
+				SET Environment.MensajeDeEntrada = CAST(ASBITSTREAM(InputRoot) AS CHARACTER CCSID 819);
+		END;
+		
+		CREATE FIELD OutputRoot.SOAP.Body;
+		CREATE FIELD OutputRoot.SOAP.Header.ns225:responseHeader;
+		SET OutputExceptionList = InputExceptionList;
+
+		CASE ErrorNumber
+		WHEN '100' THEN
+			CALL MapeaBodyErrorCom('100', 'GeneralException', 'Access is denied due to invalid credentials', 'Proporcione datos de autenticación válidos', OutputRoot.SOAP.Body);
+		WHEN '101' THEN
+			CALL MapeaBodyErrorCom('100', 'GeneralException','Could not get the security group', 'No se pudo obtener el SecurityGroup', OutputRoot.SOAP.Body);
+		WHEN '5025' THEN
+			CALL MapeaBodyErrorCom('200', 'GeneralException', 'Schema Validation Error', 'Hay un error en el formato, verifique los tipos de datos de los campos', OutputRoot.SOAP.Body);
+		WHEN '3602' THEN
+			CALL MapeaBodyErrorCom('200', 'GeneralException', 'Schema Validation Error', 'Hay un error en el formato, verifique los tipos de datos de los campos', OutputRoot.SOAP.Body);
+		WHEN '5004' THEN
+			CALL MapeaBodyErrorCom('200', 'GeneralException', 'Schema Validation Error', 'Hay un error en el formato, verifique los tipos de datos de los campos', OutputRoot.SOAP.Body);
+		WHEN '3001' THEN
+			CALL MapeaBodyErrorCom('200', 'GeneralException', 'Schema Validation Error', 'Hay un error en el formato, verifique los tipos de datos de los campos', OutputRoot.SOAP.Body);
+		WHEN '3150' THEN
+			CALL MapeaBodyErrorCom('300', 'SystemException', 'Backend Service Unreachable', 'No se pudo acceder al backend', OutputRoot.SOAP.Body);
+		WHEN '3165' THEN
+			CALL MapeaBodyErrorCom('300', 'SystemException', 'Backend Service Unreachable', 'No se pudo acceder al backend', OutputRoot.SOAP.Body);
+		WHEN '3691' THEN
+			CALL MapeaBodyErrorCom('300', 'SystemException', 'Backend Service Unreachable', 'No se pudo acceder al backend', OutputRoot.SOAP.Body);
+		WHEN '301' THEN
+			CALL MapeaBodyErrorCom('301', 'SystemException', 'Backend Service Unreachable', 'No se pudo acceder al backend', OutputRoot.SOAP.Body); --
+		WHEN '4310' THEN
+			CALL MapeaBodyErrorCom('400', 'BusinessException', 'The Decision Service node detected an exception due to an invalid parameter', 'Parámetro inválido encontrado por Decision Service', OutputRoot.SOAP.Body);
+		WHEN '0401' THEN
+			CALL MapeaBodyErrorCom('401', 'BusinessException', 'The request could not be processed by due to invalid parameters: Location is not valid', 'El parámetro Location no es válido', OutputRoot.SOAP.Body);
+		WHEN '0402' THEN
+			CALL MapeaBodyErrorCom('402', 'BusinessException', 'The request could not be processed by due to invalid parameters: DocumentType is not valid', 'DocumentType no válido', OutputRoot.SOAP.Body);
+		WHEN '0403' THEN
+			CALL MapeaBodyErrorCom('403', 'BusinessException', 'The request could not be processed by due to invalid parameters: Currency is not valid', 'Currency no válido', OutputRoot.SOAP.Body);
+		WHEN '0404' THEN
+			CALL MapeaBodyErrorCom('404', 'BusinessException', 'The request could not be processed by due to invalid parameters: IvaCondition is not valid', 'IvaCondition no es válido', OutputRoot.SOAP.Body);
+		WHEN '0405' THEN
+			CALL MapeaBodyErrorCom('405', 'BusinessException', 'The request could not be processed by due to invalid parameters: Product is not valid', 'Product no es válido', OutputRoot.SOAP.Body);
+		WHEN '0406' THEN
+			CALL MapeaBodyErrorCom('406', 'BusinessException', 'The request could not be processed by due to invalid parameters: There is not product to price', 'Sin producto para cotizar', OutputRoot.SOAP.Body);
+		WHEN '0407' THEN
+			CALL MapeaBodyErrorCom('407', 'BusinessException', 'The request could not be processed by due to invalid parameters: Vehicle Class is not valid', 'Vehicle Class no es válido', OutputRoot.SOAP.Body);
+		WHEN '0408' THEN
+			CALL MapeaBodyErrorCom('408', 'BusinessException', 'The request could not be processed by due to invalid parameters: Pay Frequency is not valid', 'Pay Frequency no es válida', OutputRoot.SOAP.Body);
+		WHEN '0409' THEN
+			CALL MapeaBodyErrorCom('409', 'BusinessException', 'The request could not be processed by due to invalid parameters: Fee is not valid', 'Fee no es válido', OutputRoot.SOAP.Body);
+		WHEN '0410' THEN
+			CALL MapeaBodyErrorCom('410', 'BusinessException', 'The request could not be processed by due to invalid parameters: Vehicle Type is not valid by Intermediary', 'Vehicle Type no es válido para este Intermediary', OutputRoot.SOAP.Body);
+		WHEN '0411' THEN
+			CALL MapeaBodyErrorCom('411', 'BusinessException', 'The request could not be processed by due to invalid parameters: Vehicle Type is not valid by FiscalCondition', 'Vehicle Type no es válido para esta FiscalCondition', OutputRoot.SOAP.Body);
+		WHEN '0412' THEN
+			CALL MapeaBodyErrorCom('412', 'BusinessException', 'The request could not be processed by due to invalid parameters: Vehicle Use is not valid', 'Vehicle Use no es válido', OutputRoot.SOAP.Body);
+		WHEN '0413' THEN
+			CALL MapeaBodyErrorCom('413', 'BusinessException', 'The request could not be processed by due to invalid parameters: Vehicle Code is not valid', 'Vehicle Code no es válido', OutputRoot.SOAP.Body);
+		WHEN '0414' THEN
+			CALL MapeaBodyErrorCom('414', 'BusinessException', 'The request could not be processed by due to invalid parameters: There is not module to price', 'No hay módulo para cotizar', OutputRoot.SOAP.Body);
+		WHEN '0415' THEN
+			CALL MapeaBodyErrorCom('415', 'BusinessException', 'The request could not be processed by due to invalid parameters: Intermediary Code is not valid', 'Intermediary Code no es válido', OutputRoot.SOAP.Body);
+		WHEN '0416' THEN
+			CALL MapeaBodyErrorCom('416', 'BusinessException', 'The request could not be processed by due to invalid parameters: Vehicle value too high to price', 'El valor del vehículo es más alto del aceptado para cotizar', OutputRoot.SOAP.Body);
+		WHEN '0417' THEN
+			CALL MapeaBodyErrorCom('417', 'BusinessException', 'The request could not be processed by due to invalid parameters: Period of Validity is not valid', 'Period of Validity no es válido', OutputRoot.SOAP);	
+		WHEN '0499' THEN
+			CALL MapeaBodyErrorCom('499', 'BusinessException', 'Calculate Service took too long to respond', 'Calculate Service excedió el tiempo máximo de espera', OutputRoot.SOAP.Body);
+		WHEN '1003' THEN
+			CALL MapeaBodyErrorCom('499', 'BusinessException', 'Error en el Backend OpenText', 'No se pudo generar un Token Valido', OutputRoot.SOAP.Body);
+		WHEN '502' THEN
+			CALL MapeaBodyErrorCom('502', 'HomologationError', ErrorDesc, 'Error de homologación. Por favor, revise los datos enviados e intente nuevamente.', OutputRoot.SOAP.Body);
+		WHEN '501' THEN
+			CALL MapeaBodyErrorCom('501', 'BackendError', ErrorDesc, 'El servicio backend. ha recibido la petición pero ha respondido con error. Por favor, comuniquese con el proveedor para revisar el estado de su transacción', OutputRoot.SOAP.Body);
+		ELSE
+			CALL MapeaBodyErrorCom('9999', 'SystemException', 'System General Error', 'Error general de sistema', OutputRoot.SOAP.Body);
+		END CASE;
+		--SET OutputRoot.XMLNSC.soapenv:Envelope.soapenv:Body.soapenv:Fault.detail.nsErr:businessFault.errorDetails.errorDetail.errorCode = 0;
+		--SET OutputRoot.XMLNSC.soapenv:Envelope.soapenv:Body.soapenv:Fault.detail.nsErr:businessFault.errorDetails.errorDetail.errorDesc = Environment.ErrorMsg_Detail;
+
+		SET OutputLocalEnvironment.Destination.SOAP.Reply.Transport.HTTP.ReplyStatusCode = 500;
+
+		RETURN TRUE;
+	END;	
+
+
+	CREATE PROCEDURE MapeaBodyErrorCom(IN pfaultCode CHARACTER, IN pfaultActor CHARACTER, IN pfaulString CHARACTER, IN pfaulDesc CHARACTER, IN prefOutBody REFERENCE)
+	BEGIN
+		/****************************************************************************
+		* Procedimiento que completa los campos del body con los valores
+		* correspondientes a una excepcion de negocio.
+		* IN pfaultCode: faultcode del backend
+		* IN pfaultActor: faultactor del backend
+		* IN pfaultString: faultstring del backend
+		* IN prefOutHeader: Referencia al SOAP Body de salida
+		*****************************************************************************/
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsError NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Err/v1.0';
+		
+		CALL MapeaCabeceraErrorCom(InputRoot.XMLNSC.*:Envelope.*:Header.*:requestHeader,OutputRoot.SOAP.Header.ns225:responseHeader, pfaultActor);
+
+		SET prefOutBody.nsSoap:Fault.faultcode.(XMLNSC.Attribute)xmlns:s='http://schemas.xmlsoap.org/soap/envelope/';
+		SET prefOutBody.nsSoap:Fault.faultcode = 's:Server';
+		SET prefOutBody.nsSoap:Fault.faultstring = pfaulDesc;
+		--Mapeo body
+		CREATE FIELD prefOutBody.nsSoap:Fault.detail.nsError:businessFault.errorDetails.errorDetail;
+		DECLARE refOutBodyError REFERENCE TO prefOutBody.nsSoap:Fault.detail.nsError:businessFault.errorDetails.errorDetail;
+
+		SET refOutBodyError.errorCode = pfaultCode;
+		SET refOutBodyError.errorType = pfaultActor;
+		SET refOutBodyError.errorDesc = pfaulString;
+
+	END;
+
+	CREATE PROCEDURE MapeaCabeceraErrorCom(IN prefInHeader REFERENCE, IN prefOutHeader REFERENCE, IN statusCode CHARACTER)
+	BEGIN
+		/****************************************************************************
+		* Procedimiento que completa los campos de la cabecera del ResponseMessage
+		* con los valores correspondientes a una excepcion de negocio.
+		* IN prefInHeader: Referencia a cabecera esb de entrada.
+		* IN prefOutHeader: Referencia a cabecera es de salida.
+		*****************************************************************************/
+
+		SET prefOutHeader.systemId = prefInHeader.systemId;
+		CREATE FIELD prefOutHeader.messageId;
+		SET prefOutHeader.timestamp = CURRENT_TIMESTAMP;
+		--SET prefOutHeader.messageContext = prefInHeader.messageContext;
+		SET prefOutHeader.responseStatus.statusCode = statusCode;
+		SET prefOutHeader.messageId = COALESCE(prefInHeader.messageId, Environment.TransactionId);
+
+	END;
+	
+	CREATE PROCEDURE GetLastExceptionDetailV2(IN InputTree reference,OUT messageNumber integer,OUT messageText CHARACTER,OUT messageText2 CHARACTER)   
+    /****************************************************************************
+     * A procedure that will get the details of the last exception from a message
+     * IN InputTree:  The incoming exception list
+     * OUT messageNumber:  The last message number.
+     * OUT messageText: The last message text.
+     *****************************************************************************/
+   BEGIN
+    -- Create a reference to the first child of the exception list
+    declare ptrException reference to InputTree.*[1];
+    -- keep looping while the moves to the child of exception list work 
+    WHILE lastmove(ptrException) DO
+        -- store the current values for the error number and text
+        IF ptrException.Number is not null THEN
+            SET messageNumber = ptrException.Number;
+            SET messageText = ptrException.Text;
+            SET messageText2 = ptrException.Insert.Text;
+        END IF;
+        -- now move to the last child which should be the next exceptionlist
+        move ptrException lastchild;
+    END WHILE; 
+   END;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

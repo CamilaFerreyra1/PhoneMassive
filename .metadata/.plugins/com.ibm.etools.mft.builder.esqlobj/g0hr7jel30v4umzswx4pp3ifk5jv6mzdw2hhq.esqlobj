@@ -1,0 +1,9 @@
+CREATE FUNCTION TransFromTimestampToDotNetDate (IN DateNotFormatted CHARACTER) RETURNS CHARACTER BEGIN
+	DECLARE DotNetDate CHARACTER '';
+	IF CONTAINS(DateNotFormatted, 'TIME') THEN
+		SET DotNetDate = SUBSTRING (DateNotFormatted FROM 12 FOR 19);
+	ELSE
+		SET DotNetDate = SUBSTRING (DateNotFormatted FROM 1 FOR 19);
+	END IF;
+	RETURN DotNetDate;
+END;

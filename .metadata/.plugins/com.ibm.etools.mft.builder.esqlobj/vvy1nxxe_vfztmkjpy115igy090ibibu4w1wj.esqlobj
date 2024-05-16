@@ -1,0 +1,43 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		
+			CREATE FIELD OutputRoot.XMLNSC.Msg.MessageHeader;
+	        DECLARE refHead REFERENCE TO OutputRoot.XMLNSC.Msg.MessageHeader;
+	        
+	       DECLARE PersonaEncontradaEnBup INTEGER;
+			DECLARE PersonaNoEncontradaEnBup INTEGER;
+			DECLARE TelefonosCreados INTEGER;
+			DECLARE TelefonosNoCreados INTEGER;
+			
+			CALL CountPerson_Phone(Environment.Variables.batchId) INTO Result;
+			
+			-- Ahora puedes asignar los valores a las variables
+			SET PersonaEncontradaEnBup = CAST(SUBSTRING(Result AFTER 1 BEFORE ',') AS INTEGER);
+			SET Result = SUBSTRING(Result AFTER ',' BEFORE LENGTH(Result));
+			SET PersonaNoEncontradaEnBup = CAST(SUBSTRING(Result AFTER 1 BEFORE ',') AS INTEGER);
+			SET Result = SUBSTRING(Result AFTER ',' BEFORE LENGTH(Result));
+			SET TelefonosCreados = CAST(SUBSTRING(Result AFTER 1 BEFORE ',') AS INTEGER);
+			SET Result = SUBSTRING(Result AFTER ',' BEFORE LENGTH(Result));
+			SET TelefonosNoCreados = CAST(Result AS INTEGER);
+	
+	 		SET refHead.batchId 					= Environment.Variables.batchId;
+			SET refHead.EmailEntered 				= Environment.Variables.EmailEntered;			
+			SET refHead.TotalPerson 				= Environment.Variables.TotalPerson;	  		
+			SET refHead.StartTime 					= Environment.Variables.StartTime; 				
+			SET refHead.EndTime 					= Environment.Variables.EndTime; 	
+			SET refHead.Duration 					= Environment.Variables.Duration; 			
+			SET refHead.numPeopleFound				= Environment.Variables.numPeopleFound;	  		
+			SET refHead.numPeopleNOTFound			= Environment.Variables.numPeopleNOTFound;				
+			SET refHead.numPhoneForged 				= Environment.Variables.numPhoneForged; 			
+			SET refHead.numPhoneNOTForged 			= Environment.Variables.numPhoneNOTForged;	  
+			
+			PROPAGATE TO TERMINAL 0;
+		RETURN FALSE;		
+	END;
+--END MODULE;
+
+
+	CREATE PROCEDURE CountPerson_Phone 
+	(IN ID CHARACTER) RETURNS CHARACTER
+	LANGUAGE DATABASE
+	EXTERNAL NAME "dbo.ContabilizarTelefonos";

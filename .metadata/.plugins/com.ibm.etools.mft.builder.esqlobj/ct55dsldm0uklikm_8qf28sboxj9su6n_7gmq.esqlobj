@@ -1,0 +1,71 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		SET Environment.TransactionId	    				= UUIDASCHAR;
+		SET Environment.Variables.Orchestration_ID			= COALESCE(InputRoot.HTTPInputHeader.Transactionid, Environment.TransactionId);
+		SET TransactionID									= Environment.TransactionId;
+		
+		SET Environment.Variables.REST = TRUE;
+		CREATE FIELD Environment.Variables;
+		
+		CALL ValidateHeader(InputRoot, Environment.Variables);
+		IF EXISTS(Environment.Variables.ErrorHeader.Code[]) THEN
+			THROW USER EXCEPTION;
+		ELSE
+			IF EXISTS(InputLocalEnvironment.HTTP.Input.QueryString[]) THEN
+				CALL CheckFieldRepetitionsQueryString(InputLocalEnvironment.HTTP.Input.QueryString, Environment.Variables);
+			ELSE
+				CALL CheckFieldRepetitionsJSON(InputRoot.JSON.Data, Environment.Variables);
+			END IF;
+			IF EXISTS(Environment.Variables.ErrorCodes.Code[]) THEN
+				THROW USER EXCEPTION;
+			END IF;
+			SET OutputRoot = InputRoot;
+			DECLARE nsCommons 	NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Commons/v1.0';
+			CREATE FIELD OutputRoot.SOAP.Header.nsCommons:requestHeader;
+			DECLARE refHeader REFERENCE TO OutputRoot.SOAP.Header.nsCommons:requestHeader;
+			SET refHeader.userName 					= COALESCE(InputRoot.HTTPInputHeader.userName, InputRoot.HTTPInputHeader.Username);
+			SET refHeader.userToken					= COALESCE(InputRoot.HTTPInputHeader.userToken, InputRoot.HTTPInputHeader.Usertoken);
+			SET refHeader.TokenType 				= COALESCE(InputRoot.HTTPInputHeader.tokenType, InputRoot.HTTPInputHeader.Tokentype);
+			SET refHeader.ConnectionDomain 			= COALESCE(InputRoot.HTTPInputHeader.connectionDomain, InputRoot.HTTPInputHeader.Connectiondomain);
+			SET refHeader.systemId					= COALESCE(InputRoot.HTTPInputHeader.systemId, InputRoot.HTTPInputHeader.Systemid);
+			
+-------------MessageContext-------------------------------------------------------------------------------------------------------------
+			
+			SET Environment.Variables[1] ='BUSINESSENTITYDEF';
+			SET Environment.Variables[2] ='BUSINESSENTITYID';
+			SET Environment.Variables[3] ='PROCESSDEF';
+			SET Environment.Variables[4] ='PROCESSINSTANCEID';
+			SET Environment.Variables[5] ='ACTIVITYDEF';
+			SET Environment.Variables[6] ='ACTIVITYSTATUS'; 
+			
+			SET Environment.Variables[7] ='PROCESSDEFINITIONID';
+			SET Environment.Variables[8] ='PROCESSINSTANCEID';
+			SET Environment.Variables[9] ='ACTIVITYDEFINITIONID';
+			SET Environment.Variables[10] ='ACTIVITYSTATUSID';
+		
+
+			FOR P AS Environment.Properties[] DO
+				DECLARE A ROW;
+			
+				SET A.key = P;
+				SET A.value = InputRoot.HTTPInputHeader.{P};
+				
+				CREATE LASTCHILD OF refHeader.messageContext NAME 'property' VALUE A;
+			END FOR;
+			
+----------------------------------------------------------------------------------------------------------------------------------------
+			
+			SET OutputLocalEnvironment = InputLocalEnvironment;
+		END IF;
+		
+		SET Environment.Variables.Service_Name 	= InputRoot.HTTPInputHeader."X-Original-HTTP-Command";
+		SET Environment.Variables.UserName		= COALESCE(InputRoot.HTTPInputHeader.Username, 'NULL');
+		SET Environment.Variables.IP 			= InputRoot.HTTPInputHeader."X-Remote-Addr";
+		DECLARE operationString CHARACTER '/';
+		FOR path AS InputLocalEnvironment.HTTP.Input.Path.Segment[] DO
+			SET operationString = operationString || path || '/';
+		END FOR;
+		SET Environment.Variables.Operation_Name = operationString;
+		
+		RETURN TRUE;
+	END;

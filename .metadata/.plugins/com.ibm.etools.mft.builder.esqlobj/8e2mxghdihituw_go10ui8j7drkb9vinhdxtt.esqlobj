@@ -1,0 +1,86 @@
+CREATE COMPUTE MODULE ErrorTranslate_FilterAndBuildRequest
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+	----Error generado por código (ya sea de backend, sp o validación REST)
+		SET OutputRoot.HTTPInputHeader."Content-Type"= 'application/xml';
+		DECLARE nsSoap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+		DECLARE nsCommon NAMESPACE 'http://gruposancorseguros.com/ents/SOI/Commons/v1.0';
+		DECLARE refHeader REFERENCE TO OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader;
+		CALL GetDistinct(Environment.Variables.ErrorCodes);
+		
+		CREATE FIELD OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader;
+		SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[1].key	= 'ApplicationId'; 
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[1].value 	= Environment.Variables.ApplicationId;
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[2].key 	= 'CompanyCode';
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[2].value 	= Environment.Variables.CompanyCode;
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[3].key 	= 'ClientTypeId';
+        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[3].value 	= Environment.Variables.ClientTypeId;
+        IF EXISTS(Environment.Variables.RoleId[]) THEN
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[4].key 	= 'RoleId';
+	        SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Header.nsCommon:requestHeader.messageContext.property[4].value = Environment.Variables.RoleId;
+        END IF;
+        
+        /*
+        IF      CONTAINS(Environment.Variables.Service_Name, 'ss10674')
+			OR 	CONTAINS(Environment.Variables.Service_Name, 'iib-dev')	THEN
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10674.sancorseguros.net:7817/Gss/Person/Process/MessageSvc';
+        ELSEIF  CONTAINS(Environment.Variables.Service_Name, 'ss10675')
+        	OR 	CONTAINS(Environment.Variables.Service_Name, 'iib-tst') THEN
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10675.sancorseguros.net:7801/Gss/Person/Process/MessageSvc';
+        ELSEIF  CONTAINS(Environment.Variables.Service_Name, 'ss10746')
+        	OR 	CONTAINS(Environment.Variables.Service_Name, 'ss10985')
+        	OR	CONTAINS(Environment.Variables.Service_Name, 'iib-pre') THEN
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10746.sancorseguros.net:7086/Gss/Person/Process/MessageSvc';
+        ELSE 
+        	SET OutputLocalEnvironment.Destination.HTTP.RequestURL = 'http://ss10766.sancorseguros.net:7086/Gss/Person/Process/MessageSvc';
+        END IF;
+        */
+		
+	----GenericErrors
+		IF EXISTS(Environment.Variables.ErrorCodes.Code[]) THEN
+	        DECLARE refError REFERENCE TO Environment.Variables.ErrorCodes.Code[1];
+	        DECLARE nsGenErrorTransReq NAMESPACE 'http://gruposancorseguros.com/ents/SOI/MessageSvc/GenericErrorTranslate/request';
+	        CREATE FIELD OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsGenErrorTransReq:GenericErrorTranslateRequest;
+	        WHILE LASTMOVE(refError) DO
+	        	SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsGenErrorTransReq:GenericErrorTranslateRequest.IIBErrorCode = refError;
+				PROPAGATE TO TERMINAL 'out' DELETE NONE;
+				MOVE refError NEXTSIBLING;
+	        END WHILE;
+		END IF;
+		
+		SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body = NULL;
+	----ParticularMessages
+		IF EXISTS(Environment.Variables.ParticularError.Code[]) THEN
+			DECLARE refError REFERENCE TO Environment.Variables.ParticularError.Code[1];
+	        DECLARE nsMessageTranslateReq NAMESPACE 'http://gruposancorseguros.com/ents/SOI/MessageSvc/MessageTranslate/request';
+	        CREATE FIELD OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsMessageTranslateReq:MessageTranslateRequest;
+	        WHILE LASTMOVE(refError) DO
+	        	SET OutputRoot.XMLNSC.nsSoap:Envelope.nsSoap:Body.nsMessageTranslateReq:MessageTranslateRequest.IIBMessageCode = refError;
+				PROPAGATE TO TERMINAL 'out' DELETE NONE;
+				MOVE refError NEXTSIBLING;
+	        END WHILE;
+		END IF;
+		
+		RETURN FALSE;
+	END;
+
+	CREATE PROCEDURE GetDistinct(IN refArrayCont REFERENCE) 
+	BEGIN
+		DECLARE tempRow ROW;
+		FOR C AS refArrayCont.Code[] DO
+			DECLARE refCodeAux REFERENCE TO C;
+			MOVE refCodeAux NEXTSIBLING;
+			DECLARE unique BOOLEAN TRUE;
+			WHILE LASTMOVE(refCodeAux) AND unique DO
+				IF refCodeAux = C THEN
+					SET unique = FALSE;
+				END IF;
+				MOVE refCodeAux NEXTSIBLING;
+			END WHILE;
+			IF unique THEN
+				CREATE LASTCHILD OF tempRow NAME 'Code' VALUE C;
+			END IF;
+		END FOR;
+		SET refArrayCont.Code[] = tempRow.Code[];
+	END;
+END MODULE;

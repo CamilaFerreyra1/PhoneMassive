@@ -1,0 +1,84 @@
+/*EATE FUNCTION Main() RETURNS BOOLE*/
+	BEGIN
+		DECLARE nss NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/SecurityTypes';
+		DECLARE nssm NAMESPACE 'http://GrupoSancorSeguros/xsd/service/SecuritySvcMsg';
+		DECLARE nsc NAMESPACE 'http://GrupoSancorSeguros/xsd/entity/CommonTypes';
+
+
+		IF InputExceptionList <> NULL THEN 
+			DECLARE ErrorNumber INTEGER;
+			DECLARE ErrorText CHARACTER;
+			CALL GetLastExceptionDetail(InputExceptionList,ErrorNumber,ErrorText);
+				
+			SET Environment.ErrorMsg.ERROR_NUMBER 				= 'ERROR_NUMBER=' || CAST(ErrorNumber AS CHARACTER); 
+			SET Environment.ErrorMsg.ERROR_TEXT 				= COALESCE(ErrorText, NULL);
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------			
+			SET Environment.ErrorMsg.EXCEPTION_LIST 			= InputExceptionList;
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			SET Environment.ErrorMsg.ERROR_LABEL 				= COALESCE(SUBSTRING(FIELDVALUE(InputExceptionList.RecoverableException.Label) FROM 1 FOR 300), NULL);
+		ELSE 
+			SET Environment.ErrorMsg.ERROR_NUMBER				= 'NULL';
+			SET Environment.ErrorMsg.ERROR_TEXT					= 'NULL';
+			SET Environment.ErrorMsg.EXCEPTION_LIST				= 'NULL';
+			SET Environment.ErrorMsg.ERROR_LABEL 				= 'NULL';
+		END IF;
+	
+		IF EXISTS(Environment.Variables.JSON[]) THEN
+            SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT    = Environment.Variables.JSON;
+        ELSE
+            CREATE LASTCHILD OF OutputRoot.XMLNSC.ErrorMsg DOMAIN 'XMLNSC' NAME 'SOAP_MESSAGE_OUTPUT';
+            SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT.ns85:Envelope.ns85:Header    = InputRoot.XMLNSC.*.Header;
+            SET OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT.ns85:Envelope.ns85:Body    	= InputRoot.XMLNSC.*.Body;
+            SET Environment.ErrorMsg.SOAP_MESSAGE_OUTPUT	= CAST (ASBITSTREAM(OutputRoot.XMLNSC.ErrorMsg.SOAP_MESSAGE_OUTPUT) AS CHARACTER CCSID 819);
+        END IF;
+				
+			SET Environment.ErrorMsg.FILTRO_BROKER 				= TRIM(BrokerName);
+			
+			SET Environment.ErrorMsg.TRANSACTION_ID 			= COALESCE(Environment.TransactionId,TransactionID);
+			
+			SET Environment.ErrorMsg.SERVICE_NAME 				= Environment.Variables.Service_Name;
+			SET Environment.ErrorMsg.OPERATION_NAME 			= Environment.Variables.Operation_Name;
+			SET Environment.ErrorMsg.USER_NAME 		    		= Environment.Variables.UserName;
+			SET Environment.ErrorMsg.SECURITY_GROUP	 			= 'NULL';
+			SET Environment.ErrorMsg.ERROR_TIMESTAMP 			= CURRENT_TIMESTAMP;			
+			SET Environment.ErrorMsg.DATETIME		 			= CURRENT_TIMESTAMP;
+			SET Environment.ErrorMsg.DIRECTION 					= 'BACKEND_ERROR';
+			SET Environment.ErrorMsg.APPOWNER 					= BrokerName;
+			SET Environment.ErrorMsg.BACKENDPROVIDER 			= Environment.Variables.Backend_Provider;
+			SET Environment.ErrorMsg.IP 						= Environment.Variables.ClientIP;
+			SET Environment.ErrorMsg.ENDPOINT_NAME 				= Environment.Variables.Endpoint_Name;
+			
+			SET Environment.ErrorMsg.SOAP_MESSAGE_INPUT 		= Environment.Variables.LastInputBeforeError;
+			
+			SET Environment.ErrorMsg.BACKEND_OPERATION_NAME 	= Environment.Variables.Backend_Operation;
+			SET Environment.ErrorMsg.BUSINESS_ENTITY_DEF	 	= COALESCE(Environment.Variables.BUSINESSDEF,Environment.Variables.BUSINESSENTITYDEF,Environment.Variables.Bussiness_DEF);
+			SET Environment.ErrorMsg.BUSINESS_ENTITY_ID	 		= COALESCE(Environment.Variables.BUSINESSID, Environment.Variables.BUSINESSENTITYID,Environment.Variables.Bussiness_ID);
+			SET Environment.ErrorMsg.ORCHESTRATION_ID	 		= Environment.Variables.Orchestration_ID;
+			
+			SET Environment.ErrorMsg.PROCESS_DEF 				= COALESCE(Environment.Variables.PROCESS_DEF,Environment.Variables.PROCESSDEFINITIONID);
+			SET Environment.ErrorMsg.PROCESS_INSTANCE_ID		= COALESCE(Environment.Variables.PROCESS_INSTANCE_ID,Environment.Variables.PROCESSINSTANCEID);
+			SET Environment.ErrorMsg.ACTIVITY_DEF	 			= COALESCE(Environment.Variables.ACTIVITY_DEF,Environment.Variables.ACTIVITYDEFINITIONID);
+			SET Environment.ErrorMsg.ACTIVITY_STATUS	 		= '1';
+			
+			SET OutputRoot.XMLNSC.ErrorMsg 						= Environment.ErrorMsg;
+			
+		SET Environment.Variables.Backend_Provider 	= 	NULL;
+        SET Environment.Variables.Endpoint_Name 	= 	NULL;
+        SET Environment.Variables.Backend_Operation =   NULL;
+			
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
